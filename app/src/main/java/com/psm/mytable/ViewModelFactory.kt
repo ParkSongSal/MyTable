@@ -20,8 +20,9 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
-import com.psm.mytable.main.MainViewModel
+import com.psm.mytable.ui.main.MainViewModel
 import com.psm.mytable.room.MyTableRepository
+import com.psm.mytable.ui.recipe.write.RecipeWriteViewModel
 
 /**
  * Factory for all ViewModels.
@@ -41,6 +42,8 @@ class ViewModelFactory constructor(
         when {
             isAssignableFrom(MainViewModel::class.java) ->
                 MainViewModel(myTableRepository)
+            isAssignableFrom(RecipeWriteViewModel::class.java) ->
+                RecipeWriteViewModel(myTableRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

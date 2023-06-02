@@ -10,11 +10,17 @@
     <color name="text_black">@color/base_text</color>
     <color name="text_right_black">#202125</color>
     <color name="text_white">#fff</color>
+    <color name="text_f6f6f6">#f6f6f6</color>
+    <color name="bg_e2e2e2">#E2E2E2</color>
     <color name="text_gray">#aeb2b6</color>
     <color name="text_dark_gray">#66696c</color>
     <color name="text_red">#f83109</color>
     <color name="text_blue">#5F97B1</color>
+    <color name="text_blue2">#194553</color>
     <color name="text_yellow">#CDDC39</color>
     <color name="text_cancel">#9ea7b0</color>
     <color name="text_address">#9ea7b0</color>
+
+    <color name="line_divider">#f4f4f4</color>
+
 </resources>

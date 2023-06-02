@@ -26,6 +26,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.recipe.write.RecipeWriteActivity"
+            android:exported="false"/>
         <!-- Google Admob -->
         <!--<meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

@@ -3,4 +3,12 @@
 
     <string name="google_admob_key">ca-app-pub-3145363349418895~7605231424</string>
 
+    <string name="recipe_type_1_001">한식</string>
+    <string name="recipe_type_1_002">일식</string>
+    <string name="recipe_type_1_003">중식</string>
+    <string name="recipe_type_1_004">간식</string>
+    <string name="recipe_type_1_005">분식</string>
+
+    <string name="recipe_write_1_001">레시피 작성</string>
+
 </resources>

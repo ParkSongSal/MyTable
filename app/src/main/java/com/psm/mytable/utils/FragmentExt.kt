@@ -23,10 +23,12 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.psm.mytable.App
+import com.psm.mytable.R
 import com.psm.mytable.ViewModelFactory
 
 fun Fragment.getViewModelFactory(): ViewModelFactory {
@@ -39,7 +41,7 @@ fun Fragment.setTitleText(view: View, @StringRes stringResId: Int) {
 }
 
 fun setTitleText(view: View, title: String) {
-    //view.findViewById<TextView>(R.id.textToolbarTitle)?.text = title
+    view.findViewById<TextView>(R.id.textToolbarTitle)?.text = title
 }
 
 fun Fragment.initToolbar(view: View) {
@@ -47,13 +49,13 @@ fun Fragment.initToolbar(view: View) {
         setOnClickListener {
             activity?.finish()
         }
-    }
+    }*/
 
     view.findViewById<View>(R.id.imgToolbarBack)?.apply {
         setOnClickListener {
             activity?.finish()
         }
-    }*/
+    }
 }
 
 fun Fragment.setFragmentResult(
