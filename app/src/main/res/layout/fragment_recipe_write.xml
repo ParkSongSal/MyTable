@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/layout_toolbar_back" />
+       <include layout="@layout/layout_toolbar_back"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -45,35 +45,44 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:clipToPadding="false">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/recipeImgTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="음식 사진"
-                        android:textColor="@color/text_blue"
-                        android:textSize="16dp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/recipeImage"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:layout_marginTop="10dp"
                         android:background="@drawable/bg_round_rect_stroke_e2"
-                        android:src="@drawable/baseline_image_search_24"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/recipeImgTitle" />
+                        android:onClick="@{() -> viewmodel.clickPhotoDialog()}"
+                        android:layout_marginTop="10dp">
+
+                        <ImageView
+                            android:id="@+id/recipeImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:scaleType="fitXY"
+                            tools:src="@drawable/baseline_settings_24"/>
+
+                        <TextView
+                            android:id="@+id/recipeImageText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:text="완성된 레시피의 이미지를 등록해주세요."
+                            android:textColor="@color/base_text"
+                            android:layout_gravity="center"
+                            android:gravity="center_horizontal"
+                            android:drawableTop="@drawable/baseline_image_search_24"
+                            android:drawablePadding="10dp"
+                            android:textSize="13sp"
+                            app:drawableTopCompat="@drawable/baseline_image_search_24"/>
+                    </FrameLayout>
+
 
                     <TextView
                         android:id="@+id/recipeTitle"
@@ -99,8 +108,137 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/recipeTitle" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/recipeImage" >
+
+                        <TextView
+                            android:id="@+id/recipeType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="종류"
+                            android:textColor="@color/text_blue"
+                            android:textSize="16dp"
+                            android:textStyle="bold"
+                            />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_round_rect_stroke_e2"
+                        android:hint="선택하세요."
+                        android:layout_gravity="center"
+                        android:gravity="center|start"
+                        android:paddingStart="6dp"
+                        android:textSize="15dp"
+                        android:text="@{viewmodel.recipeType}"
+                        android:drawableEnd="@drawable/ic_mask_group_down"
+                        android:paddingEnd="15dp"
+                        android:onClick="@{() -> viewmodel.clickSelectType()}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle" />
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/recipeImage" >
+
+                        <TextView
+                            android:id="@+id/recipeIngredient"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="재료"
+                            android:textColor="@color/text_blue"
+                            android:textSize="16dp"
+                            android:textStyle="bold"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="(최대 100자)"
+                            android:textColor="@color/text_blue"
+                            android:layout_marginTop="10dp"
+                            android:textSize="12dp"/>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_round_rect_stroke_e2"
+                        android:hint="비빔밥"
+                        android:maxLength="100"
+                        android:textSize="15dp"
+                        android:gravity="top"
+                        android:padding="5dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:visibility="visible"
+                        android:id="@+id/adView"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/text_yellow"/>
+
+                    <TextView
+                        android:id="@+id/recipeOrder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="만드는 순서"
+                        android:textColor="@color/text_blue"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/recipeImage" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_round_rect_stroke_e2"
+                        android:hint="비빔밥"
+                        android:maxLength="200"
+                        android:paddingStart="6dp"
+                        android:textSize="15dp"
+                        android:gravity="top"
+                        android:paddingTop="5dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:textColor="@color/white"
+                        android:background="@drawable/bg_radius4_blue"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textSize="16dp"
+                        android:id="@+id/regBtn"
+                        android:text="등록"
+                        android:layout_marginTop="10dp"
+                        tools:enabled="true"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </ScrollView>
+
             <!--  <View
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"

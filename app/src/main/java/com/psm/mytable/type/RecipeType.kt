@@ -10,12 +10,14 @@ import com.psm.mytable.R
  CN : 중식
  SB : 분식
  SN : 간식
+ BA : 제과/제빵
  ETC : 기타
  *
  */
-enum class RecipeType(@StringRes val stringResId: Int, @StringRes typeId: Int) {
-    KR(R.string.recipe_type_1_001, 1),
-    JP(R.string.recipe_type_1_002, 2),
-    CN(R.string.recipe_type_1_003, 3)
+enum class RecipeType(val recipeName: String, @StringRes val stringResId: Int, @StringRes typeId: Int) {
+    KR("한식", R.string.recipe_type_1_001, 1),
+    JP("일식", R.string.recipe_type_1_002, 2),
+    CN("중식", R.string.recipe_type_1_003, 3),
+    BA("제과/제빵", R.string.recipe_type_1_006, 6)
 
 }

@@ -30,6 +30,7 @@ class RecipeAdapter(private val viewModel: MainViewModel) : ListAdapter<RecipeIt
             binding.viewmodel = viewModel
             binding.itemData = itemData
 
+            binding.recipeNameText.isSelected = true
             binding.executePendingBindings()
 
 
