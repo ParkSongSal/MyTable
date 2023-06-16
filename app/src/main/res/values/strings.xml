@@ -8,7 +8,15 @@
     <string name="recipe_type_1_003">중식</string>
     <string name="recipe_type_1_004">간식</string>
     <string name="recipe_type_1_005">분식</string>
+    <string name="recipe_type_1_006">제과/제빵</string>
 
     <string name="recipe_write_1_001">레시피 작성</string>
+
+    <string name="etc_1_001">카메라 촬영</string>
+    <string name="etc_1_002">앨범 선택</string>
+
+    <string name="storage_permission_rationale_title">title</string>
+    <string name="storage_permission_rationale_message">message</string>
+    <string name="storage_permission_denied_message">deny</string>
 
 </resources>
