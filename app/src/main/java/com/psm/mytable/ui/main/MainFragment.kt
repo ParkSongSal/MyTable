@@ -3,14 +3,21 @@ package com.psm.mytable.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 import com.psm.mytable.App
 import com.psm.mytable.EventObserver
 import com.psm.mytable.R
@@ -19,14 +26,16 @@ import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.ui.recipe.write.RecipeWriteActivity
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.recyclerview.RecyclerViewDecoration
+import com.psm.mytable.utils.recyclerview.RecyclerViewHorizontalDecoration
+import com.psm.mytable.utils.recyclerview.RecyclerViewVerticalDecoration
 
-class MainFragment: Fragment() {
+class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener  {
     private lateinit var viewDataBinding: FragmentMainBinding
     private val viewModel by viewModels<MainViewModel> { getViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -45,7 +54,7 @@ class MainFragment: Fragment() {
         viewDataBinding.lifecycleOwner = this
         setupEvent()
         checkPermission()
-        viewDataBinding.recipeList.layoutManager = LinearLayoutManager(App.instance)
+        viewDataBinding.recipeList.layoutManager = GridLayoutManager(App.instance, 2)
         viewModel.init()
         setupListAdapter()
         //setupListDivider()
@@ -53,6 +62,10 @@ class MainFragment: Fragment() {
     }
 
     private fun init(){
+        viewDataBinding.navigationView.setNavigationItemSelectedListener(this)
+        viewDataBinding.menuBtn.setOnClickListener{
+            viewDataBinding.drawerLayout.openDrawer(GravityCompat.START)
+        }
         /*val adRequest = AdRequest.Builder().build()
         viewDataBinding.adView.loadAd(adRequest)*/
     }
@@ -61,8 +74,12 @@ class MainFragment: Fragment() {
 
 
     private fun setupListAdapter(){
-        viewDataBinding.recipeList.addItemDecoration(RecyclerViewDecoration(60))
-        viewDataBinding.recipeList.adapter = RecipeAdapter(viewModel)
+
+        viewDataBinding.recipeList.apply{
+            addItemDecoration(RecyclerViewHorizontalDecoration(30))
+            addItemDecoration(RecyclerViewVerticalDecoration(30))
+            adapter = RecipeAdapter(viewModel)
+        }
     }
 
     private fun setupListDivider(){
@@ -87,5 +104,33 @@ class MainFragment: Fragment() {
             arguments = Bundle().apply {
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.main_navigationmenu, menu)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.phone->{
+                Toast.makeText(App.instance, "전화번호부", Toast.LENGTH_SHORT).show()
+                return super.onOptionsItemSelected(item)
+            }
+            R.id.stopWatch->{
+                Toast.makeText(App.instance, "스탑워치", Toast.LENGTH_SHORT).show()
+                //intent = Intent(this, StopWatchActivity::class.java)
+                //startActivity(intent)
+                return super.onOptionsItemSelected(item)
+            }
+            R.id.settingItem->{
+                // 설정 클릭시
+                Toast.makeText(App.instance, "설정", Toast.LENGTH_SHORT).show()
+                //intent = Intent(this, StopWatchActivity::class.java)
+                //startActivity(intent)
+                return super.onOptionsItemSelected(item)
+            }
+        }
+        return true
     }
 }

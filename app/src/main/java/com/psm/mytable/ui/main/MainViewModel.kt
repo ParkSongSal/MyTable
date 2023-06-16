@@ -50,7 +50,8 @@ class MainViewModel(
             RecipeItemData(1, "","들기름 두부구이", RecipeType.KR),
             RecipeItemData(2, "","라면", RecipeType.JP),
             RecipeItemData(3, "","볶음밥", RecipeType.CN),
-            RecipeItemData(4, "","밀푀유나베", RecipeType.KR)
+            RecipeItemData(4, "","밀푀유나베", RecipeType.KR),
+            RecipeItemData(5, "https://my-test-butket.s3.ap-southeast-2.amazonaws.com/test1/baseball.png","매운 돼지김치찜&치즈", RecipeType.KR)
         )
         _recipeListVisibility.value = View.VISIBLE
         _emptyRecipeListVisibility.value = View.GONE

@@ -23,21 +23,49 @@
             name="viewmodel"
             type="com.psm.mytable.ui.main.MainViewModel" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/layout_toolbar_main" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/toolbarLinear"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/text_blue"
+            android:gravity="start|center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/menuBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/baseline_menu_24"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="나의 식탁"
+                android:textSize="18dp"
+                android:textColor="@color/white"
+                android:layout_marginStart="15dp"
+                android:textStyle="bold"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
             android:background="@color/bg_e2e2e2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolBar"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarLinear"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <!--<TextView
@@ -61,6 +89,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="@{viewmodel.recipeListVisibility}"
+                    android:paddingTop="15dp"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:recipeList="@{viewmodel.items}"
                     />
                 <TextView
@@ -102,9 +132,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:layout_marginLeft="50dp"
+                android:layout_marginStart="50dp"
                 android:layout_marginTop="50dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginEnd="30dp"
                 android:layout_marginBottom="50dp"
                 android:src="@drawable/baseline_edit_24"
                 android:backgroundTint="@color/text_blue2"
@@ -114,7 +144,15 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigationView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/main_naviheader"
+            app:menu="@menu/main_navigationmenu"/>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 
 </layout>
