@@ -30,6 +30,10 @@ import androidx.fragment.app.FragmentActivity
 import com.psm.mytable.App
 import com.psm.mytable.R
 import com.psm.mytable.ViewModelFactory
+import com.psm.mytable.type.PhotoType
+import com.psm.mytable.type.RecipeType
+import com.psm.mytable.ui.dialog.recipe.SelectGetPhotoTypeDialog
+import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeDialog
 
 fun Fragment.getViewModelFactory(): ViewModelFactory {
     val repository = (requireContext().applicationContext as App).repository
@@ -57,6 +61,35 @@ fun Fragment.initToolbar(view: View) {
         }
     }
 }
+
+fun Fragment.showRecipeSelectDialog(
+    positiveCallback: (type: RecipeType) -> Unit ){
+    val requestKey = System.currentTimeMillis().toString()
+    setFragmentResultListener(requestKey) {
+            _, result ->
+        if(DialogUtils.isPositiveClick(result)){
+            val type = DialogUtils.getRecipeType(result)
+            positiveCallback(type)
+        }
+    }
+    val newFragment = SelectRecipeTypeDialog.newInstance(requestKey)
+    newFragment.show(getSupportFragmentMananger(), null)
+}
+
+fun Fragment.showPhotoSelectDialog(
+    positiveCallback: (type: PhotoType) -> Unit ){
+    val requestKey = System.currentTimeMillis().toString()
+    setFragmentResultListener(requestKey) {
+            _, result ->
+        if(DialogUtils.isPositiveClick(result)){
+            val type = DialogUtils.getPhotoType(result)
+            positiveCallback(type)
+        }
+    }
+    val newFragment = SelectGetPhotoTypeDialog.newInstance(requestKey)
+    newFragment.show(getSupportFragmentMananger(), null)
+}
+
 
 fun Fragment.setFragmentResult(
     requestKey: String,
