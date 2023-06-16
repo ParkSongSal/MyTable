@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-files-path
+        name="external-files"
+        path="." />
+    <external-path
+        name="app_files"
+        path="Android/data/com.psm.mytable/files/Pictures" />
+
+</paths>
