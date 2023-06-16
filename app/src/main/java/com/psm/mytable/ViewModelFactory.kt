@@ -22,6 +22,8 @@ import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import com.psm.mytable.ui.main.MainViewModel
 import com.psm.mytable.room.MyTableRepository
+import com.psm.mytable.ui.camera.CameraViewModel
+import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeViewModel
 import com.psm.mytable.ui.recipe.write.RecipeWriteViewModel
 
 /**
@@ -44,6 +46,10 @@ class ViewModelFactory constructor(
                 MainViewModel(myTableRepository)
             isAssignableFrom(RecipeWriteViewModel::class.java) ->
                 RecipeWriteViewModel(myTableRepository)
+            isAssignableFrom(SelectRecipeTypeViewModel::class.java) ->
+                SelectRecipeTypeViewModel(myTableRepository)
+            isAssignableFrom(CameraViewModel::class.java) ->
+                CameraViewModel(myTableRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
