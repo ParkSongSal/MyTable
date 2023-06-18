@@ -1,6 +1,7 @@
 package com.psm.mytable.ui.recipe.write
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -71,6 +72,7 @@ class RecipeWriteFragment: Fragment() {
             if(it.resultCode == AppCompatActivity.RESULT_OK){
                 val imageUri = it.data?.getStringExtra("imageUri")?.toUri()
                 if(imageUri != null){
+                    viewModel.setRecipeImageUri(imageUri)
                     setRecipeImage(imageUri)
                 }
 
@@ -110,12 +112,13 @@ class RecipeWriteFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewDataBinding.lifecycleOwner = this
+        viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
         initToolbar(view)
 
         setTitleText(view, R.string.recipe_write_1_001)
 
+        viewModel.init(requireContext())
         init()
         setupEvent()
     }
@@ -127,6 +130,7 @@ class RecipeWriteFragment: Fragment() {
 
     private fun setupEvent() {
 
+        // 이미지 가져오기(카메라or앨범선택) 팝업 호출
         viewModel.openPhotoDialogEvent.observe(viewLifecycleOwner, EventObserver{
             showPhotoSelectDialog(
                 positiveCallback = {
@@ -152,6 +156,7 @@ class RecipeWriteFragment: Fragment() {
             )
         })
 
+        // 레피시 종류 선택 팝업 호출
         viewModel.openFoodTypeDialogEvent.observe(viewLifecycleOwner, EventObserver{
             showRecipeSelectDialog(
                 positiveCallback = {
@@ -159,6 +164,13 @@ class RecipeWriteFragment: Fragment() {
                     ToastUtils.showToast(it.toString())
                 }
             )
+        })
+
+        viewModel.completeRecipeDataInsertEvent.observe(viewLifecycleOwner, EventObserver{
+            ToastUtils.showToast("레시피가 등록되었습니다.")
+            activity?.setResult(Activity.RESULT_OK)
+            activity?.finish()
+            //viewModel.getAllRecipe()
         })
     }
 
@@ -181,6 +193,7 @@ class RecipeWriteFragment: Fragment() {
         )
     }
 
+    // Camera 권한 체크
     private fun validatePermission() {
         Dexter.withContext(App.instance)
             .withPermission(Manifest.permission.CAMERA)

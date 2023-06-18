@@ -16,6 +16,7 @@
     <color name="text_dark_gray">#66696c</color>
     <color name="text_red">#f83109</color>
     <color name="text_blue">#5F97B1</color>
+    <color name="text_d2d2d2">#d2d2d2</color>
     <color name="text_blue2">#194553</color>
     <color name="text_yellow">#CDDC39</color>
     <color name="text_cancel">#9ea7b0</color>

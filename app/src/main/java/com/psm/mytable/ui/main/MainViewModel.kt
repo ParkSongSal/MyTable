@@ -1,14 +1,18 @@
 package com.psm.mytable.ui.main
 
+import android.content.Context
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.psm.mytable.App
 import com.psm.mytable.Event
 import com.psm.mytable.room.MyTableRepository
+import com.psm.mytable.room.RoomDB
 import com.psm.mytable.type.RecipeType
 import com.psm.mytable.ui.recipe.RecipeItemData
+import timber.log.Timber
 
 /**
  * 인트로 화면 노출 및 앱 초기화
@@ -45,7 +49,10 @@ class MainViewModel(
     val goRecipeWriteEvent: LiveData<Event<Unit>>
         get() = _goRecipeWriteEvent
 
-    fun init(){
+    private var database: RoomDB? = null
+
+    fun init(context: Context){
+        database = RoomDB.getInstance(context)
         _items.value = arrayListOf(
             RecipeItemData(1, "","들기름 두부구이", RecipeType.KR),
             RecipeItemData(2, "","라면", RecipeType.JP),
@@ -55,6 +62,18 @@ class MainViewModel(
         )
         _recipeListVisibility.value = View.VISIBLE
         _emptyRecipeListVisibility.value = View.GONE
+        getRecipeList()
+    }
+
+    fun getRecipeList(){
+        val mRecipeList = database?.recipeDao()?.getAllRecipe() ?: listOf()
+        if(mRecipeList.isNotEmpty()){
+            Timber.d("psm_getRecipe name : ${mRecipeList?.get(0)?.recipeName}")
+            Timber.d("psm_getRecipe image : ${mRecipeList?.get(0)?.recipeImagePath}")
+        }else{
+            Timber.d("psm_getRecipe emtpy")
+        }
+
     }
 
     fun clickAddRecipe(){

@@ -1,10 +1,14 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
 }
 
+kotlin {
+    jvmToolchain(11)
+}
 android {
     namespace 'com.psm.mytable'
     compileSdk 31
@@ -33,12 +37,12 @@ android {
         enabled = true
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
-    /*buildFeatures {
+    buildFeatures {
         viewBinding true
-    }*/
+    }
 
 }
 
@@ -48,7 +52,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -63,9 +66,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
 
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
-    def lifecycle_version = "2.3.0"
-    // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
@@ -86,6 +87,9 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.2.6'
     annotationProcessor 'androidx.room:room-compiler:2.2.6'
     kapt 'androidx.room:room-compiler:2.2.6'
+
+    implementation 'com.github.starry-shivam:FileUtils:1.0.0'
+
 
     implementation 'androidx.camera:camera-camera2:1.1.0-alpha03'
     implementation 'androidx.camera:camera-lifecycle:1.1.0-alpha03'

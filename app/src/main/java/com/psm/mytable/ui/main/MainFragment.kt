@@ -9,6 +9,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -22,6 +25,7 @@ import com.psm.mytable.App
 import com.psm.mytable.EventObserver
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentMainBinding
+import com.psm.mytable.room.RoomDB
 import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.ui.recipe.write.RecipeWriteActivity
 import com.psm.mytable.utils.getViewModelFactory
@@ -33,9 +37,19 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
     private lateinit var viewDataBinding: FragmentMainBinding
     private val viewModel by viewModels<MainViewModel> { getViewModelFactory() }
 
+    private lateinit var recipeWriteResult: ActivityResultLauncher<Intent>
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        recipeWriteResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            if(it.resultCode == AppCompatActivity.RESULT_OK){
+                viewModel.getRecipeList()
+            }
+        }
+
     }
 
     override fun onCreateView(
@@ -55,7 +69,7 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         setupEvent()
         checkPermission()
         viewDataBinding.recipeList.layoutManager = GridLayoutManager(App.instance, 2)
-        viewModel.init()
+        viewModel.init(requireContext())
         setupListAdapter()
         //setupListDivider()
         init()
@@ -95,7 +109,7 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         // 레시피 작성 화면 이동
         viewModel.goRecipeWriteEvent.observe(viewLifecycleOwner, EventObserver{
             val intent = Intent(requireContext(), RecipeWriteActivity::class.java)
-            startActivity(intent)
+            recipeWriteResult.launch(intent)
         })
     }
 

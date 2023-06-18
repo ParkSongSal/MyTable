@@ -102,6 +102,7 @@
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_round_rect_stroke_e2"
                         android:hint="비빔밥"
+                        android:text="@={viewmodel.recipeWriteData.recipeName}"
                         android:maxLength="20"
                         android:paddingStart="6dp"
                         android:textSize="15dp"
@@ -180,6 +181,7 @@
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_round_rect_stroke_e2"
                         android:hint="비빔밥"
+                        android:text="@={viewmodel.recipeWriteData.ingredients}"
                         android:maxLength="100"
                         android:textSize="15dp"
                         android:gravity="top"
@@ -213,7 +215,8 @@
                         android:layout_height="200dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_round_rect_stroke_e2"
-                        android:hint="비빔밥"
+                        android:hint="비빔밥 만드는 방법"
+                        android:text="@={viewmodel.recipeWriteData.howToMake}"
                         android:maxLength="200"
                         android:paddingStart="6dp"
                         android:textSize="15dp"
@@ -227,16 +230,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:textColor="@color/white"
-                        android:background="@drawable/bg_radius4_blue"
+                        android:background="@drawable/selector_button_bg_blue_circle"
                         android:layout_marginBottom="20dp"
                         android:gravity="center"
                         android:textStyle="bold"
                         android:textSize="16dp"
                         android:id="@+id/regBtn"
                         android:text="등록"
+                        android:onClick="@{() -> viewmodel.clickNext()}"
+                        android:enabled="@{viewmodel.recipeWriteData.requiredDataComplete}"
                         android:layout_marginTop="10dp"
-                        tools:enabled="true"/>
+                        tools:enabled="false"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
+
             </ScrollView>
 
             <!--  <View
