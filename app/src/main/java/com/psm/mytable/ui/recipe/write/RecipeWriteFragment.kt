@@ -82,6 +82,7 @@ class RecipeWriteFragment: Fragment() {
         imageGalleryResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == AppCompatActivity.RESULT_OK) {
                 it.data?.dataString?.let { uri ->
+                    viewModel.setRecipeImageUri(uri.toUri())
                     setRecipeImage(uri.toUri())
                 }
             }

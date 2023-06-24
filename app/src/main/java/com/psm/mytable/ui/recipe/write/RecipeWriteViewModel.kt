@@ -62,6 +62,9 @@ class RecipeWriteViewModel(
     val recipeType: LiveData<String>
         get() = _recipeType
 
+    private var _recipeTypeId = MutableLiveData<Int>(0)
+    val recipeTypeId: LiveData<Int>
+        get() = _recipeTypeId
     val testName = MutableLiveData<String>()
 
     private var database: RoomDB? = null
@@ -76,6 +79,7 @@ class RecipeWriteViewModel(
 
     fun setRecipeType(type: RecipeType){
         _recipeType.value = type.recipeName
+        _recipeTypeId.value = type.typeId
     }
 
     fun clickPhotoDialog(){
@@ -98,7 +102,7 @@ class RecipeWriteViewModel(
             recipeType = _recipeType.value.toString(),
             ingredients = recipeWriteData.value?.ingredients ?: "",
             howToMake = recipeWriteData.value?.howToMake ?: "",
-            reg_date = "2023-06-17",
+            reg_date = "2023-06-22",
             recipeImagePath = "https://my-test-butket.s3.ap-southeast-2.amazonaws.com/test1/$fileName"
         )
 

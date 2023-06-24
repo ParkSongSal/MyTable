@@ -16,6 +16,6 @@ data class RecipeItemData(
     val recipeName: String,
 
     // 타입(한식, 중식, 일식, 간식, 분식)
-    val type: RecipeType
+    val type: String
 
 ): Parcelable
