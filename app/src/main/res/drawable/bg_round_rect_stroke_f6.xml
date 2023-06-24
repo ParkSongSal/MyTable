@@ -5,8 +5,8 @@
 
     <solid android:color="@color/white" />
     <corners
-        android:bottomRightRadius="@dimen/segment_round_radius"
-        android:bottomLeftRadius="@dimen/segment_round_radius"
-        android:topLeftRadius="@dimen/segment_round_radius"
-        android:topRightRadius="@dimen/segment_round_radius"/>
+        android:bottomRightRadius="@dimen/segment_round_radius_50"
+        android:bottomLeftRadius="@dimen/segment_round_radius_50"
+        android:topLeftRadius="@dimen/segment_round_radius_50"
+        android:topRightRadius="@dimen/segment_round_radius_50"/>
 </shape>

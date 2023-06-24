@@ -3,14 +3,23 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/phone"
+            android:id="@+id/shoppingBasket"
             android:icon="@drawable/baseline_image_search_24"
             android:title="장바구니"/>
 
         <item
-            android:id="@+id/stopWatch"
+            android:id="@+id/materialMng"
             android:icon="@drawable/baseline_settings_24"
             android:title="재료관리"/>
+
+        <item
+            android:id="@+id/weeklyDiet"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="주간식단"/>
+        <item
+            android:id="@+id/stopWatch"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="스탑워치"/>
 
         <item
             android:id="@+id/settingItem"

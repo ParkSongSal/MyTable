@@ -127,16 +127,34 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.phone->{
-                Toast.makeText(App.instance, "전화번호부", Toast.LENGTH_SHORT).show()
+            // 장바구니
+            R.id.shoppingBasket->{
+                Toast.makeText(App.instance, "장바구니", Toast.LENGTH_SHORT).show()
                 return super.onOptionsItemSelected(item)
             }
+            // 재료관리
+            R.id.materialMng->{
+                Toast.makeText(App.instance, "재료관리", Toast.LENGTH_SHORT).show()
+                //intent = Intent(this, StopWatchActivity::class.java)
+                //startActivity(intent)
+                return super.onOptionsItemSelected(item)
+            }
+            // 주간식단
+            R.id.weeklyDiet->{
+                Toast.makeText(App.instance, "주간식단", Toast.LENGTH_SHORT).show()
+                //intent = Intent(this, StopWatchActivity::class.java)
+                //startActivity(intent)
+                return super.onOptionsItemSelected(item)
+            }
+
+            // 스탑워치
             R.id.stopWatch->{
                 Toast.makeText(App.instance, "스탑워치", Toast.LENGTH_SHORT).show()
                 //intent = Intent(this, StopWatchActivity::class.java)
                 //startActivity(intent)
                 return super.onOptionsItemSelected(item)
             }
+            // 설정
             R.id.settingItem->{
                 // 설정 클릭시
                 Toast.makeText(App.instance, "설정", Toast.LENGTH_SHORT).show()

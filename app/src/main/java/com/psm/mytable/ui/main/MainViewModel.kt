@@ -10,6 +10,7 @@ import com.psm.mytable.App
 import com.psm.mytable.Event
 import com.psm.mytable.room.MyTableRepository
 import com.psm.mytable.room.RoomDB
+import com.psm.mytable.room.recipe.Recipe
 import com.psm.mytable.type.RecipeType
 import com.psm.mytable.ui.recipe.RecipeItemData
 import timber.log.Timber
@@ -53,25 +54,33 @@ class MainViewModel(
 
     fun init(context: Context){
         database = RoomDB.getInstance(context)
-        _items.value = arrayListOf(
-            RecipeItemData(1, "","들기름 두부구이", RecipeType.KR),
-            RecipeItemData(2, "","라면", RecipeType.JP),
-            RecipeItemData(3, "","볶음밥", RecipeType.CN),
-            RecipeItemData(4, "","밀푀유나베", RecipeType.KR),
-            RecipeItemData(5, "https://my-test-butket.s3.ap-southeast-2.amazonaws.com/test1/baseball.png","매운 돼지김치찜&치즈", RecipeType.KR)
-        )
-        _recipeListVisibility.value = View.VISIBLE
-        _emptyRecipeListVisibility.value = View.GONE
+        /*_items.value = arrayListOf(
+            RecipeItemData(1, "","들기름 두부구이", RecipeType.KR.typeId),
+            RecipeItemData(2, "","라면", RecipeType.JP.typeId),
+            RecipeItemData(3, "","볶음밥", RecipeType.CN.typeId),
+            RecipeItemData(4, "","밀푀유나베", RecipeType.KR.typeId),
+            RecipeItemData(5, "https://my-test-butket.s3.ap-southeast-2.amazonaws.com/test1/baseball.png","매운 돼지김치찜&치즈", RecipeType.KR.typeId)
+        )*/
+
         getRecipeList()
     }
 
     fun getRecipeList(){
         val mRecipeList = database?.recipeDao()?.getAllRecipe() ?: listOf()
         if(mRecipeList.isNotEmpty()){
-            Timber.d("psm_getRecipe name : ${mRecipeList?.get(0)?.recipeName}")
-            Timber.d("psm_getRecipe image : ${mRecipeList?.get(0)?.recipeImagePath}")
+            _items.value = mRecipeList.map{recipe ->
+                RecipeItemData(
+                    id = recipe.id.toLong(),
+                    recipeImage = recipe.recipeImagePath,
+                    recipeName = recipe.recipeName,
+                    type = recipe.recipeType
+                )
+            }
+            _recipeListVisibility.value = View.VISIBLE
+            _emptyRecipeListVisibility.value = View.GONE
         }else{
-            Timber.d("psm_getRecipe emtpy")
+            _recipeListVisibility.value = View.GONE
+            _emptyRecipeListVisibility.value = View.VISIBLE
         }
 
     }
