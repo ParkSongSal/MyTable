@@ -30,6 +30,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 
 /**
  * 레시피 작성(등록, 수정)
@@ -96,13 +98,17 @@ class RecipeWriteViewModel(
         val filePath = FileUtils(App.instance.applicationContext).getPath(fileUri)
         val file = File(filePath)
         val fileName = file.name
+        val now = System.currentTimeMillis()
+        val date = Date(now)
+        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+        val nowDate = sdf.format(date)
         val mData = Recipe(
             id = 0,
             recipeName = recipeWriteData.value?.recipeName ?: "",
             recipeType = _recipeType.value.toString(),
             ingredients = recipeWriteData.value?.ingredients ?: "",
             howToMake = recipeWriteData.value?.howToMake ?: "",
-            reg_date = "2023-06-22",
+            reg_date = nowDate,
             recipeImagePath = "https://my-test-butket.s3.ap-southeast-2.amazonaws.com/test1/$fileName"
         )
 
