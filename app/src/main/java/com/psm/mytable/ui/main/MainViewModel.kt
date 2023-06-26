@@ -54,14 +54,6 @@ class MainViewModel(
 
     fun init(context: Context){
         database = RoomDB.getInstance(context)
-        /*_items.value = arrayListOf(
-            RecipeItemData(1, "","들기름 두부구이", RecipeType.KR.typeId),
-            RecipeItemData(2, "","라면", RecipeType.JP.typeId),
-            RecipeItemData(3, "","볶음밥", RecipeType.CN.typeId),
-            RecipeItemData(4, "","밀푀유나베", RecipeType.KR.typeId),
-            RecipeItemData(5, "https://my-test-butket.s3.ap-southeast-2.amazonaws.com/test1/baseball.png","매운 돼지김치찜&치즈", RecipeType.KR.typeId)
-        )*/
-
         getRecipeList()
     }
 
@@ -73,6 +65,9 @@ class MainViewModel(
                     id = recipe.id.toLong(),
                     recipeImage = recipe.recipeImagePath,
                     recipeName = recipe.recipeName,
+                    ingredients = recipe.ingredients,
+                    howToMake = recipe.howToMake,
+                    reg_date = recipe.reg_date,
                     type = recipe.recipeType
                 )
             }

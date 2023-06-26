@@ -49,6 +49,8 @@
 
         <activity android:name=".ui.camera.CameraActivity"
             android:exported="false"/>
+        <activity android:name=".ui.recipe.detail.RecipeDetailActivity"
+            android:exported="false"/>
         <!-- Google Admob -->
         <!--<meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

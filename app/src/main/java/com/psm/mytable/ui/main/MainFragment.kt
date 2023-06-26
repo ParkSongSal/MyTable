@@ -27,6 +27,7 @@ import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentMainBinding
 import com.psm.mytable.room.RoomDB
 import com.psm.mytable.ui.recipe.RecipeAdapter
+import com.psm.mytable.ui.recipe.detail.RecipeDetailActivity
 import com.psm.mytable.ui.recipe.write.RecipeWriteActivity
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.recyclerview.RecyclerViewDecoration
@@ -38,6 +39,7 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
     private val viewModel by viewModels<MainViewModel> { getViewModelFactory() }
 
     private lateinit var recipeWriteResult: ActivityResultLauncher<Intent>
+    private lateinit var recipeDetailResult: ActivityResultLauncher<Intent>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +47,12 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         setHasOptionsMenu(true)
 
         recipeWriteResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            if(it.resultCode == AppCompatActivity.RESULT_OK){
+                viewModel.getRecipeList()
+            }
+        }
+
+        recipeDetailResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == AppCompatActivity.RESULT_OK){
                 viewModel.getRecipeList()
             }
@@ -110,6 +118,13 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         viewModel.goRecipeWriteEvent.observe(viewLifecycleOwner, EventObserver{
             val intent = Intent(requireContext(), RecipeWriteActivity::class.java)
             recipeWriteResult.launch(intent)
+        })
+
+        // 레시피 상세 화면 이동
+        viewModel.openRecipeDetailEvent.observe(viewLifecycleOwner, EventObserver{ recipe ->
+            val intent = Intent(activity, RecipeDetailActivity::class.java)
+            intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, recipe)
+            recipeDetailResult.launch(intent)
         })
     }
 

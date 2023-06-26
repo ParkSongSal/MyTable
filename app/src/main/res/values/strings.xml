@@ -12,6 +12,10 @@
 
     <string name="recipe_write_1_001">레시피 작성</string>
 
+    <string name="recipe_detail_1_001">레시피 상세</string>
+    <string name="recipe_detail_1_002">수정</string>
+    <string name="recipe_detail_1_003">삭제</string>
+
     <string name="etc_1_001">카메라 촬영</string>
     <string name="etc_1_002">앨범 선택</string>
 
@@ -19,4 +23,16 @@
     <string name="storage_permission_rationale_message">message</string>
     <string name="storage_permission_denied_message">deny</string>
 
+
+    <!--Chat GPT 추천 네이밍
+    1. 키친메이트
+    2. 레서피세이지
+    3. 프리지마스터
+    4. 쿡북키퍼
+    5. 팬트리팜
+    6. 밀매직
+    7. 스마트키친
+    8. 테이스티트래커
+    9. 인그리디언트지니어스
+    -->
 </resources>
