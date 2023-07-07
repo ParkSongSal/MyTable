@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="나만의 레시피"
-                        android:textColor="@color/text_blue"
+                        android:textColor="@color/base_text"
                         android:textSize="16dp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -124,7 +124,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="종류"
-                            android:textColor="@color/text_blue"
+                            android:textColor="@color/base_text"
                             android:textSize="16dp"
                             android:textStyle="bold"
                             />
@@ -161,7 +161,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="재료"
-                            android:textColor="@color/text_blue"
+                            android:textColor="@color/base_text"
                             android:textSize="16dp"
                             android:textStyle="bold"
                             />
@@ -170,8 +170,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="(최대 100자)"
-                            android:textColor="@color/text_blue"
+                            android:textColor="@color/base_hint"
                             android:layout_marginTop="10dp"
+                            android:layout_marginStart="5dp"
                             android:textSize="12dp"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -205,7 +206,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="만드는 순서"
-                        android:textColor="@color/text_blue"
+                        android:textColor="@color/base_text"
                         android:textSize="16dp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"

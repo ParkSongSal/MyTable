@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="나만의 레시피"
-                        android:textColor="@color/text_blue"
+                        android:textColor="@color/base_text"
                         android:textSize="16dp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -122,7 +122,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="종류"
-                            android:textColor="@color/text_blue"
+                            android:textColor="@color/base_text"
                             android:textSize="16dp"
                             android:textStyle="bold"
                             />
@@ -134,7 +134,7 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_round_rect_stroke_e2"
-                        android:hint="선택하세요."
+                        android:hint="한식"
                         android:layout_gravity="center"
                         android:gravity="center|start"
                         android:paddingStart="10dp"
@@ -159,7 +159,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="재료"
-                            android:textColor="@color/text_blue"
+                            android:textColor="@color/base_text"
                             android:textSize="16dp"
                             android:textStyle="bold"
                             />
@@ -168,8 +168,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="(최대 100자)"
-                            android:textColor="@color/text_blue"
+                            android:textColor="@color/base_hint"
                             android:layout_marginTop="10dp"
+                            android:layout_marginStart="5dp"
                             android:textSize="12dp"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -203,7 +204,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="만드는 순서"
-                        android:textColor="@color/text_blue"
+                        android:textColor="@color/base_text"
                         android:textSize="16dp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -228,7 +229,7 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_f6f6f6"
                         android:background="@drawable/selector_button_bg_blue_circle"
                         android:layout_marginBottom="20dp"
                         android:gravity="center"

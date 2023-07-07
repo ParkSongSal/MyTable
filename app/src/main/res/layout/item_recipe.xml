@@ -62,14 +62,14 @@
                     android:layout_height="80dp"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
-                    android:background="@color/text_blue"
+                    android:background="@color/main_color"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/recipeNameText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_white"
+                        android:textColor="@color/text_f6f6f6"
                         android:textStyle="bold"
                         android:textSize="18dp"
                         android:ellipsize="marquee"
@@ -88,7 +88,7 @@
                         android:paddingBottom="3dp"
                         android:text="@{itemData.type}"
                         android:textSize="15dp"
-                        android:textColor="@color/text_white"
+                        android:textColor="@color/text_f6f6f6"
                         android:background="@drawable/bg_ellipse_rect_stroke_f6"
                         android:layout_marginTop="3dp"
                         tools:text="분식"/>
