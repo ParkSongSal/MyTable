@@ -64,8 +64,7 @@
                             android:id="@+id/recipeImage"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
-                            android:scaleType="fitXY"
-                            tools:src="@drawable/baseline_settings_24"/>
+                            android:scaleType="fitXY"/>
 
                         <TextView
                             android:id="@+id/recipeImageText"
@@ -104,7 +103,7 @@
                         android:hint="비빔밥"
                         android:text="@={viewmodel.recipeWriteData.recipeName}"
                         android:maxLength="20"
-                        android:paddingStart="6dp"
+                        android:paddingStart="10dp"
                         android:textSize="15dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -138,7 +137,7 @@
                         android:hint="선택하세요."
                         android:layout_gravity="center"
                         android:gravity="center|start"
-                        android:paddingStart="6dp"
+                        android:paddingStart="10dp"
                         android:textSize="15dp"
                         android:text="@{viewmodel.recipeType}"
                         android:drawableEnd="@drawable/ic_mask_group_down"
@@ -218,7 +217,7 @@
                         android:hint="비빔밥 만드는 방법"
                         android:text="@={viewmodel.recipeWriteData.howToMake}"
                         android:maxLength="200"
-                        android:paddingStart="6dp"
+                        android:paddingStart="10dp"
                         android:textSize="15dp"
                         android:gravity="top"
                         android:paddingTop="5dp"
@@ -269,6 +268,18 @@
                 ads:adSize="SMART_BANNER"
                 ads:adUnitId="ca-app-pub-3145363349418895/3553417729"/>-->
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/text_blue2"
+            android:visibility="@{viewmodel.progressVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

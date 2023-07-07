@@ -69,6 +69,10 @@ class RecipeWriteViewModel(
         get() = _recipeTypeId
     val testName = MutableLiveData<String>()
 
+    private val _progressVisible = MutableLiveData(false)
+    val progressVisible: LiveData<Boolean>
+        get() = _progressVisible
+
     private var database: RoomDB? = null
 
     fun init(context: Context){
@@ -91,9 +95,16 @@ class RecipeWriteViewModel(
         _openFoodTypeDialogEvent.value = Event(Unit)
     }
 
+    fun showProgress(){
+        _progressVisible.value = true
+    }
+
+    fun hideProgress(){
+        _progressVisible.value = false
+    }
     @RequiresApi(Build.VERSION_CODES.Q)
     fun clickNext(){
-
+        showProgress()
         val fileUri = Uri.parse(recipeWriteData.value?.recipeImageUri.toString())
         val filePath = FileUtils(App.instance.applicationContext).getPath(fileUri)
         val file = File(filePath)
@@ -106,6 +117,7 @@ class RecipeWriteViewModel(
             id = 0,
             recipeName = recipeWriteData.value?.recipeName ?: "",
             recipeType = _recipeType.value.toString(),
+            recipeTypeId = _recipeTypeId.value ?: 1,
             ingredients = recipeWriteData.value?.ingredients ?: "",
             howToMake = recipeWriteData.value?.howToMake ?: "",
             reg_date = nowDate,
@@ -148,6 +160,7 @@ class RecipeWriteViewModel(
                     }
 
                     _completeRecipeDataInsertEvent.value = Event(Unit)
+                    hideProgress()
                     /*viewDataBinding.titleText.text = test?.get(0)?.title ?: "test"
                     Glide.with(this@MainActivity)
                         .load(test?.get(0)?.image)
@@ -163,6 +176,7 @@ class RecipeWriteViewModel(
 
             override fun onError(id: Int, ex: Exception) {
                 Log.d("MYTAG", "UPLOAD ERROR - - ID: \$id - - EX:$ex")
+                hideProgress()
             }
         })
     }
