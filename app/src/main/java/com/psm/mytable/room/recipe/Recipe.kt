@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.psm.mytable.type.RecipeType
 
 
 @Entity(tableName = "table_recipe")
@@ -16,6 +17,8 @@ class Recipe(
 
     // 레시피 종류
     var recipeType: String,
+
+    var recipeTypeId: Int,
 
     // 재료
     var ingredients: String,
