@@ -30,5 +30,7 @@ class MainActivity : AppCompatActivity() {
             return if (mediaDir != null && mediaDir.exists())
                 mediaDir else appContext.filesDir
         }
+
+        const val EXTRA_UPDATE_RECIPE = "EXTRA_UPDATE_RECIPE"
     }
 }

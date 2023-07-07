@@ -1,13 +1,16 @@
 package com.psm.mytable.ui.recipe.detail
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.os.StrictMode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.psm.mytable.EventObserver
+import com.psm.mytable.MainActivity
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentRecipeDetailBinding
 import com.psm.mytable.ui.recipe.RecipeItemData
@@ -36,6 +39,9 @@ class RecipeDetailFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+
         mView = view
         initToolbar(view)
         setTitleText(view, R.string.recipe_detail_1_001)
@@ -44,7 +50,7 @@ class RecipeDetailFragment: Fragment() {
 
         requireActivity().intent.getParcelableExtra<RecipeItemData>(RecipeDetailActivity.EXTRA_RECIPE)?.let{
             viewModel.getRecipeDetailData(it)
-        }?: errorPage()
+        }?: errorPage("잘못된 접근입니다.")
 
         setupEvent()
 
@@ -63,9 +69,9 @@ class RecipeDetailFragment: Fragment() {
         }
     }
 
-    private fun errorPage(){
+    private fun errorPage(msg: String){
         activity?.finish()
-        ToastUtils.showToast("잘못된 접근입니다.")
+        ToastUtils.showToast(msg)
     }
 
     private fun setupEvent() {
@@ -75,10 +81,20 @@ class RecipeDetailFragment: Fragment() {
             setTitleText(mView, it)
         })
 
+        viewModel.goRecipeUpdateEvent.observe(viewLifecycleOwner, EventObserver{
+            val intent = Intent(activity, MainActivity::class.java)
+            intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, it)
+            activity?.setResult(9002, intent)
+            activity?.finish()
+        })
+
         viewModel.completeRecipeDeleteEvent.observe(viewLifecycleOwner, EventObserver{
             ToastUtils.showToast("레시피가 삭제되었습니다.")
             activity?.setResult(Activity.RESULT_OK)
             activity?.finish()
+        })
+        viewModel.errorEvent.observe(viewLifecycleOwner, EventObserver{
+            errorPage("문제가 발생하여, 이전 화면으로 돌아갑니다.")
         })
     }
 

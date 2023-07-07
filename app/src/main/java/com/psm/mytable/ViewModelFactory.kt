@@ -25,6 +25,7 @@ import com.psm.mytable.room.MyTableRepository
 import com.psm.mytable.ui.camera.CameraViewModel
 import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeViewModel
 import com.psm.mytable.ui.recipe.detail.RecipeDetailViewModel
+import com.psm.mytable.ui.recipe.update.RecipeUpdateViewModel
 import com.psm.mytable.ui.recipe.write.RecipeWriteViewModel
 
 /**
@@ -53,7 +54,8 @@ class ViewModelFactory constructor(
                 CameraViewModel(myTableRepository)
             isAssignableFrom(RecipeDetailViewModel::class.java) ->
                 RecipeDetailViewModel(myTableRepository)
-
+            isAssignableFrom(RecipeUpdateViewModel::class.java) ->
+                RecipeUpdateViewModel(myTableRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

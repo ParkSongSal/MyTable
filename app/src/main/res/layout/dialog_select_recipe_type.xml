@@ -80,6 +80,17 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="18dp"
+                    android:background="@drawable/bg_round_rect_stroke_blue"
+                    android:onClick="@{() -> viewModel.clickRecipeType(RecipeType.WESTERN)}"
+                    android:text="양식"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginTop="15dp"
                     android:layout_gravity="center"
                     android:gravity="center"
@@ -98,6 +109,17 @@
                     android:background="@drawable/bg_round_rect_stroke_blue"
                     android:onClick="@{() -> viewModel.clickRecipeType(RecipeType.CN)}"
                     android:text="중식"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="18dp"
+                    android:background="@drawable/bg_round_rect_stroke_blue"
+                    android:onClick="@{() -> viewModel.clickRecipeType(RecipeType.SNACKBAR)}"
+                    android:text="분식"/>
 
                 <TextView
                     android:layout_width="match_parent"

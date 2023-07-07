@@ -68,9 +68,11 @@ class MainViewModel(
                     ingredients = recipe.ingredients,
                     howToMake = recipe.howToMake,
                     reg_date = recipe.reg_date,
-                    type = recipe.recipeType
+                    type = recipe.recipeType,
+                    typeId = recipe.recipeTypeId
                 )
             }
+
             _recipeListVisibility.value = View.VISIBLE
             _emptyRecipeListVisibility.value = View.GONE
         }else{

@@ -23,11 +23,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.psm.mytable.App
 import com.psm.mytable.EventObserver
+import com.psm.mytable.MainActivity
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentMainBinding
 import com.psm.mytable.room.RoomDB
 import com.psm.mytable.ui.recipe.RecipeAdapter
+import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.ui.recipe.detail.RecipeDetailActivity
+import com.psm.mytable.ui.recipe.update.RecipeUpdateActivity
 import com.psm.mytable.ui.recipe.write.RecipeWriteActivity
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.recyclerview.RecyclerViewDecoration
@@ -39,6 +42,7 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
     private val viewModel by viewModels<MainViewModel> { getViewModelFactory() }
 
     private lateinit var recipeWriteResult: ActivityResultLauncher<Intent>
+    private lateinit var recipeUpdateResult: ActivityResultLauncher<Intent>
     private lateinit var recipeDetailResult: ActivityResultLauncher<Intent>
 
 
@@ -53,10 +57,27 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         }
 
         recipeDetailResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            when(it.resultCode){
+                AppCompatActivity.RESULT_OK ->{
+                    viewModel.getRecipeList()
+                }
+                9002 ->{
+                    val mIntent = it.data
+                    val itemData = mIntent?.getParcelableExtra<RecipeItemData>(RecipeDetailActivity.EXTRA_RECIPE)
+                    requireActivity().intent.getParcelableExtra<RecipeItemData>(RecipeDetailActivity.EXTRA_RECIPE)
+                    val intent = Intent(activity, RecipeUpdateActivity::class.java)
+                    intent.putExtra(MainActivity.EXTRA_UPDATE_RECIPE, itemData)
+                    recipeUpdateResult.launch(intent)
+                }
+            }
+        }
+
+        recipeUpdateResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == AppCompatActivity.RESULT_OK){
                 viewModel.getRecipeList()
             }
         }
+
 
     }
 

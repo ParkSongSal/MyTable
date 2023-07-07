@@ -51,7 +51,9 @@
             android:exported="false"/>
         <activity android:name=".ui.recipe.detail.RecipeDetailActivity"
             android:exported="false"/>
-        <!-- Google Admob -->
+
+        <activity android:name=".ui.recipe.update.RecipeUpdateActivity"
+            android:exported="false"/>        <!-- Google Admob -->
         <!--<meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/google_admob_key"/>-->

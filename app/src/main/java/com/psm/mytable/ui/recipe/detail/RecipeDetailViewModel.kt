@@ -1,40 +1,26 @@
 package com.psm.mytable.ui.recipe.detail
 
 import android.content.Context
-import android.net.Uri
-import android.os.Build
-import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amazonaws.AmazonServiceException
 import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.amazonaws.regions.Region
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3Client
-import com.amazonaws.services.s3.model.CannedAccessControlList
-import com.psm.mytable.App
+import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.psm.mytable.Event
 import com.psm.mytable.room.MyTableRepository
 import com.psm.mytable.room.RoomDB
 import com.psm.mytable.room.recipe.Recipe
-import com.psm.mytable.type.RecipeType
 import com.psm.mytable.ui.recipe.RecipeItemData
-import com.starry.file_utils.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import timber.log.Timber
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
 
 /**
  * 레시피 작성(등록, 수정)
@@ -64,6 +50,14 @@ class RecipeDetailViewModel(
     val completeRecipeDeleteEvent: LiveData<Event<Unit>>
         get() = _completeRecipeDeleteEvent
 
+    private var _goRecipeUpdateEvent = MutableLiveData<Event<RecipeItemData>>()
+    val goRecipeUpdateEvent: LiveData<Event<RecipeItemData>>
+        get() = _goRecipeUpdateEvent
+
+    private var _errorEvent = MutableLiveData<Event<Unit>>()
+    val errorEvent: LiveData<Event<Unit>>
+        get() = _errorEvent
+
     private var database: RoomDB? = null
 
     fun init(context: Context){
@@ -77,7 +71,8 @@ class RecipeDetailViewModel(
             ingredients = recipeItemData.ingredients,
             howToMake = recipeItemData.howToMake,
             reg_date = recipeItemData.reg_date,
-            type = recipeItemData.type
+            type = recipeItemData.type,
+            typeId = recipeItemData.typeId
         )
 
         _setTitleEvent.value = Event(recipeItemData.recipeName)
@@ -95,31 +90,59 @@ class RecipeDetailViewModel(
         _moreLayoutVisibility.value = View.GONE
     }
 
-    fun clickEditRecipe() {
+    fun clickEditRecipe(itemData: LiveData<RecipeItemData>) {
         hideMoreMenuLayout()
-        /*val petId = petId.value ?: throw IllegalStateException()
-        _editPeInfoEvent.value = Event(petId)*/
+        if(itemData.value?.id != null){
+            _goRecipeUpdateEvent.value = Event(itemData.value!!)
+        }else{
+            _errorEvent.value = Event(Unit)
+        }
     }
 
     fun clickDeleteRecipe(itemData: LiveData<RecipeItemData>) {
 
-        val mData = Recipe(
-            id = itemData.value?.id?.toInt() ?: 0,
-            recipeName = itemData.value?.recipeName ?: "",
-            recipeType = itemData.value.toString(),
-            ingredients = itemData.value?.ingredients ?: "",
-            howToMake = itemData.value?.howToMake ?: "",
-            reg_date = itemData.value?.reg_date ?: "",
-            recipeImagePath = itemData.value?.recipeImage ?: ""
-        )
+        val awsCredentials: AWSCredentials =
+            BasicAWSCredentials(
+                "AKIARYHOJEIGIYROZHE4",
+                "SJobb4jPsRBo0ab9wnQcnpNqs836o3CeGa1C8nz9"
+            ) // IAM 생성하며 받은 것 입력
 
-        hideMoreMenuLayout()
-        runBlocking{
-            val job = viewModelScope.launch(Dispatchers.IO){
-                database?.recipeDao()?.delete(mData)
+        val s3Client = AmazonS3Client(awsCredentials, Region.getRegion(Regions.AP_SOUTHEAST_2))
+        val mRecipeImage = itemData.value?.recipeImage
+        val mBucket = "my-test-butket"
+        val mKey = mRecipeImage?.substring(mRecipeImage.indexOf("test1/"))
+
+
+        try{
+
+            val deleteObjectRequest = DeleteObjectRequest(mBucket, mKey)
+            s3Client.deleteObject(deleteObjectRequest)
+
+            val mData = Recipe(
+                id = itemData.value?.id?.toInt() ?: 0,
+                recipeName = itemData.value?.recipeName ?: "",
+                recipeType = itemData.value.toString(),
+                recipeTypeId = itemData.value?.typeId ?: 0,
+                ingredients = itemData.value?.ingredients ?: "",
+                howToMake = itemData.value?.howToMake ?: "",
+                reg_date = itemData.value?.reg_date ?: "",
+                recipeImagePath = itemData.value?.recipeImage ?: ""
+            )
+
+            hideMoreMenuLayout()
+           runBlocking{
+                val job = viewModelScope.launch(Dispatchers.IO){
+                    database?.recipeDao()?.delete(mData)
+                }
+                job.join()
             }
-            job.join()
+            _completeRecipeDeleteEvent.value = Event((Unit))
+        }catch (e: AmazonServiceException){
+            _errorEvent.value = Event(Unit)
+        }catch (e: Exception){
+            _errorEvent.value = Event(Unit)
         }
-        _completeRecipeDeleteEvent.value = Event((Unit))
+
+
     }
 }

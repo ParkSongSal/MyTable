@@ -25,6 +25,8 @@ data class RecipeItemData(
     var reg_date: String,
 
     // 타입(한식, 중식, 일식, 간식, 분식)
-    val type: String
+    val type: String,
+
+    val typeId: Int
 
 ): Parcelable
