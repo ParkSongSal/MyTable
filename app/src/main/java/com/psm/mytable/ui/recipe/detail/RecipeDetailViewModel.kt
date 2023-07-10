@@ -145,4 +145,12 @@ class RecipeDetailViewModel(
 
 
     }
+
+    fun itemDoubleClick(itemData: LiveData<RecipeItemData>){
+        if(itemData.value?.id != null){
+            _goRecipeUpdateEvent.value = Event(itemData.value!!)
+        }else{
+            _errorEvent.value = Event(Unit)
+        }
+    }
 }
