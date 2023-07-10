@@ -31,33 +31,34 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/toolbarLinear"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/main_dark_color"
-            android:gravity="start|center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
 
-            <ImageView
-                android:id="@+id/menuBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/baseline_menu_24"/>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/toolbarLinear"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/main_color"
+                android:gravity="start|center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="나의 식탁"
-                android:textSize="18dp"
-                android:textColor="@color/text_f6f6f6"
-                android:layout_marginStart="15dp"
-                android:textStyle="bold"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                <!--<ImageView
+                    android:id="@+id/menuBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/baseline_menu_24" />-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/app_name"
+                    android:textColor="@color/text_f6f6f6"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:paddingStart="15dp"
