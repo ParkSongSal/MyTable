@@ -1,6 +1,7 @@
 package com.psm.mytable.ui.recipe.update
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -107,10 +108,15 @@ class RecipeUpdateFragment: Fragment() {
         viewModel.init(requireContext())
         init()
         setupEvent()
+        initAd()
     }
 
     private fun init(){
 
+    }
+
+    private fun initAd(){
+        viewDataBinding.adView.loadAd(App.instance.adRequest)
     }
 
     private fun errorPage(msg: String){
@@ -157,6 +163,18 @@ class RecipeUpdateFragment: Fragment() {
                     ToastUtils.showToast(it.toString())
                 }
             )
+        })
+
+        viewModel.errorEvent.observe(viewLifecycleOwner, EventObserver{
+            ToastUtils.showToast("오류가 발생했습니다.")
+            activity?.setResult(Activity.RESULT_CANCELED)
+            activity?.finish()
+        })
+
+        viewModel.completeRecipeDataUpdateEvent.observe(viewLifecycleOwner, EventObserver{
+            ToastUtils.showToast("레시피가 수정되었습니다.")
+            activity?.setResult(Activity.RESULT_OK)
+            activity?.finish()
         })
     }
 

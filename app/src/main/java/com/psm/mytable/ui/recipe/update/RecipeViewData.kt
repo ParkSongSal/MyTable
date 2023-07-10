@@ -26,7 +26,7 @@ class RecipeViewData: BaseObservable() {
     var originalRecipeTypeId: Int = 0
 
     @get:Bindable
-    var recipeTypeId: Int = 0
+    var recipeTypeId: Int = 1
         set(value){
             field = value
             notifyPropertyChanged(BR.recipeTypeId)
@@ -76,9 +76,9 @@ class RecipeViewData: BaseObservable() {
 
 
     private fun checkRequiredData() {
-        requiredDataComplete = (originalRecipeName != recipeName) ||
-                (originalIngredients != ingredients) ||
-                (originalHowToMake != howToMake) ||
+        requiredDataComplete = (originalRecipeName != recipeName && recipeName.isNotEmpty()) ||
+                (originalIngredients != ingredients && ingredients.isNotEmpty()) ||
+                (originalHowToMake != howToMake && howToMake.isNotEmpty()) ||
                 (originalRecipeTypeId != recipeTypeId) ||
                 recipeImageUri != null
     }

@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amazonaws.AmazonServiceException
 import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
@@ -20,6 +21,7 @@ import com.amazonaws.regions.Region
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.CannedAccessControlList
+import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.psm.mytable.App
 import com.psm.mytable.Event
 import com.psm.mytable.room.MyTableRepository
@@ -27,8 +29,10 @@ import com.psm.mytable.room.RoomDB
 import com.psm.mytable.room.recipe.Recipe
 import com.psm.mytable.type.RecipeType
 import com.psm.mytable.ui.recipe.RecipeItemData
+import com.psm.mytable.utils.ToastUtils
 import com.starry.file_utils.FileUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
@@ -65,7 +69,12 @@ class RecipeUpdateViewModel(
     val openFoodTypeDialogEvent: LiveData<Event<Unit>>
         get() = _openFoodTypeDialogEvent
 
-    private var _recipeType = MutableLiveData<String>("")
+    // 레시피 수정 완료
+    private var _completeRecipeDataUpdateEvent = MutableLiveData<Event<Unit>>()
+    val completeRecipeDataUpdateEvent: LiveData<Event<Unit>>
+        get() = _completeRecipeDataUpdateEvent
+
+    private var _recipeType = MutableLiveData<String>("한식")
     val recipeType: LiveData<String>
         get() = _recipeType
 
@@ -76,6 +85,10 @@ class RecipeUpdateViewModel(
     private val _progressVisible = MutableLiveData(false)
     val progressVisible: LiveData<Boolean>
         get() = _progressVisible
+
+    private var _errorEvent = MutableLiveData<Event<Unit>>()
+    val errorEvent: LiveData<Event<Unit>>
+        get() = _errorEvent
 
     private var database: RoomDB? = null
 
@@ -134,7 +147,158 @@ class RecipeUpdateViewModel(
     }
 
     fun clickNext(){
+        showProgress()
 
+        var file:File? = null
+        var fileName = ""
+        val mRecipeImagePath = if(_recipeData.value?.recipeImageUri != null){
+            val fileUri = Uri.parse(_recipeData.value?.recipeImageUri.toString())
+            val filePath = FileUtils(App.instance.applicationContext).getPath(fileUri)
+            file = File(filePath)
+            fileName = file.name
+
+            "https://my-test-butket.s3.ap-southeast-2.amazonaws.com/test1/$fileName"
+        }else{
+            _recipeData.value?.recipeImage!!
+        }
+
+        val mRecipeName = if(_recipeData.value?.recipeName != _recipeData.value?.originalRecipeName){
+            _recipeData.value?.recipeName
+        }else{
+            _recipeData.value?.originalRecipeName
+        }
+
+        val mRecipeType = _recipeType.value
+
+        val mRecipeTypeId = if(_recipeData.value?.recipeTypeId != _recipeData.value?.originalRecipeTypeId){
+            _recipeData.value?.recipeTypeId
+        }else{
+            _recipeData.value?.originalRecipeTypeId
+        }
+
+        val mIngredients = if(_recipeData.value?.ingredients != _recipeData.value?.originalIngredients){
+            _recipeData.value?.ingredients
+        }else{
+            _recipeData.value?.originalIngredients
+        }
+
+        val mHowToMake = if(_recipeData.value?.howToMake != _recipeData.value?.originalHowToMake){
+            _recipeData.value?.howToMake
+        }else{
+            _recipeData.value?.originalHowToMake
+        }
+
+        val now = System.currentTimeMillis()
+        val date = Date(now)
+        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+        val nowDate = sdf.format(date)
+
+        val mData = Recipe(
+            id = _recipeData.value?.recipeId!!.toInt(),
+            recipeName = mRecipeName ?: "",
+            recipeType = mRecipeType ?: "한식",
+            recipeTypeId = mRecipeTypeId ?: 1,
+            ingredients = mIngredients ?: "",
+            howToMake = mHowToMake ?: "",
+            reg_date = nowDate,
+            recipeImagePath = mRecipeImagePath
+        )
+
+        uploadS3Image(fileName, file, mData)
+    }
+
+    fun roomRecipeUpdate(mData: Recipe, fileDelteFlag : Boolean){
+        viewModelScope.launch(IO){
+            val result = database?.recipeDao()?.updateRecipe(mData)
+            // 이미지 업로드 성공시 기존 이미지 삭제
+           /* if(result != 0){
+                _completeRecipeDataUpdateEvent.value = Event(Unit)
+            }else{
+                ToastUtils.showToast("룸 업데이트 실패")
+                _completeRecipeDataUpdateEvent.value = Event(Unit)
+            }*/
+        }
+        if(fileDelteFlag){
+            deleteS3Image()
+        }else{
+            //_completeRecipeDataUpdateEvent.postValue(Event(Unit))
+            _completeRecipeDataUpdateEvent.value = Event(Unit)
+        }
+    }
+
+    fun uploadS3Image(fileName: String, file: File?, mData: Recipe){
+        if(file != null){
+            val awsCredentials: AWSCredentials =  BasicAWSCredentials(
+                "AKIARYHOJEIGIYROZHE4",
+                "SJobb4jPsRBo0ab9wnQcnpNqs836o3CeGa1C8nz9"
+            ) // IAM 생성하며 받은 것 입력
+
+            val s3Client = AmazonS3Client(awsCredentials, Region.getRegion(Regions.AP_SOUTHEAST_2))
+
+            val transferUtility = TransferUtility.builder().s3Client(s3Client)
+                .context(App.instance).build()
+            TransferNetworkLossHandler.getInstance(App.instance.applicationContext)
+
+            val mBucket = "my-test-butket"
+
+            val uploadObserver = transferUtility.upload(
+                mBucket,
+                "test1/$fileName",
+                file,
+                CannedAccessControlList.PublicRead
+            )
+
+            uploadObserver.setTransferListener(object : TransferListener{
+                override fun onStateChanged(id: Int, state: TransferState?) {
+                    when (state) {
+                        TransferState.COMPLETED -> {
+                            roomRecipeUpdate(mData, true)
+
+                        }
+                        TransferState.FAILED, TransferState.CANCELED -> {
+                            _errorEvent.value = Event(Unit)
+                        }
+
+                        else -> {}
+                    }
+                }
+
+                override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
+                }
+
+                override fun onError(id: Int, ex: java.lang.Exception?) {
+                    hideProgress()
+                    _errorEvent.value = Event(Unit)
+                }
+
+            })
+
+        }else{
+            roomRecipeUpdate(mData, false)
+        }
+    }
+    fun deleteS3Image(){
+        val awsCredentials: AWSCredentials =  BasicAWSCredentials(
+            "AKIARYHOJEIGIYROZHE4",
+            "SJobb4jPsRBo0ab9wnQcnpNqs836o3CeGa1C8nz9"
+        ) // IAM 생성하며 받은 것 입력
+
+        val s3Client = AmazonS3Client(awsCredentials, Region.getRegion(Regions.AP_SOUTHEAST_2))
+        val mRecipeImage = _recipeData.value?.recipeImage
+        val mBucket = "my-test-butket"
+        val mKey = mRecipeImage?.substring(mRecipeImage.indexOf("test1/"))
+
+        try{
+            val deleteObjectRequest = DeleteObjectRequest(mBucket, mKey)
+            s3Client.deleteObject(deleteObjectRequest)
+            _completeRecipeDataUpdateEvent.value = Event(Unit)
+        }catch (e: AmazonServiceException){
+            _errorEvent.value = Event(Unit)
+        }catch(e:Exception){
+            _errorEvent.value = Event(Unit)
+        }finally {
+            hideProgress()
+        }
     }
 
     fun showProgress(){
