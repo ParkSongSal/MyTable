@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.psm.mytable.App
 import com.psm.mytable.EventObserver
 import com.psm.mytable.MainActivity
 import com.psm.mytable.R
@@ -55,6 +56,7 @@ class RecipeDetailFragment: Fragment() {
         setupEvent()
 
         initView()
+        initAd()
     }
 
     private fun initView(){
@@ -67,6 +69,10 @@ class RecipeDetailFragment: Fragment() {
                 }
             }
         }
+    }
+
+    private fun initAd(){
+        viewDataBinding.adView.loadAd(App.instance.adRequest)
     }
 
     private fun errorPage(msg: String){

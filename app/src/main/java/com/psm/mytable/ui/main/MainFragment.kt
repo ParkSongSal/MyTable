@@ -20,6 +20,11 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.navigation.NavigationView
 import com.psm.mytable.App
 import com.psm.mytable.EventObserver
@@ -32,6 +37,7 @@ import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.ui.recipe.detail.RecipeDetailActivity
 import com.psm.mytable.ui.recipe.update.RecipeUpdateActivity
 import com.psm.mytable.ui.recipe.write.RecipeWriteActivity
+import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.recyclerview.RecyclerViewDecoration
 import com.psm.mytable.utils.recyclerview.RecyclerViewHorizontalDecoration
@@ -41,6 +47,7 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
     private lateinit var viewDataBinding: FragmentMainBinding
     private val viewModel by viewModels<MainViewModel> { getViewModelFactory() }
 
+    private var mInterstitialAd: InterstitialAd? = null
     private lateinit var recipeWriteResult: ActivityResultLauncher<Intent>
     private lateinit var recipeUpdateResult: ActivityResultLauncher<Intent>
     private lateinit var recipeDetailResult: ActivityResultLauncher<Intent>
@@ -102,15 +109,67 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         setupListAdapter()
         //setupListDivider()
         init()
+
+        initAd()
     }
 
     private fun init(){
         viewDataBinding.navigationView.setNavigationItemSelectedListener(this)
-        viewDataBinding.menuBtn.setOnClickListener{
+        /*viewDataBinding.menuBtn.setOnClickListener{
             viewDataBinding.drawerLayout.openDrawer(GravityCompat.START)
-        }
+        }*/
         /*val adRequest = AdRequest.Builder().build()
         viewDataBinding.adView.loadAd(adRequest)*/
+    }
+
+    private fun initAd(){
+        InterstitialAd.load(App.instance, "ca-app-pub-3145363349418895/5216668354", App.instance.adRequest, object : InterstitialAdLoadCallback(){
+            override fun onAdFailedToLoad(p0: LoadAdError) {
+                super.onAdFailedToLoad(p0)
+                mInterstitialAd = null
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                super.onAdLoaded(interstitialAd)
+                mInterstitialAd = interstitialAd
+
+                if(mInterstitialAd != null){
+                    showInterstitial()
+                }else{
+                    ToastUtils.showToast("Ad wasn`t loaded")
+                }
+
+            }
+        })
+    }
+
+    fun showInterstitial(){
+        if(mInterstitialAd != null){
+            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback(){
+                override fun onAdClicked() {
+                    super.onAdClicked()
+                }
+
+                override fun onAdDismissedFullScreenContent() {
+                    super.onAdDismissedFullScreenContent()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                    super.onAdFailedToShowFullScreenContent(p0)
+                }
+
+                override fun onAdImpression() {
+                    super.onAdImpression()
+                }
+
+                override fun onAdShowedFullScreenContent() {
+                    super.onAdShowedFullScreenContent()
+                }
+            }
+            mInterstitialAd?.show(requireActivity())
+        }else{
+
+        }
     }
     private fun checkPermission() {
     }

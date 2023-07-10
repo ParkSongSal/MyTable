@@ -121,11 +121,16 @@ class RecipeWriteFragment: Fragment() {
 
         viewModel.init(requireContext())
         init()
+        initAd()
         setupEvent()
     }
 
     private fun init(){
 
+    }
+
+    private fun initAd(){
+        viewDataBinding.adView.loadAd(App.instance.adRequest)
     }
 
 
