@@ -60,11 +60,11 @@ class RecipeWriteViewModel(
     val completeRecipeDataInsertEvent: LiveData<Event<Unit>>
         get() = _completeRecipeDataInsertEvent
 
-    private var _recipeType = MutableLiveData<String>("")
+    private var _recipeType = MutableLiveData<String>("한식")
     val recipeType: LiveData<String>
         get() = _recipeType
 
-    private var _recipeTypeId = MutableLiveData<Int>(0)
+    private var _recipeTypeId = MutableLiveData<Int>(1)
     val recipeTypeId: LiveData<Int>
         get() = _recipeTypeId
     val testName = MutableLiveData<String>()
