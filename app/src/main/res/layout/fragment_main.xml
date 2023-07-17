@@ -41,21 +41,50 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <!--<ImageView
+                <ImageView
                     android:id="@+id/menuBtn"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="10dp"
-                    android:src="@drawable/baseline_menu_24" />-->
+                    android:visibility="gone"
+                    android:src="@drawable/baseline_menu_24" />
 
-                <TextView
+                <!--<TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="@string/app_name"
                     android:textColor="@color/text_f6f6f6"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold" />-->
+
+                <androidx.appcompat.widget.SearchView
+                    style="@style/MySearchViewStyle"
+                    android:id="@+id/Search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:inputType="text"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
+
+                <!--<androidx.appcompat.widget.AppCompatEditText
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:inputType="text"
+                    android:imeOptions="actionSearch"
+                    android:background="@null"
+                    android:textSize="15sp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="12dp"
+                    android:textColor="@color/text_d2d2d2"
+                    android:textColorHint="@color/text_d2d2d2"
+                    android:drawableEnd="@drawable/baseline_search_24"
+                    android:text="@={viewmodel.searchWord}"
+                    android:hint="레시피를 검색하세요."
+                    app:addTextChangedListener="@{viewmodel.onSearchWordEditTextWatcher()}"/>-->
+
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,22 +118,54 @@
                     android:id="@+id/recipeList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="@{viewmodel.recipeListVisibility}"
+                    android:visibility="@{viewmodel.recipeListVisibility ? View.VISIBLE: View.GONE}"
                     android:paddingTop="15dp"
+                    android:clipToPadding="false"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:recipeList="@{viewmodel.items}"
+                    tools:visibility="gone"
                     />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textColor="#bbb"
-                    android:text="등록된 레시피가 없습니다."
-                    android:visibility="@{viewmodel.emptyRecipeListVisibility}"
-                    tools:visibility="gone"/>
+
+               <androidx.recyclerview.widget.RecyclerView
+                   android:id="@+id/searchResultList"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:paddingTop="15dp"
+                   android:clipToPadding="false"
+                   tools:visibility="gone"
+                   android:visibility="@{viewmodel.searchResultVisible ? View.VISIBLE : View.GONE}"
+                   app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                   app:searchResultItems="@{viewmodel.searchResultItems}"/>
+
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{viewmodel.emptyRecipeListVisibility ? View.VISIBLE : View.GONE}"
+                tools:visibility="visible">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_launcher"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/emptyText"
+                    android:layout_marginBottom="10dp"/>
+                <TextView
+                    android:id="@+id/emptyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#bbb"
+                    android:textSize="18sp"
+                    android:text="등록된 레시피가 없습니다."
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
           <!--  <View
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

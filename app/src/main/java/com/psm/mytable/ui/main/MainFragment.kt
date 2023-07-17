@@ -12,14 +12,12 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
@@ -31,15 +29,14 @@ import com.psm.mytable.EventObserver
 import com.psm.mytable.MainActivity
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentMainBinding
-import com.psm.mytable.room.RoomDB
 import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.ui.recipe.RecipeItemData
+import com.psm.mytable.ui.recipe.RecipeSearchAdapter
 import com.psm.mytable.ui.recipe.detail.RecipeDetailActivity
 import com.psm.mytable.ui.recipe.update.RecipeUpdateActivity
 import com.psm.mytable.ui.recipe.write.RecipeWriteActivity
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
-import com.psm.mytable.utils.recyclerview.RecyclerViewDecoration
 import com.psm.mytable.utils.recyclerview.RecyclerViewHorizontalDecoration
 import com.psm.mytable.utils.recyclerview.RecyclerViewVerticalDecoration
 
@@ -104,7 +101,7 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         viewDataBinding.lifecycleOwner = this
         setupEvent()
         checkPermission()
-        viewDataBinding.recipeList.layoutManager = GridLayoutManager(App.instance, 2)
+
         viewModel.init(requireContext())
         setupListAdapter()
         //setupListDivider()
@@ -115,11 +112,21 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
 
     private fun init(){
         viewDataBinding.navigationView.setNavigationItemSelectedListener(this)
-        /*viewDataBinding.menuBtn.setOnClickListener{
-            viewDataBinding.drawerLayout.openDrawer(GravityCompat.START)
-        }*/
-        /*val adRequest = AdRequest.Builder().build()
-        viewDataBinding.adView.loadAd(adRequest)*/
+
+        viewDataBinding.SearchView.setIconifiedByDefault(false)
+        viewDataBinding.SearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            // 완료 누르면
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            // 검색어가 변경될때 마다
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.filterSearchWordRecipe(newText ?: "")
+                return true
+            }
+
+        })
     }
 
     private fun initAd(){
@@ -178,9 +185,18 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
     private fun setupListAdapter(){
 
         viewDataBinding.recipeList.apply{
+            layoutManager = GridLayoutManager(App.instance, 2)
             addItemDecoration(RecyclerViewHorizontalDecoration(30))
             addItemDecoration(RecyclerViewVerticalDecoration(30))
             adapter = RecipeAdapter(viewModel)
+            //adapter = pagingAdapter
+        }
+
+        viewDataBinding.searchResultList.apply{
+            layoutManager = GridLayoutManager(App.instance, 2)
+            addItemDecoration(RecyclerViewHorizontalDecoration(30))
+            addItemDecoration(RecyclerViewVerticalDecoration(30))
+            adapter = RecipeSearchAdapter(viewModel)
         }
     }
 

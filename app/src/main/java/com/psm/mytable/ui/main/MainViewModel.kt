@@ -1,19 +1,14 @@
 package com.psm.mytable.ui.main
 
 import android.content.Context
-import android.util.Log
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.psm.mytable.App
 import com.psm.mytable.Event
-import com.psm.mytable.room.MyTableRepository
+import com.psm.mytable.room.AppRepository
 import com.psm.mytable.room.RoomDB
-import com.psm.mytable.room.recipe.Recipe
-import com.psm.mytable.type.RecipeType
 import com.psm.mytable.ui.recipe.RecipeItemData
-import timber.log.Timber
+import com.psm.mytable.utils.HangulUtils
 
 /**
  * 인트로 화면 노출 및 앱 초기화
@@ -24,7 +19,7 @@ import timber.log.Timber
  * - 버전 체크 (강제 또는 선택 업데이트 알럿 노출)
  */
 class MainViewModel(
-    private val repository: MyTableRepository
+    private val repository: AppRepository
 ) : ViewModel(){
 
 
@@ -32,14 +27,27 @@ class MainViewModel(
     val items: LiveData<List<RecipeItemData>>
         get() = _items
 
-    private val _recipeListVisibility = MutableLiveData(View.INVISIBLE)
-    val recipeListVisibility: LiveData<Int>
+    private val _searchResultItems = MutableLiveData<List<RecipeItemData>>()
+    val searchResultItems: LiveData<List<RecipeItemData>>
+        get() = _searchResultItems
+
+    private val _recipeListVisibility = MutableLiveData(false)
+    val recipeListVisibility: LiveData<Boolean>
         get() = _recipeListVisibility
 
+    // 검색결과 없음 레이아웃 노출
+    private val _emptyLayoutVisible = MutableLiveData(false)
+    val emptyLayoutVisible: LiveData<Boolean>
+        get() = _emptyLayoutVisible
+
+    // 검색 결과 레이아웃 노출
+    private val _searchResultVisible = MutableLiveData(false)
+    val searchResultVisible: LiveData<Boolean>
+        get() = _searchResultVisible
 
 
-    private val _emptyRecipeListVisibility = MutableLiveData(View.INVISIBLE)
-    val emptyRecipeListVisibility: LiveData<Int>
+    private val _emptyRecipeListVisibility = MutableLiveData(false)
+    val emptyRecipeListVisibility: LiveData<Boolean>
         get() = _emptyRecipeListVisibility
 
     private val _openRecipeDetailEvent = MutableLiveData<Event<RecipeItemData>>()
@@ -51,6 +59,9 @@ class MainViewModel(
         get() = _goRecipeWriteEvent
 
     private var database: RoomDB? = null
+
+    val searchWord = MutableLiveData("")
+
 
     fun init(context: Context){
         database = RoomDB.getInstance(context)
@@ -73,13 +84,70 @@ class MainViewModel(
                 )
             }
 
-            _recipeListVisibility.value = View.VISIBLE
-            _emptyRecipeListVisibility.value = View.GONE
+            _recipeListVisibility.value = true
+            _emptyRecipeListVisibility.value = false
         }else{
-            _recipeListVisibility.value = View.GONE
-            _emptyRecipeListVisibility.value = View.VISIBLE
+            _recipeListVisibility.value = false
+            _emptyRecipeListVisibility.value = true
         }
 
+    }
+
+   /* fun test() : Flow<PagingData<Recipe>>{
+        return Pager(PagingConfig(pageSize = 10)){
+                repository.recipeDao
+        }.flow.cachedIn(viewModelScope)
+    }*/
+
+    fun filterSearchWordRecipe(mSearchWord: String) {
+        if(mSearchWord.isNotEmpty()){
+            searchWord.value = mSearchWord
+            _searchResultItems.value = _items.value?.filter {
+                val result = HangulUtils.getHangulInitialSound(it.recipeName, searchWord.value)
+                result.indexOf(searchWord.value!!) >= 0
+            }
+        }else{
+            searchWord.value = ""
+        }
+
+        updateLayoutVisible()
+    }
+
+    private fun updateLayoutVisible() {
+        when {
+
+            // 검색어가 있고, 검색결과가 없다면, 데이터 없음 레이아웃 표출
+            !searchWord.value.isNullOrEmpty() && searchResultItems.value.isNullOrEmpty() -> {
+                _emptyRecipeListVisibility.value = true
+                _recipeListVisibility.value = false
+                _searchResultVisible.value = false
+            }
+
+            // 검색어가 있고, 검색결과가 있다면, 검색결과 레이아웃 표출
+           !searchWord.value.isNullOrEmpty() && !searchResultItems.value.isNullOrEmpty() -> {
+               _emptyRecipeListVisibility.value = false
+               _recipeListVisibility.value = false
+               _searchResultVisible.value = true
+           }
+
+            // 검색어가 없고, 검색결과도 없고, 기존 레시피목록 데이터가 있다면 레시피목록 표출
+           searchWord.value.isNullOrEmpty() && searchResultItems.value.isNullOrEmpty() && !_items.value.isNullOrEmpty() ->{
+               _emptyRecipeListVisibility.value = false
+               _recipeListVisibility.value = true
+               _searchResultVisible.value = false
+           }
+            // 검색어가 없고, 검색결과도 없고, 기존 레시피목록 데이터도 없다면 데이터 없음 레이아웃 표출
+           searchWord.value.isNullOrEmpty() && searchResultItems.value.isNullOrEmpty() && _items.value.isNullOrEmpty() ->{
+                _emptyRecipeListVisibility.value = true
+                _recipeListVisibility.value = false
+                _searchResultVisible.value = false
+           }
+           else -> {
+                _emptyRecipeListVisibility.value = false
+                _recipeListVisibility.value = true
+                _searchResultVisible.value = false
+           }
+        }
     }
 
     fun clickAddRecipe(){
@@ -89,4 +157,6 @@ class MainViewModel(
     fun clickRecipeDetail(item: RecipeItemData){
         _openRecipeDetailEvent.value = Event(item)
     }
+
+
 }

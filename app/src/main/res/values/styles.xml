@@ -8,4 +8,10 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="MySearchViewStyle">
+        <item name="searchIcon">@drawable/baseline_search_24</item>
+        <item name="closeIcon">@drawable/baseline_close_24</item>
+        <item name="hintTextColor">@color/text_d2d2d2</item>
+        <item name="android:textColor">@color/text_d2d2d2</item>
+    </style>
 </resources>
