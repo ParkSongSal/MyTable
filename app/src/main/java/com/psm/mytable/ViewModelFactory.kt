@@ -20,10 +20,12 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
+import com.psm.mytable.room.AppRepository
 import com.psm.mytable.ui.main.MainViewModel
 import com.psm.mytable.room.MyTableRepository
 import com.psm.mytable.ui.camera.CameraViewModel
 import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeViewModel
+import com.psm.mytable.ui.intro.IntroViewModel
 import com.psm.mytable.ui.recipe.detail.RecipeDetailViewModel
 import com.psm.mytable.ui.recipe.update.RecipeUpdateViewModel
 import com.psm.mytable.ui.recipe.write.RecipeWriteViewModel
@@ -33,7 +35,7 @@ import com.psm.mytable.ui.recipe.write.RecipeWriteViewModel
  */
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory constructor(
-    private val myTableRepository: MyTableRepository,
+    private val appRepository: AppRepository,
     owner: SavedStateRegistryOwner,
     defaultArgs: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
@@ -45,17 +47,19 @@ class ViewModelFactory constructor(
     ) = with(modelClass) {
         when {
             isAssignableFrom(MainViewModel::class.java) ->
-                MainViewModel(myTableRepository)
+                MainViewModel(appRepository)
             isAssignableFrom(RecipeWriteViewModel::class.java) ->
-                RecipeWriteViewModel(myTableRepository)
+                RecipeWriteViewModel(appRepository)
             isAssignableFrom(SelectRecipeTypeViewModel::class.java) ->
-                SelectRecipeTypeViewModel(myTableRepository)
+                SelectRecipeTypeViewModel(appRepository)
             isAssignableFrom(CameraViewModel::class.java) ->
-                CameraViewModel(myTableRepository)
-            isAssignableFrom(RecipeDetailViewModel::class.java) ->
-                RecipeDetailViewModel(myTableRepository)
+                CameraViewModel(appRepository)
             isAssignableFrom(RecipeUpdateViewModel::class.java) ->
-                RecipeUpdateViewModel(myTableRepository)
+                RecipeUpdateViewModel(appRepository)
+            isAssignableFrom(RecipeDetailViewModel::class.java) ->
+                RecipeDetailViewModel(appRepository)
+            isAssignableFrom(IntroViewModel::class.java) ->
+                IntroViewModel(appRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
