@@ -3,25 +3,17 @@ package com.psm.mytable.ui.recipe.write
 import android.content.Context
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.amazonaws.auth.AWSCredentials
-import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
-import com.amazonaws.regions.Region
-import com.amazonaws.regions.Regions
-import com.amazonaws.services.s3.AmazonS3Client
-import com.amazonaws.services.s3.model.CannedAccessControlList
 import com.psm.mytable.App
 import com.psm.mytable.Event
-import com.psm.mytable.room.MyTableRepository
+import com.psm.mytable.room.AppRepository
 import com.psm.mytable.room.RoomDB
 import com.psm.mytable.room.recipe.Recipe
 import com.psm.mytable.type.RecipeType
@@ -42,7 +34,7 @@ import java.util.Date
  * - 버전 체크 (강제 또는 선택 업데이트 알럿 노출)
  */
 class RecipeWriteViewModel(
-    private val repository: MyTableRepository
+    private val repository: AppRepository
 ) : ViewModel(){
 
     val recipeWriteData = MutableLiveData(RecipeViewData())
@@ -129,55 +121,43 @@ class RecipeWriteViewModel(
 
     }
 
-    fun uploadWithTransferUtility(fileName: String, file: File, mData : Recipe) {
-
-        val awsCredentials: AWSCredentials =
-            BasicAWSCredentials(
-                "AKIARYHOJEIGIYROZHE4",
-                "SJobb4jPsRBo0ab9wnQcnpNqs836o3CeGa1C8nz9"
-            ) // IAM 생성하며 받은 것 입력
-
-        val s3Client = AmazonS3Client(awsCredentials, Region.getRegion(Regions.AP_SOUTHEAST_2))
-
-        val transferUtility = TransferUtility.builder().s3Client(s3Client)
-            .context(App.instance).build()
-        TransferNetworkLossHandler.getInstance(App.instance.applicationContext)
-
-        val uploadObserver = transferUtility.upload(
-            "my-test-butket",
-            "test1/$fileName",
-            file,
-            CannedAccessControlList.PublicRead
-        ) // (bucket api, file이름, file객체)
-
-
-        uploadObserver.setTransferListener(object : TransferListener {
-            override fun onStateChanged(id: Int, state: TransferState) {
-                if (state === TransferState.COMPLETED) {
-                    // Handle a completed upload
-                    viewModelScope.launch(Dispatchers.IO){
-                        database?.recipeDao()?.insert(mData)
-                    }
-
-                    _completeRecipeDataInsertEvent.value = Event(Unit)
-                    hideProgress()
-                    /*viewDataBinding.titleText.text = test?.get(0)?.title ?: "test"
-                    Glide.with(this@MainActivity)
-                        .load(test?.get(0)?.image)
-                        .error(R.mipmap.ic_launcher)
-                        .into(viewDataBinding.dbImageView)*/
+    fun uploadWithTransferUtility(fileName: String, file: File, mData : Recipe) : Int?{
+        try {
+            TransferNetworkLossHandler.getInstance(App.instance)
+            val observer = App.instance.getTransferUtility(App.instance).upload("my-test-butket", "test1/$fileName", file)
+            observer.setTransferListener(object : TransferListener {
+                override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
+                    //callback.onProgress(bytesCurrent.toFloat() / bytesTotal)
                 }
-            }
 
-            override fun onProgressChanged(id: Int, current: Long, total: Long) {
-                val done = (current.toDouble() / total * 100.0).toInt()
-                Log.d("MYTAG", "UPLOAD - - ID: \$id, percent done = \$done")
-            }
+                override fun onStateChanged(id: Int, state: TransferState?) {
+                    when (state) {
+                        TransferState.COMPLETED -> {
+                            viewModelScope.launch(Dispatchers.IO){
+                                database?.recipeDao()?.insert(mData)
+                            }
 
-            override fun onError(id: Int, ex: Exception) {
-                Log.d("MYTAG", "UPLOAD ERROR - - ID: \$id - - EX:$ex")
-                hideProgress()
-            }
-        })
+                            _completeRecipeDataInsertEvent.value = Event(Unit)
+                            hideProgress()
+                        }
+                        TransferState.FAILED, TransferState.CANCELED -> {
+                            //callback.onFailure(state.toString())
+                            hideProgress()
+                        }
+                        else -> {}
+                    }
+                }
+
+                override fun onError(id: Int, ex: Exception?) {
+                    hideProgress()
+                    //callback.onFailure(ex?.localizedMessage ?: "Unknown error(3)")
+                }
+            })
+            return observer.id
+        } catch (e: IllegalArgumentException) {
+            //callback.onFailure(e.localizedMessage ?: "Unknown error(4)")
+            return null
+        }
     }
+
 }

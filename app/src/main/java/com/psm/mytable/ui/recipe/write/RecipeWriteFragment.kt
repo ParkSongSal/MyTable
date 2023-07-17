@@ -3,6 +3,7 @@ package com.psm.mytable.ui.recipe.write
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,18 +12,15 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
@@ -32,29 +30,45 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.psm.mytable.App
 import com.psm.mytable.EventObserver
+import com.psm.mytable.Prefs
 import com.psm.mytable.R
-import com.psm.mytable.databinding.FragmentMainBinding
 import com.psm.mytable.databinding.FragmentRecipeWriteBinding
 import com.psm.mytable.ui.camera.CameraActivity
-import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.initToolbar
-import com.psm.mytable.utils.recyclerview.RecyclerViewDecoration
 import com.psm.mytable.utils.setTitleText
 import com.psm.mytable.utils.showPhotoSelectDialog
 import com.psm.mytable.utils.showRecipeSelectDialog
-import timber.log.Timber
+import com.psm.mytable.utils.showTempSaveDialog
+import com.psm.mytable.utils.showYesNoDialog
 import java.io.File
 
 class RecipeWriteFragment: Fragment() {
     private lateinit var viewDataBinding: FragmentRecipeWriteBinding
     private val viewModel by viewModels<RecipeWriteViewModel> { getViewModelFactory() }
 
-    //private lateinit var imageCameraResult: ActivityResultLauncher<Intent>
     private lateinit var imageGalleryResult: ActivityResultLauncher<Intent>
     private lateinit var imageCameraResult: ActivityResultLauncher<Intent>
-    private var imageUri: Uri? = null
+
+    private lateinit var callback: OnBackPressedCallback
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callback = object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                checkSaveDialog()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callback.remove()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -89,6 +103,28 @@ class RecipeWriteFragment: Fragment() {
         }
     }
 
+    fun checkSaveDialog(){
+        if(viewModel.recipeWriteData.value?.recipeName?.isNotEmpty() == true ||
+                viewModel.recipeWriteData.value?.ingredients?.isNotEmpty() == true ||
+                viewModel.recipeWriteData.value?.howToMake?.isNotEmpty() == true){
+            showTempSaveDialogListener()
+        }else{
+            activity?.finish()
+        }
+    }
+
+    private fun showTempSaveDialogListener(){
+        showTempSaveDialog(positiveCallback = {
+            Prefs.recipeName = viewModel.recipeWriteData.value?.recipeName ?: ""
+            Prefs.ingredients = viewModel.recipeWriteData.value?.ingredients ?: ""
+            Prefs.howToMake = viewModel.recipeWriteData.value?.howToMake ?: ""
+            ToastUtils.showToast("임시저장 되었습니다.")
+            activity?.finish()
+        }, negativeCallback = {
+            activity?.finish()
+        })
+    }
+
     fun setRecipeImage(imageUri:Uri){
         if(imageUri.toString().isNotEmpty()){
             viewDataBinding.recipeImageText.visibility = View.GONE
@@ -116,17 +152,45 @@ class RecipeWriteFragment: Fragment() {
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
         initToolbar(view)
-
+        initView(view)
         setTitleText(view, R.string.recipe_write_1_001)
 
         viewModel.init(requireContext())
         init()
         initAd()
         setupEvent()
+        checkTempSaved()
+    }
+
+
+    private fun initView(view: View){
+        val toolbarBack = view.findViewById<ImageFilterView>(R.id.imgToolbarBack)
+        toolbarBack.setOnClickListener{
+            checkSaveDialog()
+        }
     }
 
     private fun init(){
 
+    }
+
+    private fun checkTempSaved(){
+        if(Prefs.recipeName.isNotEmpty() || Prefs.ingredients.isNotEmpty() || Prefs.howToMake.isNotEmpty()){
+            val message = getString(R.string.recipe_dialog_1_003)
+            val positiveButton = getString(R.string.confirm)
+            val negativeButton = getString(R.string.cancel)
+            showYesNoDialog(message, positiveButton, negativeButton, positiveCallback = {
+                setTempSavedData()
+            })
+        }else{
+            return
+        }
+    }
+
+    private fun setTempSavedData(){
+        viewModel.recipeWriteData.value?.recipeName = Prefs.recipeName
+        viewModel.recipeWriteData.value?.ingredients = Prefs.ingredients
+        viewModel.recipeWriteData.value?.howToMake = Prefs.howToMake
     }
 
     private fun initAd(){
@@ -157,7 +221,6 @@ class RecipeWriteFragment: Fragment() {
                             imageGalleryResult.launch(intent)
                         }
                     }
-                    ToastUtils.showToast(it.name)
                 }
             )
         })
@@ -167,13 +230,13 @@ class RecipeWriteFragment: Fragment() {
             showRecipeSelectDialog(
                 positiveCallback = {
                     viewModel.setRecipeType(it)
-                    ToastUtils.showToast(it.toString())
                 }
             )
         })
 
         viewModel.completeRecipeDataInsertEvent.observe(viewLifecycleOwner, EventObserver{
             ToastUtils.showToast("레시피가 등록되었습니다.")
+            Prefs.clearRecipe()
             activity?.setResult(Activity.RESULT_OK)
             activity?.finish()
             //viewModel.getAllRecipe()
@@ -205,7 +268,7 @@ class RecipeWriteFragment: Fragment() {
             .withPermission(Manifest.permission.CAMERA)
             .withListener(object : PermissionListener {
                 override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-                    ToastUtils.showToast("Permission Granted")
+                    //ToastUtils.showToast("Permission Granted")
                 }
 
                 override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) {
@@ -224,7 +287,7 @@ class RecipeWriteFragment: Fragment() {
                 }
 
                 override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                    ToastUtils.showToast(R.string.storage_permission_denied_message)
+                    //ToastUtils.showToast(R.string.storage_permission_denied_message)
                 }
             }
             ).check()

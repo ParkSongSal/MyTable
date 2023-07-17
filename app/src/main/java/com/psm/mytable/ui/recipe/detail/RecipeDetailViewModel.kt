@@ -7,14 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.amazonaws.AmazonServiceException
-import com.amazonaws.auth.AWSCredentials
-import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.regions.Region
-import com.amazonaws.regions.Regions
-import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.DeleteObjectRequest
+import com.psm.mytable.App
 import com.psm.mytable.Event
-import com.psm.mytable.room.MyTableRepository
+import com.psm.mytable.room.AppRepository
 import com.psm.mytable.room.RoomDB
 import com.psm.mytable.room.recipe.Recipe
 import com.psm.mytable.ui.recipe.RecipeItemData
@@ -31,7 +27,7 @@ import kotlinx.coroutines.runBlocking
  * - 버전 체크 (강제 또는 선택 업데이트 알럿 노출)
  */
 class RecipeDetailViewModel(
-    private val repository: MyTableRepository
+    private val repository: AppRepository
 ) : ViewModel(){
 
     private val _recipeDetail = MutableLiveData<RecipeItemData>()
@@ -53,6 +49,10 @@ class RecipeDetailViewModel(
     private var _goRecipeUpdateEvent = MutableLiveData<Event<RecipeItemData>>()
     val goRecipeUpdateEvent: LiveData<Event<RecipeItemData>>
         get() = _goRecipeUpdateEvent
+
+    private var _doubleClickGoRecipeUpdateEvent = MutableLiveData<Event<RecipeItemData>>()
+    val doubleClickGoRecipeUpdateEvent: LiveData<Event<RecipeItemData>>
+        get() = _doubleClickGoRecipeUpdateEvent
 
     private var _errorEvent = MutableLiveData<Event<Unit>>()
     val errorEvent: LiveData<Event<Unit>>
@@ -101,22 +101,14 @@ class RecipeDetailViewModel(
 
     fun clickDeleteRecipe(itemData: LiveData<RecipeItemData>) {
 
-        val awsCredentials: AWSCredentials =
-            BasicAWSCredentials(
-                "AKIARYHOJEIGIYROZHE4",
-                "SJobb4jPsRBo0ab9wnQcnpNqs836o3CeGa1C8nz9"
-            ) // IAM 생성하며 받은 것 입력
-
-        val s3Client = AmazonS3Client(awsCredentials, Region.getRegion(Regions.AP_SOUTHEAST_2))
         val mRecipeImage = itemData.value?.recipeImage
         val mBucket = "my-test-butket"
         val mKey = mRecipeImage?.substring(mRecipeImage.indexOf("test1/"))
 
-
         try{
 
             val deleteObjectRequest = DeleteObjectRequest(mBucket, mKey)
-            s3Client.deleteObject(deleteObjectRequest)
+            App.instance.s3Client.deleteObject(deleteObjectRequest)
 
             val mData = Recipe(
                 id = itemData.value?.id?.toInt() ?: 0,
@@ -146,11 +138,14 @@ class RecipeDetailViewModel(
 
     }
 
+    var clickTime:Long = 0
     fun itemDoubleClick(itemData: LiveData<RecipeItemData>){
-        if(itemData.value?.id != null){
-            _goRecipeUpdateEvent.value = Event(itemData.value!!)
+
+        val currentTime = System.currentTimeMillis()
+        if(currentTime - clickTime >= 2500){
+            clickTime = currentTime
         }else{
-            _errorEvent.value = Event(Unit)
+            _doubleClickGoRecipeUpdateEvent.value = Event(itemData.value!!)
         }
     }
 }

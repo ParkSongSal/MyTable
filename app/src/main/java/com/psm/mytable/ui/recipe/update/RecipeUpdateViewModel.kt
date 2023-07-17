@@ -2,39 +2,27 @@ package com.psm.mytable.ui.recipe.update
 
 import android.content.Context
 import android.net.Uri
-import android.os.Build
-import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.amazonaws.AmazonServiceException
-import com.amazonaws.auth.AWSCredentials
-import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
-import com.amazonaws.regions.Region
-import com.amazonaws.regions.Regions
-import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.CannedAccessControlList
 import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.psm.mytable.App
 import com.psm.mytable.Event
-import com.psm.mytable.room.MyTableRepository
+import com.psm.mytable.room.AppRepository
 import com.psm.mytable.room.RoomDB
 import com.psm.mytable.room.recipe.Recipe
 import com.psm.mytable.type.RecipeType
 import com.psm.mytable.ui.recipe.RecipeItemData
-import com.psm.mytable.utils.ToastUtils
 import com.starry.file_utils.FileUtils
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -48,7 +36,7 @@ import java.util.Date
  * - 버전 체크 (강제 또는 선택 업데이트 알럿 노출)
  */
 class RecipeUpdateViewModel(
-    private val repository: MyTableRepository
+    private val repository: AppRepository
 ) : ViewModel(){
 
     private val _recipeData = MutableLiveData<RecipeViewData>()
@@ -228,26 +216,15 @@ class RecipeUpdateViewModel(
 
     fun uploadS3Image(fileName: String, file: File?, mData: Recipe){
         if(file != null){
-            val awsCredentials: AWSCredentials =  BasicAWSCredentials(
-                "AKIARYHOJEIGIYROZHE4",
-                "SJobb4jPsRBo0ab9wnQcnpNqs836o3CeGa1C8nz9"
-            ) // IAM 생성하며 받은 것 입력
 
-            val s3Client = AmazonS3Client(awsCredentials, Region.getRegion(Regions.AP_SOUTHEAST_2))
-
-            val transferUtility = TransferUtility.builder().s3Client(s3Client)
-                .context(App.instance).build()
             TransferNetworkLossHandler.getInstance(App.instance.applicationContext)
-
             val mBucket = "my-test-butket"
-
-            val uploadObserver = transferUtility.upload(
+            val uploadObserver = App.instance.getTransferUtility(App.instance).upload(
                 mBucket,
                 "test1/$fileName",
                 file,
                 CannedAccessControlList.PublicRead
             )
-
             uploadObserver.setTransferListener(object : TransferListener{
                 override fun onStateChanged(id: Int, state: TransferState?) {
                     when (state) {
@@ -278,19 +255,14 @@ class RecipeUpdateViewModel(
         }
     }
     fun deleteS3Image(){
-        val awsCredentials: AWSCredentials =  BasicAWSCredentials(
-            "AKIARYHOJEIGIYROZHE4",
-            "SJobb4jPsRBo0ab9wnQcnpNqs836o3CeGa1C8nz9"
-        ) // IAM 생성하며 받은 것 입력
 
-        val s3Client = AmazonS3Client(awsCredentials, Region.getRegion(Regions.AP_SOUTHEAST_2))
         val mRecipeImage = _recipeData.value?.recipeImage
         val mBucket = "my-test-butket"
         val mKey = mRecipeImage?.substring(mRecipeImage.indexOf("test1/"))
 
         try{
             val deleteObjectRequest = DeleteObjectRequest(mBucket, mKey)
-            s3Client.deleteObject(deleteObjectRequest)
+            App.instance.s3Client.deleteObject(deleteObjectRequest)
             _completeRecipeDataUpdateEvent.value = Event(Unit)
         }catch (e: AmazonServiceException){
             _errorEvent.value = Event(Unit)

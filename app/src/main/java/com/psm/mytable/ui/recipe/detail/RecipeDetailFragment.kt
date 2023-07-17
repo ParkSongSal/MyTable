@@ -94,6 +94,13 @@ class RecipeDetailFragment: Fragment() {
             activity?.finish()
         })
 
+        viewModel.doubleClickGoRecipeUpdateEvent.observe(viewLifecycleOwner, EventObserver{
+            val intent = Intent(activity, MainActivity::class.java)
+            intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, it)
+            activity?.setResult(9002, intent)
+            activity?.finish()
+        })
+
         viewModel.completeRecipeDeleteEvent.observe(viewLifecycleOwner, EventObserver{
             ToastUtils.showToast("레시피가 삭제되었습니다.")
             activity?.setResult(Activity.RESULT_OK)

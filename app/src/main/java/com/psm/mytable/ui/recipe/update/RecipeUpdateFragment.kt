@@ -150,7 +150,6 @@ class RecipeUpdateFragment: Fragment() {
                             imageGalleryResult.launch(intent)
                         }
                     }
-                    ToastUtils.showToast(it.name)
                 }
             )
         })
@@ -160,7 +159,6 @@ class RecipeUpdateFragment: Fragment() {
             showRecipeSelectDialog(
                 positiveCallback = {
                     viewModel.setRecipeType(it)
-                    ToastUtils.showToast(it.toString())
                 }
             )
         })
@@ -203,7 +201,7 @@ class RecipeUpdateFragment: Fragment() {
             .withPermission(Manifest.permission.CAMERA)
             .withListener(object : PermissionListener {
                 override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-                    ToastUtils.showToast("Permission Granted")
+                    //ToastUtils.showToast("Permission Granted")
                 }
 
                 override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) {
@@ -222,7 +220,7 @@ class RecipeUpdateFragment: Fragment() {
                 }
 
                 override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                    ToastUtils.showToast(R.string.storage_permission_denied_message)
+                    //ToastUtils.showToast(R.string.storage_permission_denied_message)
                 }
             }
             ).check()

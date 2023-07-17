@@ -1,0 +1,33 @@
+{
+  "auth": {
+    "plugins": {
+      "awsCognitoAuthPlugin": {
+        "IdentityManager": {
+          "Default": {}
+        },
+        "CredentialsProvider": {
+          "CognitoIdentity": {
+            "Default": {
+              "PoolId": "us-east-2:983cea4f-ee6a-4f5a-8b0c-210df4950bb2",
+              "Region": "us-east-2"
+            }
+          }
+        },
+        "CognitoUserPool": {
+        },
+        "Auth": {
+          "Default": {
+          }
+        }
+      }
+    }
+  },
+  "storage": {
+    "plugins": {
+      "awsS3StoragePlugin": {
+        "bucket": "my-test-butket",
+        "region": "ap-southeast-2"
+      }
+    }
+  }
+}
