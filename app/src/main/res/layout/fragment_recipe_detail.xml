@@ -164,12 +164,12 @@
                         xmlns:ads="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/adView"
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_centerHorizontal="true"
                         android:layout_gravity="center"
                         ads:adSize="SMART_BANNER"
-                        ads:adUnitId="@string/google_admob_test_key"/>
+                        ads:adUnitId="@string/banner_admob_key"/>
 
                     <TextView
                         android:id="@+id/recipeOrder"
