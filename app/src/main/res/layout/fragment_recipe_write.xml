@@ -55,7 +55,7 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="300dp"
                         android:background="@drawable/bg_round_rect_stroke_e2"
                         android:onClick="@{() -> viewmodel.clickPhotoDialog()}"
                         android:layout_marginTop="10dp">
@@ -63,7 +63,7 @@
                         <ImageView
                             android:id="@+id/recipeImage"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp"
+                            android:layout_height="300dp"
                             android:scaleType="fitXY"/>
 
                         <TextView
