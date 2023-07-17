@@ -1,9 +1,17 @@
 <resources>
     <string name="app_name">스마트 식탁</string>
 
+    <string name="cancel">취소</string>
+    <string name="confirm">확인</string>
+    <string name="back">뒤로가기</string>
+    <string name="temp_save">임시저장</string>
+
     <string name="google_admob_key">ca-app-pub-3145363349418895~7605231424</string>
 
+    <string name="banner_admob_key">ca-app-pub-3145363349418895/7077896000</string>
+    <string name="banner_admob_key2">ca-app-pub-3145363349418895/3553417729</string>
     <string name="google_admob_test_key">ca-app-pub-3940256099942544/6300978111</string>
+
     <string name="recipe_type_1_001">한식</string>
     <string name="recipe_type_1_002">일식</string>
     <string name="recipe_type_1_003">중식</string>
@@ -12,6 +20,10 @@
     <string name="recipe_type_1_007">양식</string>
 
     <string name="recipe_write_1_001">레시피 작성</string>
+
+    <string name="recipe_dialog_1_001">작성중인 레피시가 있습니다.\n임시저장 하시겠습니까?</string>
+    <string name="recipe_dialog_1_002">(텍스트만 임시저장됩니다)</string>
+    <string name="recipe_dialog_1_003">임시저장한 내역이 있습니다.\n불러오시겠습니까?</string>
 
     <string name="recipe_detail_1_001">레시피 상세</string>
     <string name="recipe_detail_1_002">수정</string>
