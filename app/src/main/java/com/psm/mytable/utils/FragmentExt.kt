@@ -32,8 +32,10 @@ import com.psm.mytable.R
 import com.psm.mytable.ViewModelFactory
 import com.psm.mytable.type.PhotoType
 import com.psm.mytable.type.RecipeType
+import com.psm.mytable.ui.dialog.common.YesNoDialog
 import com.psm.mytable.ui.dialog.recipe.SelectGetPhotoTypeDialog
 import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeDialog
+import com.psm.mytable.ui.dialog.recipe.TempSaveDialog
 
 fun Fragment.getViewModelFactory(): ViewModelFactory {
     val repository = (requireContext().applicationContext as App).repository
@@ -62,6 +64,48 @@ fun Fragment.initToolbar(view: View) {
     }
 }
 
+
+fun Fragment.showTempSaveDialog(
+    negativeCallback: () -> Unit = {},
+    positiveCallback: () -> Unit,
+){
+    val requestKey = System.currentTimeMillis().toString()
+    setFragmentResultListener(requestKey) {
+            _, result ->
+        if(DialogUtils.isPositiveClick(result)){
+            positiveCallback()
+        }
+
+        if(DialogUtils.isNegativeClick(result)){
+            negativeCallback()
+        }
+    }
+    val newFragment = TempSaveDialog.newInstance(requestKey)
+    newFragment.show(getSupportFragmentManager(), null)
+}
+
+
+fun Fragment.showYesNoDialog(
+    message: String,
+    positiveButtonText: String,
+    negativeButtonText: String,
+    negativeCallback: () -> Unit = {},
+    positiveCallback: () -> Unit,
+){
+    val requestKey = System.currentTimeMillis().toString()
+    setFragmentResultListener(requestKey) {
+            _, result ->
+        if(DialogUtils.isPositiveClick(result)){
+            positiveCallback()
+        }
+
+        if(DialogUtils.isNegativeClick(result)){
+            negativeCallback()
+        }
+    }
+    val newFragment = YesNoDialog.newInstance(message, positiveButtonText, negativeButtonText, requestKey)
+    newFragment.show(getSupportFragmentManager(), null)
+}
 fun Fragment.showRecipeSelectDialog(
     positiveCallback: (type: RecipeType) -> Unit ){
     val requestKey = System.currentTimeMillis().toString()
