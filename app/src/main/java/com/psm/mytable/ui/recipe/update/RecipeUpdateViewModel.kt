@@ -222,8 +222,7 @@ class RecipeUpdateViewModel(
             val uploadObserver = App.instance.getTransferUtility(App.instance).upload(
                 mBucket,
                 "test1/$fileName",
-                file,
-                CannedAccessControlList.PublicRead
+                file
             )
             uploadObserver.setTransferListener(object : TransferListener{
                 override fun onStateChanged(id: Int, state: TransferState?) {
