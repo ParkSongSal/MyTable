@@ -18,11 +18,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="com.psm.mytable.ui.main.MainViewModel" />
     </data>
+
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
@@ -58,19 +61,19 @@
                     android:textStyle="bold" />-->
 
                 <androidx.appcompat.widget.SearchView
-                    style="@style/MySearchViewStyle"
                     android:id="@+id/Search_view"
+                    style="@style/MySearchViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="text"
                     android:layoutDirection="rtl"
                     android:textSize="15sp"
                     app:iconifiedByDefault="false"
-                    app:queryHint="레시피를 검색하세요."
                     app:queryBackground="@null"
-                    android:inputType="text"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    app:queryHint="레시피 검색..." />
 
                 <!--<androidx.appcompat.widget.AppCompatEditText
                     android:layout_width="0dp"
@@ -92,132 +95,134 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:background="@color/bg_e2e2e2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarLinear"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <!--<TextView
-                android:id="@+id/reqrer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewmodel.name}"
-                android:textSize="20dp"
-                android:textColor="@color/text_blue"
-                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/mainLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/bg_e2e2e2"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:visibility="visible"
-                tools:text="홀리이"/>-->
-           <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                app:layout_constraintTop_toBottomOf="@+id/toolbarLinear">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recipeList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="@{viewmodel.recipeListVisibility ? View.VISIBLE: View.GONE}"
-                    android:paddingTop="15dp"
-                    android:clipToPadding="false"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:recipeList="@{viewmodel.items}"
-                    tools:visibility="gone"
-                    />
-
-               <androidx.recyclerview.widget.RecyclerView
-                   android:id="@+id/searchResultList"
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:paddingTop="15dp"
-                   android:clipToPadding="false"
-                   tools:visibility="gone"
-                   android:visibility="@{viewmodel.searchResultVisible ? View.VISIBLE : View.GONE}"
-                   app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                   app:searchResultItems="@{viewmodel.searchResultItems}"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="@{viewmodel.emptyRecipeListVisibility ? View.VISIBLE : View.GONE}"
-                tools:visibility="visible">
-
-                <ImageView
+                <!--<TextView
+                    android:id="@+id/reqrer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_launcher"
+                    android:text="@{viewmodel.name}"
+                    android:textSize="20dp"
+                    android:textColor="@color/text_blue"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/emptyText"
-                    android:layout_marginBottom="10dp"/>
-                <TextView
-                    android:id="@+id/emptyText"
+                    android:visibility="visible"
+                    tools:text="홀리이"/>-->
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recipeList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:paddingTop="15dp"
+                        android:visibility="@{viewmodel.recipeListVisibility ? View.VISIBLE: View.GONE}"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:recipeList="@{viewmodel.items}"
+                        tools:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/searchResultList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:paddingTop="15dp"
+                        android:visibility="@{viewmodel.searchResultVisible ? View.VISIBLE : View.GONE}"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:searchResultItems="@{viewmodel.searchResultItems}"
+                        tools:visibility="gone" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="@{viewmodel.emptyRecipeListVisibility ? View.VISIBLE : View.GONE}"
+                    tools:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:src="@mipmap/ic_launcher"
+                        app:layout_constraintBottom_toTopOf="@id/emptyText"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/emptyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="등록된 레시피가 없습니다."
+                        android:textColor="#bbb"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <!--  <View
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:visibility="visible"
+                      android:id="@+id/adView"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintStart_toStartOf="parent"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      />-->
+                <!--<com.google.android.gms.ads.AdView
+                    xmlns:ads="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/adView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="#bbb"
-                    android:textSize="18sp"
-                    android:text="등록된 레시피가 없습니다."
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    ads:layout_constraintStart_toStartOf="parent"
+                    ads:layout_constraintEnd_toEndOf="parent"
+                    ads:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_gravity="center"
+                    ads:adSize="SMART_BANNER"
+                    ads:adUnitId="ca-app-pub-3145363349418895/3553417729"/>-->
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="50dp"
+                    android:backgroundTint="@color/main_dark_color"
+                    android:onClick="@{() -> viewmodel.clickAddRecipe()}"
+                    android:src="@drawable/baseline_edit_24"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="@null" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-          <!--  <View
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:id="@+id/adView"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                />-->
-            <!--<com.google.android.gms.ads.AdView
-                xmlns:ads="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/adView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintEnd_toEndOf="parent"
-                ads:layout_constraintBottom_toBottomOf="parent"
-                android:layout_gravity="center"
-                ads:adSize="SMART_BANNER"
-                ads:adUnitId="ca-app-pub-3145363349418895/3553417729"/>-->
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="50dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="50dp"
-                android:src="@drawable/baseline_edit_24"
-                android:backgroundTint="@color/main_dark_color"
-                android:onClick="@{() -> viewmodel.clickAddRecipe()}"
-                app:tint="@null"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigationView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             app:headerLayout="@layout/main_naviheader"
-            app:menu="@menu/main_navigationmenu"/>
+            app:menu="@menu/main_navigationmenu" />
     </androidx.drawerlayout.widget.DrawerLayout>
 
 

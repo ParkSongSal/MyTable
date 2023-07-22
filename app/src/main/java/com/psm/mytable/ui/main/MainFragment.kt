@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -112,7 +113,21 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         initAd()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        // SearchView 자동 포커스 제거
+        viewDataBinding.SearchView.setQuery("", false)
+        viewDataBinding.mainLayout.requestFocus()
+    }
+
     private fun init(){
+
+        // SearchView 자동 포커스 제거
+        viewDataBinding.mainLayout.isFocusableInTouchMode = true
+        viewDataBinding.mainLayout.isFocusable = true
+
+
         viewDataBinding.navigationView.setNavigationItemSelectedListener(this)
         viewDataBinding.menuBtn.setOnClickListener{
             viewDataBinding.drawerLayout.openDrawer(GravityCompat.START)
