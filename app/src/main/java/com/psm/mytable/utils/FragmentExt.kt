@@ -32,6 +32,7 @@ import com.psm.mytable.R
 import com.psm.mytable.ViewModelFactory
 import com.psm.mytable.type.PhotoType
 import com.psm.mytable.type.RecipeType
+import com.psm.mytable.ui.dialog.InputItemDialog
 import com.psm.mytable.ui.dialog.common.YesNoDialog
 import com.psm.mytable.ui.dialog.recipe.SelectGetPhotoTypeDialog
 import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeDialog
@@ -133,6 +134,30 @@ fun Fragment.showPhotoSelectDialog(
     val newFragment = SelectGetPhotoTypeDialog.newInstance(requestKey)
     newFragment.show(getSupportFragmentMananger(), null)
 }
+
+// 항목명 추가 Dialog 호출
+fun Fragment.showItemAddDialog(
+    title: String,
+    hint: String,
+    inputCallback: (String) -> Unit,
+    cancelCallback: () -> Unit){
+    val requestKey = System.currentTimeMillis().toString()
+    setFragmentResultListener(requestKey) {
+            _, result ->
+        if(DialogUtils.isPositiveClick(result)){
+
+            DialogUtils.getInputText(result)?.let {
+                inputCallback(it)
+            }
+        } else {
+            cancelCallback()
+        }
+
+    }
+    val newFragment = InputItemDialog.newInstance(requestKey, title, hint)
+    newFragment.show(getSupportFragmentManager(), null)
+}
+
 
 
 fun Fragment.setFragmentResult(

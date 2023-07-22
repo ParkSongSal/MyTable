@@ -4,10 +4,10 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/shoppingBasket"
-            android:icon="@drawable/baseline_image_search_24"
+            android:icon="@drawable/baseline_shopping_cart_24"
             android:title="장바구니"/>
 
-        <item
+        <!--<item
             android:id="@+id/materialMng"
             android:icon="@drawable/baseline_settings_24"
             android:title="재료관리"/>
@@ -24,7 +24,7 @@
         <item
             android:id="@+id/settingItem"
             android:icon="@drawable/baseline_settings_24"
-            android:title="설정"/>
+            android:title="설정"/>-->
 
     </group>
 </menu>

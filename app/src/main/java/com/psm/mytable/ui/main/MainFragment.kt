@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -29,6 +30,7 @@ import com.psm.mytable.EventObserver
 import com.psm.mytable.MainActivity
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentMainBinding
+import com.psm.mytable.ui.basket.ShoppingBasketListActivity
 import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.ui.recipe.RecipeSearchAdapter
@@ -112,8 +114,12 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
 
     private fun init(){
         viewDataBinding.navigationView.setNavigationItemSelectedListener(this)
+        viewDataBinding.menuBtn.setOnClickListener{
+            viewDataBinding.drawerLayout.openDrawer(GravityCompat.START)
 
+        }
         viewDataBinding.SearchView.setIconifiedByDefault(false)
+        viewDataBinding.SearchView.isIconified = false
         viewDataBinding.SearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             // 완료 누르면
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -240,10 +246,12 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         when(item.itemId){
             // 장바구니
             R.id.shoppingBasket->{
-                Toast.makeText(App.instance, "장바구니", Toast.LENGTH_SHORT).show()
+                val intent = Intent(activity, ShoppingBasketListActivity::class.java)
+                startActivity(intent)
+                viewDataBinding.drawerLayout.close()
                 return super.onOptionsItemSelected(item)
             }
-            // 재료관리
+            /*// 재료관리
             R.id.materialMng->{
                 Toast.makeText(App.instance, "재료관리", Toast.LENGTH_SHORT).show()
                 //intent = Intent(this, StopWatchActivity::class.java)
@@ -272,7 +280,7 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
                 //intent = Intent(this, StopWatchActivity::class.java)
                 //startActivity(intent)
                 return super.onOptionsItemSelected(item)
-            }
+            }*/
         }
         return true
     }

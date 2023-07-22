@@ -23,6 +23,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.psm.mytable.room.AppRepository
 import com.psm.mytable.ui.main.MainViewModel
 import com.psm.mytable.room.MyTableRepository
+import com.psm.mytable.ui.basket.ShoppingBasketListViewModel
 import com.psm.mytable.ui.camera.CameraViewModel
 import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeViewModel
 import com.psm.mytable.ui.intro.IntroViewModel
@@ -60,6 +61,9 @@ class ViewModelFactory constructor(
                 RecipeDetailViewModel(appRepository)
             isAssignableFrom(IntroViewModel::class.java) ->
                 IntroViewModel(appRepository)
+            isAssignableFrom(ShoppingBasketListViewModel::class.java) ->
+                ShoppingBasketListViewModel(appRepository)
+
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

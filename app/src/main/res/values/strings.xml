@@ -31,6 +31,13 @@
 
     <string name="recipe_update_1_001">레시피 수정</string>
 
+    <string name="shopping_basket_list_1_001">장바구니</string>
+
+
+    <string name="shopping_dialog_1_001">장바구니 항목 추가</string>
+    <string name="shopping_dialog_1_002">추가할 항목을 입력하세요.</string>
+    <string name="shopping_dialog_1_003">선택하신 항목을 삭제하시겠습니까?</string>
+
     <string name="etc_1_001">카메라 촬영</string>
     <string name="etc_1_002">앨범 선택</string>
 
