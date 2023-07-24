@@ -17,8 +17,8 @@ android {
         applicationId "com.psm.mytable"
         minSdk 24
         targetSdk 33
-        versionCode 12
-        versionName "2.0.4"
+        versionCode 16
+        versionName "2.0.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
