@@ -152,14 +152,14 @@
                     android:visibility="@{viewmodel.emptyRecipeListVisibility ? View.VISIBLE : View.GONE}"
                     tools:visibility="visible">
 
-                    <ImageView
+                 <!--   <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:src="@mipmap/ic_launcher"
                         app:layout_constraintBottom_toTopOf="@id/emptyText"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent" />-->
 
                     <TextView
                         android:id="@+id/emptyText"
