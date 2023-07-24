@@ -79,15 +79,29 @@ class ShoppingBasketListViewModel(
                 reg_date = "2023-07-18"
             )
         )*/
-        val mShoppingBasketList = database?.shoppingBasketDao()?.getAllShoppingBasket() ?: listOf()
-        if(mShoppingBasketList.isNotEmpty()){
-            _items.value = mShoppingBasketList.map{item ->
-                ShoppingBasketItemData(
-                    id = item.id.toLong(),
-                    itemName = item.itemName,
-                    reg_date = item.reg_date
-                )
+        try{
+            val mShoppingBasketList = database?.shoppingBasketDao()?.getAllShoppingBasket() ?: listOf()
+            if(mShoppingBasketList.isNotEmpty()){
+                _items.value = mShoppingBasketList.map{item ->
+                    ShoppingBasketItemData(
+                        id = item.id.toLong(),
+                        itemName = item.itemName,
+                        reg_date = item.reg_date
+                    )
+                }
+                updateShoppingBasketVisibleState(true)
+            }else{
+                updateShoppingBasketVisibleState(false)
             }
+        }catch(e: IllegalStateException){
+            updateShoppingBasketVisibleState(false)
+        }catch(e: Exception){
+            updateShoppingBasketVisibleState(false)
+        }
+    }
+
+    private fun updateShoppingBasketVisibleState(boolean: Boolean){
+        if(boolean){
             _shoppingListVisibility.value = true
             _emptyShoppingListVisibility.value = false
         }else{

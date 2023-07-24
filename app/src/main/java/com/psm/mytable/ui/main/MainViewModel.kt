@@ -69,28 +69,41 @@ class MainViewModel(
     }
 
     fun getRecipeList(){
-        val mRecipeList = database?.recipeDao()?.getAllRecipe() ?: listOf()
-        if(mRecipeList.isNotEmpty()){
-            _items.value = mRecipeList.map{recipe ->
-                RecipeItemData(
-                    id = recipe.id.toLong(),
-                    recipeImage = recipe.recipeImagePath,
-                    recipeName = recipe.recipeName,
-                    ingredients = recipe.ingredients,
-                    howToMake = recipe.howToMake,
-                    reg_date = recipe.reg_date,
-                    type = recipe.recipeType,
-                    typeId = recipe.recipeTypeId
-                )
-            }
+        try{
+            val mRecipeList = database?.recipeDao()?.getAllRecipe() ?: listOf()
+            if(mRecipeList.isNotEmpty()){
+                _items.value = mRecipeList.map{recipe ->
+                    RecipeItemData(
+                        id = recipe.id.toLong(),
+                        recipeImage = recipe.recipeImagePath,
+                        recipeName = recipe.recipeName,
+                        ingredients = recipe.ingredients,
+                        howToMake = recipe.howToMake,
+                        reg_date = recipe.reg_date,
+                        type = recipe.recipeType,
+                        typeId = recipe.recipeTypeId
+                    )
+                }
 
+                updateRecipeVisibleState(true)
+            }else{
+                updateRecipeVisibleState(false)
+            }
+        }catch(e: IllegalStateException){
+            updateRecipeVisibleState(false)
+        }catch(e: Exception){
+            updateRecipeVisibleState(false)
+        }
+    }
+
+    private fun updateRecipeVisibleState(boolean: Boolean){
+        if(boolean){
             _recipeListVisibility.value = true
             _emptyRecipeListVisibility.value = false
         }else{
             _recipeListVisibility.value = false
             _emptyRecipeListVisibility.value = true
         }
-
     }
 
    /* fun test() : Flow<PagingData<Recipe>>{
