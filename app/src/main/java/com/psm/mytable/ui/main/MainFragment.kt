@@ -107,10 +107,7 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
 
         viewModel.init(requireContext())
         setupListAdapter()
-        //setupListDivider()
         init()
-
-        initAd()
     }
 
     override fun onResume() {
@@ -148,56 +145,6 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
             }
 
         })
-    }
-
-    private fun initAd(){
-        InterstitialAd.load(App.instance, "ca-app-pub-3145363349418895/5216668354", App.instance.adRequest, object : InterstitialAdLoadCallback(){
-            override fun onAdFailedToLoad(p0: LoadAdError) {
-                super.onAdFailedToLoad(p0)
-                mInterstitialAd = null
-            }
-
-            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                super.onAdLoaded(interstitialAd)
-                mInterstitialAd = interstitialAd
-
-                if(mInterstitialAd != null){
-                    showInterstitial()
-                }else{
-                    ToastUtils.showToast("Ad wasn`t loaded")
-                }
-
-            }
-        })
-    }
-
-    fun showInterstitial(){
-        if(mInterstitialAd != null){
-            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback(){
-                override fun onAdClicked() {
-                    super.onAdClicked()
-                }
-
-                override fun onAdDismissedFullScreenContent() {
-                    super.onAdDismissedFullScreenContent()
-                }
-
-                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-                    super.onAdFailedToShowFullScreenContent(p0)
-                }
-
-                override fun onAdImpression() {
-                    super.onAdImpression()
-                }
-
-                override fun onAdShowedFullScreenContent() {
-                    super.onAdShowedFullScreenContent()
-                }
-            }
-            mInterstitialAd?.show(requireActivity())
-        }else{
-
-        }
     }
     private fun checkPermission() {
     }
