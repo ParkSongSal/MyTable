@@ -54,6 +54,12 @@ class RecipeDetailViewModel(
     val doubleClickGoRecipeUpdateEvent: LiveData<Event<RecipeItemData>>
         get() = _doubleClickGoRecipeUpdateEvent
 
+    private var _goRecipeImageDetailEvent = MutableLiveData<Event<RecipeItemData>>()
+    val goRecipeImageDetailEvent: LiveData<Event<RecipeItemData>>
+        get() = _goRecipeImageDetailEvent
+
+
+
     private var _errorEvent = MutableLiveData<Event<Unit>>()
     val errorEvent: LiveData<Event<Unit>>
         get() = _errorEvent
@@ -147,5 +153,9 @@ class RecipeDetailViewModel(
         }else{
             _doubleClickGoRecipeUpdateEvent.value = Event(itemData.value!!)
         }
+    }
+
+    fun imageClick(itemData: LiveData<RecipeItemData>){
+        _goRecipeImageDetailEvent.value = Event(itemData.value!!)
     }
 }

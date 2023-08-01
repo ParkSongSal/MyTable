@@ -61,6 +61,7 @@
                         android:scaleType="centerCrop"
                         tools:src="@mipmap/ic_launcher"
                         android:adjustViewBounds="true"
+                        android:onClick="@{() -> viewmodel.imageClick(viewmodel.recipeDetail)}"
                         app:imageUrl="@{viewmodel.recipeDetail.recipeImage}"
                         />
 
@@ -141,7 +142,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
+                        android:layout_height="120dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_round_rect_stroke_e2"
                         android:text="@{viewmodel.recipeDetail.ingredients}"

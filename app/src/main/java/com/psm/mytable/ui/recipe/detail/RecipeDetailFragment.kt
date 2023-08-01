@@ -15,6 +15,7 @@ import com.psm.mytable.MainActivity
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentRecipeDetailBinding
 import com.psm.mytable.ui.recipe.RecipeItemData
+import com.psm.mytable.ui.recipe.image.RecipeImageDetailActivity
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.initToolbar
@@ -108,6 +109,12 @@ class RecipeDetailFragment: Fragment() {
         })
         viewModel.errorEvent.observe(viewLifecycleOwner, EventObserver{
             errorPage("문제가 발생하여, 이전 화면으로 돌아갑니다.")
+        })
+
+        viewModel.goRecipeImageDetailEvent.observe(viewLifecycleOwner, EventObserver{
+            val intent = Intent(activity, RecipeImageDetailActivity::class.java)
+            intent.putExtra(RecipeImageDetailActivity.EXTRA_RECIPE, it)
+            startActivity(intent)
         })
     }
 

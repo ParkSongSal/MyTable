@@ -28,6 +28,7 @@ import com.psm.mytable.ui.camera.CameraViewModel
 import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeViewModel
 import com.psm.mytable.ui.intro.IntroViewModel
 import com.psm.mytable.ui.recipe.detail.RecipeDetailViewModel
+import com.psm.mytable.ui.recipe.image.RecipeImageDetailViewModel
 import com.psm.mytable.ui.recipe.update.RecipeUpdateViewModel
 import com.psm.mytable.ui.recipe.write.RecipeWriteViewModel
 
@@ -63,7 +64,8 @@ class ViewModelFactory constructor(
                 IntroViewModel(appRepository)
             isAssignableFrom(ShoppingBasketListViewModel::class.java) ->
                 ShoppingBasketListViewModel(appRepository)
-
+            isAssignableFrom(RecipeImageDetailViewModel::class.java) ->
+                RecipeImageDetailViewModel(appRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

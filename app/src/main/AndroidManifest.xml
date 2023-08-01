@@ -58,6 +58,8 @@
             android:exported="false"/>
         <activity android:name=".ui.recipe.detail.RecipeDetailActivity"
             android:exported="false"/>
+        <activity android:name=".ui.recipe.image.RecipeImageDetailActivity"
+            android:exported="false"/>
 
         <activity android:name=".ui.recipe.update.RecipeUpdateActivity"
             android:exported="false"/>
