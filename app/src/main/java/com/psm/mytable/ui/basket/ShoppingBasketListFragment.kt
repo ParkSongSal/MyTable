@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.psm.mytable.App
 import com.psm.mytable.EventObserver
@@ -19,12 +20,15 @@ import com.psm.mytable.utils.initToolbar
 import com.psm.mytable.utils.setTitleText
 import com.psm.mytable.utils.showItemAddDialog
 import com.psm.mytable.utils.showYesNoDialog
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class ShoppingBasketListFragment: Fragment() {
     private lateinit var viewDataBinding: FragmentShoppingBasketListBinding
     private val viewModel by viewModels<ShoppingBasketListViewModel> { getViewModelFactory() }
 
     lateinit var mView:View
+    lateinit var mAdapter : ShoppingBasketPagingAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,9 +67,19 @@ class ShoppingBasketListFragment: Fragment() {
     }
 
     private fun setupListAdapter(){
+
+        mAdapter = ShoppingBasketPagingAdapter(viewModel)
+
         viewDataBinding.shoppingList.apply{
             layoutManager = LinearLayoutManager(App.instance)
-            adapter = ShoppingBasketAdapter(viewModel)
+            //adapter = ShoppingBasketAdapter(viewModel)
+            adapter = mAdapter
+        }
+
+        lifecycleScope.launch{
+            viewModel.shoppingBasketPagingData.collectLatest{
+                (viewDataBinding.shoppingList.adapter as ShoppingBasketPagingAdapter).submitData(it)
+            }
         }
     }
 
@@ -84,11 +98,13 @@ class ShoppingBasketListFragment: Fragment() {
         })
 
         viewModel.completeShoppingItemInsertEvent.observe(viewLifecycleOwner, EventObserver{
+            mAdapter.refresh()
             viewModel.getShoppingBasketList()
         })
 
         viewModel.completeShoppingItemDeleteEvent.observe(viewLifecycleOwner, EventObserver{
             ToastUtils.showToast("삭제되었습니다.")
+            mAdapter.refresh()
             viewModel.getShoppingBasketList()
         })
 

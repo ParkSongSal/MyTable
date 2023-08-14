@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import androidx.room.Update
+import com.psm.mytable.ui.basket.ShoppingBasketItemData
 
 @Dao
 interface ShoppingBasketDao {
@@ -28,4 +29,8 @@ interface ShoppingBasketDao {
 
     @Query("SELECT * FROM table_shopping_basket order by id desc")
     fun getAllRecipePaging(): PagingSource<Int, ShoppingBasket>
+
+    @Query("SELECT * FROM table_shopping_basket ORDER BY id ASC LIMIT 10 OFFSET (:page-1)*10")
+    fun getShoppingBasketPagingList(page:Int): List<ShoppingBasketItemData>
+
 }

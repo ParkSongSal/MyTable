@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.psm.mytable.Event
 import com.psm.mytable.room.AppRepository
 import com.psm.mytable.room.RoomDB
@@ -32,7 +33,10 @@ class ShoppingBasketListViewModel(
     val items: LiveData<List<ShoppingBasketItemData>>
         get() = _items
 
-    private val _shoppingListVisibility = MutableLiveData(false)
+    val shoppingBasketPagingData = repository.getShoppingBasketPagingSource().cachedIn(viewModelScope)
+
+
+    private val _shoppingListVisibility = MutableLiveData(true)
     val shoppingListVisibility: LiveData<Boolean>
         get() = _shoppingListVisibility
 
@@ -67,6 +71,25 @@ class ShoppingBasketListViewModel(
     }
 
     fun getShoppingBasketList(){
+
+        /*runBlocking {
+            repeat(22){
+                val now = System.currentTimeMillis()
+                val date = Date(now)
+                val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                val nowDate = sdf.format(date)
+                val mData = ShoppingBasket(
+                    id = 0,
+                    itemName = "test$it",
+                    reg_date = nowDate
+                )
+
+                viewModelScope.launch(Dispatchers.IO){
+                    database?.shoppingBasketDao()?.insert(mData)
+                }
+            }
+        }*/
+
         /*_items.value = listOf(
             ShoppingBasketItemData(
                 id = 1,
@@ -79,7 +102,7 @@ class ShoppingBasketListViewModel(
                 reg_date = "2023-07-18"
             )
         )*/
-        try{
+        /*try{
             val mShoppingBasketList = database?.shoppingBasketDao()?.getAllShoppingBasket() ?: listOf()
             if(mShoppingBasketList.isNotEmpty()){
                 _items.value = mShoppingBasketList.map{item ->
@@ -97,7 +120,7 @@ class ShoppingBasketListViewModel(
             updateShoppingBasketVisibleState(false)
         }catch(e: Exception){
             updateShoppingBasketVisibleState(false)
-        }
+        }*/
     }
 
     private fun updateShoppingBasketVisibleState(boolean: Boolean){
@@ -160,6 +183,6 @@ class ShoppingBasketListViewModel(
             Timber.d("psm_Thread is continuing...")
         }
         Timber.d("psm_Thread is The End...")
-        _completeShoppingItemDeleteEvent.value = Event(Unit)
+        _completeShoppingItemDeleteEvent.postValue(Event(Unit))
     }
 }
