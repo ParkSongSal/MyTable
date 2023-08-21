@@ -65,6 +65,8 @@
             android:exported="false"/>
         <activity android:name=".ui.basket.ShoppingBasketListActivity"
             android:exported="false"/>
+        <activity android:name=".ui.setting.SettingActivity"
+            android:exported="false"/>
         <!-- Google Admob -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

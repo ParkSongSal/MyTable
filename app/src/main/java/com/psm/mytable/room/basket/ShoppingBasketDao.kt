@@ -18,8 +18,8 @@ interface ShoppingBasketDao {
     @Delete
     fun delete(shoppingBasket: ShoppingBasket)
 
-    @Delete
-    fun allDelete(shoppingBasket : List<ShoppingBasket>)
+    @Query("DELETE FROM table_shopping_basket")
+    fun basketAllDelete()
 
     @Update
     fun updateShoppingBasketItem(shoppingBasket: ShoppingBasket) : Int

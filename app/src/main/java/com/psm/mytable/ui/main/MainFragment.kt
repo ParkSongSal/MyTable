@@ -38,6 +38,7 @@ import com.psm.mytable.ui.recipe.RecipeSearchAdapter
 import com.psm.mytable.ui.recipe.detail.RecipeDetailActivity
 import com.psm.mytable.ui.recipe.update.RecipeUpdateActivity
 import com.psm.mytable.ui.recipe.write.RecipeWriteActivity
+import com.psm.mytable.ui.setting.SettingActivity
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.recyclerview.RecyclerViewHorizontalDecoration
@@ -51,6 +52,7 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
     private lateinit var recipeWriteResult: ActivityResultLauncher<Intent>
     private lateinit var recipeUpdateResult: ActivityResultLauncher<Intent>
     private lateinit var recipeDetailResult: ActivityResultLauncher<Intent>
+    private lateinit var settingResult: ActivityResultLauncher<Intent>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +82,12 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         }
 
         recipeUpdateResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            if(it.resultCode == AppCompatActivity.RESULT_OK){
+                viewModel.getRecipeList()
+            }
+        }
+
+        settingResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == AppCompatActivity.RESULT_OK){
                 viewModel.getRecipeList()
             }
@@ -213,6 +221,13 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
                 viewDataBinding.drawerLayout.close()
                 return super.onOptionsItemSelected(item)
             }
+            // 설정
+            R.id.setting->{
+                val intent = Intent(activity, SettingActivity::class.java)
+                settingResult.launch(intent)
+                viewDataBinding.drawerLayout.close()
+                return super.onOptionsItemSelected(item)
+            }
             /*// 재료관리
             R.id.materialMng->{
                 Toast.makeText(App.instance, "재료관리", Toast.LENGTH_SHORT).show()
@@ -235,14 +250,7 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
                 //startActivity(intent)
                 return super.onOptionsItemSelected(item)
             }
-            // 설정
-            R.id.settingItem->{
-                // 설정 클릭시
-                Toast.makeText(App.instance, "설정", Toast.LENGTH_SHORT).show()
-                //intent = Intent(this, StopWatchActivity::class.java)
-                //startActivity(intent)
-                return super.onOptionsItemSelected(item)
-            }*/
+           */
         }
         return true
     }

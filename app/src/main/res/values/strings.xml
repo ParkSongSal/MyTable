@@ -2,6 +2,7 @@
     <string name="app_name">스마트 식탁</string>
 
     <string name="cancel">취소</string>
+    <string name="reset">초기화</string>
     <string name="confirm">확인</string>
     <string name="back">뒤로가기</string>
     <string name="temp_save">임시저장</string>
@@ -40,6 +41,10 @@
 
     <string name="etc_1_001">카메라 촬영</string>
     <string name="etc_1_002">앨범 선택</string>
+
+    <string name="setting_1_001">설정</string>
+
+    <string name="data_reset_dialog_1_001">작성한 레시피, 장바구니 데이터가\n모두 초기화됩니다.\n진행하시겠습니까?</string>
 
     <string name="storage_permission_rationale_title">title</string>
     <string name="storage_permission_rationale_message">message</string>

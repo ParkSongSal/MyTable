@@ -7,6 +7,11 @@
             android:icon="@drawable/baseline_shopping_cart_24"
             android:title="장바구니"/>
 
+        <item
+            android:id="@+id/setting"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="설정"/>
+
         <!--<item
             android:id="@+id/materialMng"
             android:icon="@drawable/baseline_settings_24"
@@ -20,11 +25,7 @@
             android:id="@+id/stopWatch"
             android:icon="@drawable/baseline_settings_24"
             android:title="스탑워치"/>
-
-        <item
-            android:id="@+id/settingItem"
-            android:icon="@drawable/baseline_settings_24"
-            android:title="설정"/>-->
+        -->
 
     </group>
 </menu>
