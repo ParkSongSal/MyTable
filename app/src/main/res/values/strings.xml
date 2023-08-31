@@ -20,24 +20,42 @@
     <string name="recipe_type_1_006">제과/제빵</string>
     <string name="recipe_type_1_007">양식</string>
 
+    <!-- 레시피 작성 -->
     <string name="recipe_write_1_001">레시피 작성</string>
 
     <string name="recipe_dialog_1_001">작성중인 레피시가 있습니다.\n임시저장 하시겠습니까?</string>
     <string name="recipe_dialog_1_002">(텍스트만 임시저장됩니다)</string>
     <string name="recipe_dialog_1_003">임시저장한 내역이 있습니다.\n불러오시겠습니까?</string>
 
+    <!-- 레시피 상세 -->
     <string name="recipe_detail_1_001">레시피 상세</string>
     <string name="recipe_detail_1_002">수정</string>
     <string name="recipe_detail_1_003">삭제</string>
 
+    <!-- 레시피 수정-->
     <string name="recipe_update_1_001">레시피 수정</string>
 
+    <!-- 장바구니 목록-->
     <string name="shopping_basket_list_1_001">장바구니</string>
 
 
+    <!-- 장바구니 추가 -->
     <string name="shopping_dialog_1_001">장바구니 항목 추가</string>
     <string name="shopping_dialog_1_002">추가할 항목을 입력하세요.</string>
     <string name="shopping_dialog_1_003">선택하신 항목을 삭제하시겠습니까?</string>
+
+    <!--재료 목록  -->
+    <string name="ingredients_1_001">식재료관리</string>
+
+    <!-- 재료 등록-->
+    <string name="ingredients_add_1_000">재료추가</string>
+    <string name="ingredients_add_1_001">냉장</string>
+    <string name="ingredients_add_1_002">냉동</string>
+    <string name="ingredients_add_1_003">실온</string>
+    <string name="ingredients_add_1_004">선택해주세요.</string>
+    <string name="ingredients_add_1_005">재료명을 입력 후 검색해주세요.</string>
+    <string name="ingredients_add_1_006">추가</string>
+
 
     <string name="etc_1_001">카메라 촬영</string>
     <string name="etc_1_002">앨범 선택</string>
@@ -49,6 +67,7 @@
     <string name="storage_permission_rationale_title">title</string>
     <string name="storage_permission_rationale_message">message</string>
     <string name="storage_permission_denied_message">deny</string>
+
 
 
     <!--Chat GPT 추천 네이밍
