@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    ~ Copyright (C) 2019 The Android Open Source Project
+    ~
+    ~ Licensed under the Apache License, Version 2.0 (the "License");
+    ~ you may not use this file except in compliance with the License.
+    ~ You may obtain a copy of the License at
+    ~
+    ~      http://www.apache.org/licenses/LICENSE-2.0
+    ~
+    ~ Unless required by applicable law or agreed to in writing, software
+    ~ distributed under the License is distributed on an "AS IS" BASIS,
+    ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    ~ See the License for the specific language governing permissions and
+    ~ limitations under the License.
+    -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="com.psm.mytable.ui.ingredients.ingredientsAdd.IngredientsAddViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+       <include layout="@layout/layout_toolbar_close"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/bg_e2e2e2"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolBar">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- 재료명 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="*재료명"
+                        android:textColor="@color/base_text"
+                        android:textSize="16dp"
+                        android:textStyle="bold"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/ingredientNameEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_input_border"
+                        android:text="@={viewmodel.ingredientsAddViewData.ingredientName}"
+                        android:hint="돼지고기"
+                        android:maxLength="20"
+                        android:paddingStart="10dp"
+                        android:textSize="15sp"/>
+
+                    <!-- 개수 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="*개수"
+                        android:textColor="@color/base_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_input_border"
+                        android:text="@={viewmodel.ingredientsAddViewData.ingredientCount}"
+                        android:hint="ex) 1개, 100g, 500L"
+                        android:maxLength="20"
+                        android:paddingStart="10dp"
+                        android:textSize="15sp"/>
+
+                    <!-- 보관방법 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="*보관방법"
+                        android:textColor="@color/base_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                    <RadioGroup
+                        android:id="@+id/rgStorage"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:orientation="horizontal"
+                        android:checkedButton="@={viewmodel.ingredientsAddViewData.checkedStorage}"
+                        android:layout_marginTop="8dp">
+
+                        <RadioButton
+                            android:id="@+id/rdoCold"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="@string/ingredients_add_1_001"
+                            android:background="@drawable/bg_radio_segment"
+                            style="@style/SegmentRadioButton" />
+
+                        <RadioButton
+                            android:id="@+id/rdoFrozen"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:text="@string/ingredients_add_1_002"
+                            android:background="@drawable/bg_radio_segment"
+                            style="@style/SegmentRadioButton" />
+
+                        <RadioButton
+                            android:id="@+id/rdoRoomTemperature"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="@string/ingredients_add_1_003"
+                            android:background="@drawable/bg_radio_segment"
+                            tools:checked="true"
+                            style="@style/SegmentRadioButton" />
+                    </RadioGroup>
+
+                    <!-- 유통(소비)기한 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="*유통(소비)기한"
+                        android:textColor="@color/base_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/CommonEditText44"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_input_border"
+                            android:hint="@string/ingredients_add_1_004"
+                            android:text="@={viewmodel.ingredientsAddViewData.expirationDate}"
+                            android:onClick="@{() -> viewmodel.clickSelectExpirationDate()}"
+                            android:textColor="@color/base_text"
+                            android:drawableEnd="@drawable/ic_calendar_24"
+                            tools:text="2023-08-31"/>
+
+                        <!-- 유통(소비)기한 검색 -->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/CommonEditText44"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="6dp"
+                            android:gravity="center_vertical"
+                            android:text="유통(소비)기한 검색"
+                            android:onClick="@{() -> viewmodel.expirationDateSearchClick()}"
+                            android:textColor="@color/base_hint"
+                            android:drawableEnd="@drawable/ic_search_24_main_color"/>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                    <!-- 메모 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="메모"
+                        android:textColor="@color/base_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/memoEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_input_border"
+                        android:text="@={viewmodel.ingredientsAddViewData.memo}"
+                        android:hint="ex) 제육볶음 재료"
+                        android:maxLength="100"
+                        android:gravity="top"
+                        android:paddingTop="10dp"
+                        android:paddingStart="10dp"
+                        android:textSize="15sp"/>
+
+                    <TextView
+                        android:id="@+id/addBtn"
+                        style="@style/PositiveButton"
+                        android:text="@string/ingredients_add_1_006"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:enabled="@{viewmodel.ingredientsAddViewData.requiredDataComplete}"
+                        android:onClick="@{() -> viewmodel.ingredientAddClick()}"
+                        tools:enabled="true"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </ScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/text_blue2"
+            android:visibility="@{viewmodel.progressVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

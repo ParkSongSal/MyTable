@@ -26,6 +26,11 @@ import com.psm.mytable.room.MyTableRepository
 import com.psm.mytable.ui.basket.ShoppingBasketListViewModel
 import com.psm.mytable.ui.camera.CameraViewModel
 import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeViewModel
+import com.psm.mytable.ui.ingredients.IngredientsViewModel
+import com.psm.mytable.ui.ingredients.cold.ColdStorageViewModel
+import com.psm.mytable.ui.ingredients.frozen.FrozenStorageViewModel
+import com.psm.mytable.ui.ingredients.ingredientsAdd.IngredientsAddViewModel
+import com.psm.mytable.ui.ingredients.roomTemperature.RoomTemperatureStorageViewModel
 import com.psm.mytable.ui.intro.IntroViewModel
 import com.psm.mytable.ui.recipe.detail.RecipeDetailViewModel
 import com.psm.mytable.ui.recipe.image.RecipeImageDetailViewModel
@@ -69,6 +74,16 @@ class ViewModelFactory constructor(
                 RecipeImageDetailViewModel(appRepository)
             isAssignableFrom(SettingViewModel::class.java) ->
                 SettingViewModel(appRepository)
+            isAssignableFrom(IngredientsViewModel::class.java) ->
+                IngredientsViewModel(appRepository)
+            isAssignableFrom(ColdStorageViewModel::class.java) ->
+                ColdStorageViewModel(appRepository)
+            isAssignableFrom(FrozenStorageViewModel::class.java) ->
+                FrozenStorageViewModel(appRepository)
+            isAssignableFrom(RoomTemperatureStorageViewModel::class.java) ->
+                RoomTemperatureStorageViewModel(appRepository)
+            isAssignableFrom(IngredientsAddViewModel::class.java) ->
+                IngredientsAddViewModel(appRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
