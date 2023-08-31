@@ -21,6 +21,7 @@
     <color name="text_gray">#aeb2b6</color>
     <color name="text_dark_gray">#66696c</color>
     <color name="text_red">#f83109</color>
+    <color name="text_bright_red">#FFA391</color>
 
     <color name="text_blue">#D4E0EE</color>
 

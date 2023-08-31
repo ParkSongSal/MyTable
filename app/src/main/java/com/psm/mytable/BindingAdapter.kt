@@ -1,10 +1,11 @@
 package com.psm.mytable
 
-import android.util.Log
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.psm.mytable.ui.basket.ShoppingBasketAdapter
 import com.psm.mytable.ui.basket.ShoppingBasketItemData
+import com.psm.mytable.ui.ingredients.IngredientsAdapter
+import com.psm.mytable.ui.ingredients.IngredientsItemData
 import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.ui.recipe.RecipeSearchAdapter
@@ -45,3 +46,17 @@ fun setShoppingBasketListItem(listView: RecyclerView, items: List<ShoppingBasket
         (listView.adapter as ShoppingBasketAdapter).submitList(items)
     }
 }
+
+/**
+ * # 재료관리
+ * - 냉장 재료 리스트
+ * */
+@BindingAdapter("app:ingredientsList")
+fun setIngredientsListItem(listView: RecyclerView, items: List<IngredientsItemData>?) {
+    items?.let {
+        (listView.adapter as IngredientsAdapter).submitList(items)
+    }
+}
+
+
+

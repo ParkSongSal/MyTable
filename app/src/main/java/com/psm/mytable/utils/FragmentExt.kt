@@ -52,11 +52,11 @@ fun setTitleText(view: View, title: String) {
 }
 
 fun Fragment.initToolbar(view: View) {
-    /*view.findViewById<View>(R.id.imgToolbarClose)?.apply {
+    view.findViewById<View>(R.id.imgToolbarClose)?.apply {
         setOnClickListener {
             activity?.finish()
         }
-    }*/
+    }
 
     view.findViewById<View>(R.id.imgToolbarBack)?.apply {
         setOnClickListener {
