@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/recipe"
+            android:icon="@drawable/ic_recipe"
+            android:title="레시피관리"/>
+
         <item
             android:id="@+id/shoppingBasket"
             android:icon="@drawable/baseline_shopping_cart_24"
@@ -11,6 +17,11 @@
             android:id="@+id/setting"
             android:icon="@drawable/baseline_settings_24"
             android:title="설정"/>
+
+        <!--<item
+            android:id="@+id/ingredient"
+            android:icon="@drawable/baseline_search_24"
+            android:title="재료관리"/>-->
 
         <!--<item
             android:id="@+id/materialMng"

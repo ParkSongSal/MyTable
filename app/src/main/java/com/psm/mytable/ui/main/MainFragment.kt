@@ -3,48 +3,32 @@ package com.psm.mytable.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.google.android.material.navigation.NavigationView
 import com.psm.mytable.App
 import com.psm.mytable.EventObserver
 import com.psm.mytable.MainActivity
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentMainBinding
-import com.psm.mytable.ui.basket.ShoppingBasketListActivity
 import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.ui.recipe.RecipeSearchAdapter
 import com.psm.mytable.ui.recipe.detail.RecipeDetailActivity
 import com.psm.mytable.ui.recipe.update.RecipeUpdateActivity
 import com.psm.mytable.ui.recipe.write.RecipeWriteActivity
-import com.psm.mytable.ui.setting.SettingActivity
-import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.recyclerview.RecyclerViewHorizontalDecoration
 import com.psm.mytable.utils.recyclerview.RecyclerViewVerticalDecoration
 
-class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener  {
+class MainFragment: Fragment(){
     private lateinit var viewDataBinding: FragmentMainBinding
     private val viewModel by viewModels<MainViewModel> { getViewModelFactory() }
 
@@ -57,7 +41,6 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
 
         recipeWriteResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == AppCompatActivity.RESULT_OK){
@@ -86,14 +69,6 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
                 viewModel.getRecipeList()
             }
         }
-
-        settingResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            if(it.resultCode == AppCompatActivity.RESULT_OK){
-                viewModel.getRecipeList()
-            }
-        }
-
-
     }
 
     override fun onCreateView(
@@ -111,7 +86,12 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.lifecycleOwner = this
         setupEvent()
-        checkPermission()
+
+        view.findViewById<View>(R.id.imgToolbarBack)?.apply {
+            setOnClickListener {
+                activity?.finish()
+            }
+        }
 
         viewModel.init(requireContext())
         setupListAdapter()
@@ -128,16 +108,12 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
 
     private fun init(){
 
+
+
         // SearchView 자동 포커스 제거
         viewDataBinding.mainLayout.isFocusableInTouchMode = true
         viewDataBinding.mainLayout.isFocusable = true
 
-
-        viewDataBinding.navigationView.setNavigationItemSelectedListener(this)
-        viewDataBinding.menuBtn.setOnClickListener{
-            viewDataBinding.drawerLayout.openDrawer(GravityCompat.START)
-
-        }
         viewDataBinding.SearchView.setIconifiedByDefault(false)
         viewDataBinding.SearchView.isIconified = false
         viewDataBinding.SearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
@@ -154,10 +130,6 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
 
         })
     }
-    private fun checkPermission() {
-    }
-
-
     private fun setupListAdapter(){
 
         viewDataBinding.recipeList.apply{
@@ -173,14 +145,6 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
             addItemDecoration(RecyclerViewHorizontalDecoration(30))
             addItemDecoration(RecyclerViewVerticalDecoration(30))
             adapter = RecipeSearchAdapter(viewModel)
-        }
-    }
-
-    private fun setupListDivider(){
-        ContextCompat.getDrawable(requireContext(), R.drawable.line_divider)?.let {
-            val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-            divider.setDrawable(it)
-            viewDataBinding.recipeList.addItemDecoration(divider)
         }
     }
 
@@ -205,53 +169,5 @@ class MainFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener 
             arguments = Bundle().apply {
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.main_navigationmenu, menu)
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            // 장바구니
-            R.id.shoppingBasket->{
-                val intent = Intent(activity, ShoppingBasketListActivity::class.java)
-                startActivity(intent)
-                viewDataBinding.drawerLayout.close()
-                return super.onOptionsItemSelected(item)
-            }
-            // 설정
-            R.id.setting->{
-                val intent = Intent(activity, SettingActivity::class.java)
-                settingResult.launch(intent)
-                viewDataBinding.drawerLayout.close()
-                return super.onOptionsItemSelected(item)
-            }
-            /*// 재료관리
-            R.id.materialMng->{
-                Toast.makeText(App.instance, "재료관리", Toast.LENGTH_SHORT).show()
-                //intent = Intent(this, StopWatchActivity::class.java)
-                //startActivity(intent)
-                return super.onOptionsItemSelected(item)
-            }
-            // 주간식단
-            R.id.weeklyDiet->{
-                Toast.makeText(App.instance, "주간식단", Toast.LENGTH_SHORT).show()
-                //intent = Intent(this, StopWatchActivity::class.java)
-                //startActivity(intent)
-                return super.onOptionsItemSelected(item)
-            }
-
-            // 스탑워치
-            R.id.stopWatch->{
-                Toast.makeText(App.instance, "스탑워치", Toast.LENGTH_SHORT).show()
-                //intent = Intent(this, StopWatchActivity::class.java)
-                //startActivity(intent)
-                return super.onOptionsItemSelected(item)
-            }
-           */
-        }
-        return true
     }
 }

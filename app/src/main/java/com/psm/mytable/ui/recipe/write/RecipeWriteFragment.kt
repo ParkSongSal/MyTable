@@ -164,8 +164,8 @@ class RecipeWriteFragment: Fragment() {
 
 
     private fun initView(view: View){
-        val toolbarBack = view.findViewById<ImageFilterView>(R.id.imgToolbarBack)
-        toolbarBack.setOnClickListener{
+        val toolbarClose = view.findViewById<ImageFilterView>(R.id.imgToolbarClose)
+        toolbarClose.setOnClickListener{
             checkSaveDialog()
         }
     }
