@@ -99,13 +99,13 @@ class ShoppingBasketListFragment: Fragment() {
 
         viewModel.completeShoppingItemInsertEvent.observe(viewLifecycleOwner, EventObserver{
             mAdapter.refresh()
-            viewModel.getShoppingBasketList()
+            viewModel.getShoppingBasketListCount()
         })
 
         viewModel.completeShoppingItemDeleteEvent.observe(viewLifecycleOwner, EventObserver{
             ToastUtils.showToast("삭제되었습니다.")
             mAdapter.refresh()
-            viewModel.getShoppingBasketList()
+            viewModel.getShoppingBasketListCount()
         })
 
 

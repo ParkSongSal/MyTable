@@ -67,9 +67,24 @@ class ShoppingBasketListViewModel(
 
         database = RoomDB.getInstance(context)
 
-        getShoppingBasketList()
+        //getShoppingBasketList()
+        getShoppingBasketListCount()
     }
 
+    fun getShoppingBasketListCount(){
+        try{
+            val mCount = database?.shoppingBasketDao()?.getShoppingBasketListCount()
+            if((mCount ?: 0) > 0){
+                updateShoppingBasketVisibleState(true)
+            }else{
+                updateShoppingBasketVisibleState(false)
+            }
+        }catch(e: IllegalStateException){
+            updateShoppingBasketVisibleState(false)
+        }catch(e: Exception){
+            updateShoppingBasketVisibleState(false)
+        }
+    }
     fun getShoppingBasketList(){
 
         /*runBlocking {

@@ -33,4 +33,6 @@ interface ShoppingBasketDao {
     @Query("SELECT * FROM table_shopping_basket ORDER BY id ASC LIMIT 10 OFFSET (:page-1)*10")
     fun getShoppingBasketPagingList(page:Int): List<ShoppingBasketItemData>
 
+    @Query("SELECT count(*) FROM table_shopping_basket")
+    fun getShoppingBasketListCount(): Int
 }
