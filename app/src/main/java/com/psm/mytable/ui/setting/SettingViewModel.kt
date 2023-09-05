@@ -96,6 +96,7 @@ class SettingViewModel(
             runBlocking{
                 val job = viewModelScope.launch(Dispatchers.IO){
                     database?.shoppingBasketDao()?.basketAllDelete()
+                    database?.ingredientDao()?.ingredientAllDelete()
                     //database?.recipeDao()?.recipeAllDelete()
                     val mRecipeList = database?.recipeDao()?.getAllRecipe() ?: listOf()
                     val mBucket = "my-test-butket"
