@@ -18,6 +18,7 @@ import com.psm.mytable.App
 import com.psm.mytable.EventObserver
 import com.psm.mytable.MainActivity
 import com.psm.mytable.databinding.FragmentIntroBinding
+import com.psm.mytable.ui.ingredients.IngredientsActivity
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
 import timber.log.Timber
@@ -51,7 +52,7 @@ class IntroFragment: Fragment(){
         Handler(Looper.getMainLooper()).postDelayed(
             {
                 initAd()
-            },2000
+            },1500
         )
     }
 
@@ -66,7 +67,7 @@ class IntroFragment: Fragment(){
     private fun setupEvent() {
 
         viewModel.appInitCompleteEvent.observe(viewLifecycleOwner, EventObserver{
-            val intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, IngredientsActivity::class.java)
             startActivity(intent)
             activity?.finish()
             /*Handler(Looper.getMainLooper()).postDelayed(
@@ -84,6 +85,7 @@ class IntroFragment: Fragment(){
             override fun onAdFailedToLoad(p0: LoadAdError) {
                 super.onAdFailedToLoad(p0)
                 mInterstitialAd = null
+                viewModel.appInit()
             }
 
             override fun onAdLoaded(interstitialAd: InterstitialAd) {
