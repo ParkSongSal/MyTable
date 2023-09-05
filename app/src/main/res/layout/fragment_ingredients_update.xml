@@ -20,17 +20,18 @@
     <data>
 
         <import type="android.view.View" />
+        <import type="com.psm.mytable.type.RecipeSearchType" />
 
         <variable
             name="viewmodel"
-            type="com.psm.mytable.ui.ingredients.ingredientsAdd.IngredientsAddViewModel" />
+            type="com.psm.mytable.ui.ingredients.ingredientUpdate.IngredientsUpdateViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-       <include layout="@layout/layout_toolbar_close"/>
+        <include layout="@layout/layout_toolbar_close" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -61,7 +62,7 @@
                         android:text="*재료명"
                         android:textColor="@color/base_text"
                         android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/ingredientNameEdit"
@@ -69,11 +70,11 @@
                         android:layout_height="48dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_input_border"
-                        android:text="@={viewmodel.ingredientsAddViewData.ingredientName}"
                         android:hint="돼지고기"
                         android:maxLength="20"
                         android:paddingStart="10dp"
-                        android:textSize="15sp"/>
+                        android:text="@={viewmodel.ingredientsData.ingredientName}"
+                        android:textSize="15sp" />
 
                     <!-- 개수 -->
                     <TextView
@@ -83,18 +84,18 @@
                         android:text="*개수"
                         android:textColor="@color/base_text"
                         android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_input_border"
-                        android:text="@={viewmodel.ingredientsAddViewData.ingredientCount}"
                         android:hint="ex) 1개, 100g, 500L"
                         android:maxLength="20"
                         android:paddingStart="10dp"
-                        android:textSize="15sp"/>
+                        android:text="@={viewmodel.ingredientsData.ingredientCount}"
+                        android:textSize="15sp" />
 
                     <!-- 보관방법 -->
                     <TextView
@@ -104,45 +105,45 @@
                         android:text="*보관방법"
                         android:textColor="@color/base_text"
                         android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <RadioGroup
                         android:id="@+id/rgStorage"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:orientation="horizontal"
-                        android:checkedButton="@={viewmodel.ingredientsAddViewData.checkedStorage}"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="8dp"
+                        android:checkedButton="@={viewmodel.ingredientsData.checkedStorage}"
+                        android:orientation="horizontal">
 
                         <RadioButton
                             android:id="@+id/rdoCold"
+                            style="@style/SegmentRadioButton"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="@string/ingredients_add_1_001"
                             android:background="@drawable/bg_radio_segment"
-                            style="@style/SegmentRadioButton" />
+                            android:text="@string/ingredients_add_1_001" />
 
                         <RadioButton
                             android:id="@+id/rdoFrozen"
+                            style="@style/SegmentRadioButton"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="5dp"
-                            android:text="@string/ingredients_add_1_002"
+                            android:layout_weight="1"
                             android:background="@drawable/bg_radio_segment"
-                            style="@style/SegmentRadioButton" />
+                            android:text="@string/ingredients_add_1_002" />
 
                         <RadioButton
                             android:id="@+id/rdoRoomTemperature"
+                            style="@style/SegmentRadioButton"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="@string/ingredients_add_1_003"
                             android:background="@drawable/bg_radio_segment"
-                            tools:checked="true"
-                            style="@style/SegmentRadioButton" />
+                            android:text="@string/ingredients_add_1_003"
+                            tools:checked="true" />
                     </RadioGroup>
 
                     <!-- 유통(소비)기한 -->
@@ -153,7 +154,7 @@
                         android:text="*유통(소비)기한"
                         android:textColor="@color/base_text"
                         android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
@@ -165,28 +166,28 @@
                             style="@style/CommonEditText44"
                             android:layout_width="wrap_content"
                             android:layout_height="48dp"
-                            android:gravity="center_vertical"
                             android:layout_weight="1"
                             android:background="@drawable/bg_input_border"
-                            android:hint="@string/ingredients_add_1_004"
-                            android:text="@={viewmodel.ingredientsAddViewData.expirationDate}"
-                            android:onClick="@{() -> viewmodel.clickSelectExpirationDate()}"
-                            android:textColor="@color/base_text"
                             android:drawableEnd="@drawable/ic_calendar_24"
-                            tools:text="2023-08-31"/>
+                            android:gravity="center_vertical"
+                            android:hint="@string/ingredients_add_1_004"
+                            android:onClick="@{() -> viewmodel.clickSelectExpirationDate()}"
+                            android:text="@={viewmodel.ingredientsData.expirationDate}"
+                            android:textColor="@color/base_text"
+                            tools:text="2023-08-31" />
 
                         <!-- 유통(소비)기한 검색 -->
                         <androidx.appcompat.widget.AppCompatTextView
                             style="@style/CommonEditText44"
                             android:layout_width="wrap_content"
                             android:layout_height="48dp"
-                            android:layout_weight="1"
                             android:layout_marginStart="6dp"
+                            android:layout_weight="1"
+                            android:drawableEnd="@drawable/ic_search_24_main_color"
                             android:gravity="center_vertical"
-                            android:text="유통(소비)기한 검색"
                             android:onClick="@{() -> viewmodel.expirationDateSearchClick()}"
-                            android:textColor="@color/base_hint"
-                            android:drawableEnd="@drawable/ic_search_24_main_color"/>
+                            android:text="유통(소비)기한 검색"
+                            android:textColor="@color/base_hint" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -198,7 +199,7 @@
                         android:text="메모"
                         android:textColor="@color/base_text"
                         android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/memoEdit"
@@ -206,25 +207,106 @@
                         android:layout_height="250dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_input_border"
-                        android:text="@={viewmodel.ingredientsAddViewData.memo}"
+                        android:gravity="top"
                         android:hint="ex) 제육볶음 재료"
                         android:maxLength="100"
-                        android:gravity="top"
-                        android:paddingTop="10dp"
                         android:paddingStart="10dp"
-                        android:textSize="15sp"/>
+                        android:paddingTop="10dp"
+                        android:text="@={viewmodel.ingredientsData.memo}"
+                        android:textSize="15sp" />
 
+                    <com.google.android.gms.ads.AdView
+                        xmlns:ads="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/adView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center"
+                        ads:adSize="SMART_BANNER"
+                        ads:adUnitId="@string/banner_admob_key2"/>
+
+                    <!-- 레시피 검색 -->
                     <TextView
-                        android:id="@+id/addBtn"
-                        style="@style/PositiveButton"
-                        android:text="@string/ingredients_add_1_006"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="레시피 검색"
+                        android:textColor="@color/base_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+                        <!-- 네이버 -->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:background="@drawable/bg_round_rect_stroke_e2"
+                            android:onClick="@{() -> viewmodel.recipeSearchClick(RecipeSearchType.NAVER)}"
+                            android:text="네이버"
+                            android:textColor="@color/base_hint"/>
+
+                        <!-- 만개의 레피시 -->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_round_rect_stroke_e2"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginEnd="6dp"
+                            android:gravity="center"
+                            android:onClick="@{() -> viewmodel.recipeSearchClick(RecipeSearchType.MANGAE)}"
+                            android:text="만개의레시피"
+                            android:textColor="@color/base_hint"/>
+
+                        <!-- 유튜브 -->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:background="@drawable/bg_round_rect_stroke_e2"
+                            android:onClick="@{() -> viewmodel.recipeSearchClick(RecipeSearchType.YOUTUBE)}"
+                            android:text="유튜브"
+                            android:textColor="@color/base_hint"/>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal"
                         android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:enabled="@{viewmodel.ingredientsAddViewData.requiredDataComplete}"
-                        android:onClick="@{() -> viewmodel.ingredientAddClick()}"
-                        tools:enabled="true"/>
+                        android:layout_marginBottom="20dp">
+                        <TextView
+                            android:id="@+id/deleteBtn"
+                            style="@style/NegativeButton"
+                            android:layout_weight="1"
+                            android:onClick="@{() -> viewmodel.clickDelete(viewmodel.ingredientsData)}"
+                            android:text="@string/ingredients_update_1_002"
+                            tools:enabled="true" />
+
+                        <TextView
+                            android:id="@+id/addBtn"
+                            style="@style/PositiveButton"
+                            android:layout_weight="1"
+                            android:layout_marginStart="6dp"
+                            android:enabled="@{viewmodel.ingredientsData.requiredDataComplete}"
+                            android:onClick="@{() -> viewmodel.clickNext()}"
+                            android:text="@string/ingredients_update_1_001"
+                            tools:enabled="true" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
 
             </ScrollView>
 

@@ -34,8 +34,6 @@ class IngredientsAdapter(private val viewModel: IngredientsViewModel) : ListAdap
                 binding.pointView.setBackgroundColor(Color.parseColor("#CDDC39"))
             }
 
-            itemData.itemCount = "[${itemData.itemCount}]"
-
             if(itemData.remainDay.toInt() >= -5){
                 // 유통(소비)기한 5일 이내 남음
                 binding.remainText.setTextColor(Color.parseColor("#FFA391"))
@@ -43,6 +41,8 @@ class IngredientsAdapter(private val viewModel: IngredientsViewModel) : ListAdap
                 // 유통(소비)기한 5일 이상 남음
                 binding.remainText.setTextColor(Color.parseColor("#7293AD"))
             }
+
+            binding.itemCountText.text = "[${itemData.itemCount}]"
 
             when{
                 itemData.remainDay == "-0" -> {

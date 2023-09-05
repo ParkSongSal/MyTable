@@ -1,10 +1,12 @@
 package com.psm.mytable.ui.ingredients
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.FragmentTransaction
 import com.psm.mytable.R
 import com.psm.mytable.databinding.ActivityIngredientsBinding
+import java.io.File
 
 class IngredientsActivity : AppCompatActivity() {
 
@@ -25,5 +27,11 @@ class IngredientsActivity : AppCompatActivity() {
         transaction.commit()
 
 
+    }
+
+    companion object {
+
+
+        const val EXTRA_UPDATE_INGREDIENTS = "EXTRA_UPDATE_INGREDIENTS"
     }
 }

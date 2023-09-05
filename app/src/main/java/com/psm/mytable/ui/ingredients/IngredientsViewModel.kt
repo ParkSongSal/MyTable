@@ -8,7 +8,6 @@ import com.psm.mytable.Event
 import com.psm.mytable.room.AppRepository
 import com.psm.mytable.room.RoomDB
 import com.psm.mytable.utils.CalendarUtils
-import timber.log.Timber
 
 /**
  * 설정 화면 노출 및 앱 초기화
@@ -55,6 +54,10 @@ class IngredientsViewModel(
         get() = _goIngredientAddEvent
 
 
+    private val _openIngredientsDetailEvent = MutableLiveData<Event<IngredientsItemData>>()
+    val openIngredientsDetailEvent: LiveData<Event<IngredientsItemData>>
+        get() = _openIngredientsDetailEvent
+
     private var database: RoomDB? = null
 
     fun appInit(context: Context) {
@@ -64,29 +67,37 @@ class IngredientsViewModel(
 
     fun getColdStorageList() {
 
-        val mColdList = database?.ingredientDao()?.getColdStorage() ?: listOf()
+        try{
+            val mColdList = database?.ingredientDao()?.getColdStorage() ?: listOf()
 
-        if(mColdList.isNotEmpty()){
-            _coldStorageListItem.value = mColdList.map{ingredient ->
-                IngredientsItemData(
-                    id = ingredient.id,
-                    itemName = ingredient.ingredientName,
-                    itemCount = ingredient.ingredientCount,
-                    storage = ingredient.storage,
-                    storageType = ingredient.storageType,
-                    regDate = ingredient.regDate,
-                    expiryDate = ingredient.expiryDate,
-                    remainDay = CalendarUtils.getDDay(ingredient.expiryDate),
-                    memo = ingredient.memo ?: ""
-                )
+            if(mColdList.isNotEmpty()){
+                _coldStorageListItem.value = mColdList.map{ingredient ->
+                    IngredientsItemData(
+                        id = ingredient.id,
+                        itemName = ingredient.ingredientName,
+                        itemCount = ingredient.ingredientCount,
+                        storage = ingredient.storage,
+                        storageType = ingredient.storageType,
+                        regDate = ingredient.regDate,
+                        expiryDate = ingredient.expiryDate,
+                        remainDay = CalendarUtils.getDDay(ingredient.expiryDate),
+                        memo = ingredient.memo ?: ""
+                    )
+                }
+                /**
+                 * Dummy Data
+                 * _coldStorageList = 0개
+                 * */
+                //_coldStorageListItem.value = emptyList()
+            }else{
+                _coldStorageListItem.value = emptyList()
             }
-            /**
-             * Dummy Data
-             * _coldStorageList = 0개
-             * */
-            //_frozenStorageListItem.value = emptyList()
-        }else{
+        }catch(e: IllegalStateException){
             _coldStorageListItem.value = emptyList()
+        }catch(e: Exception){
+            _coldStorageListItem.value = emptyList()
+        }finally {
+            updateColdStorageVisibleState()
         }
 
         /**
@@ -155,7 +166,7 @@ class IngredientsViewModel(
          * _coldStorageList = 0개
          * */
         //_coldStorageList.value = listOf()
-        updateColdStorageVisibleState()
+
     }
 
     fun getFrozenStorageList() {
@@ -187,60 +198,75 @@ class IngredientsViewModel(
                 memo = ""
             )
         )*/
-        val mFrozenList = database?.ingredientDao()?.getFrozenStorage() ?: listOf()
+        try{
+            val mFrozenList = database?.ingredientDao()?.getFrozenStorage() ?: listOf()
 
-        if(mFrozenList.isNotEmpty()){
-            _frozenStorageListItem.value = mFrozenList.map{ingredient ->
-                IngredientsItemData(
-                    id = ingredient.id,
-                    itemName = ingredient.ingredientName,
-                    itemCount = ingredient.ingredientCount,
-                    storage = ingredient.storage,
-                    storageType = ingredient.storageType,
-                    regDate = ingredient.regDate,
-                    expiryDate = ingredient.expiryDate,
-                    remainDay = CalendarUtils.getDDay(ingredient.expiryDate),
-                    memo = ingredient.memo ?: ""
-                )
+            if(mFrozenList.isNotEmpty()){
+                _frozenStorageListItem.value = mFrozenList.map{ingredient ->
+                    IngredientsItemData(
+                        id = ingredient.id,
+                        itemName = ingredient.ingredientName,
+                        itemCount = ingredient.ingredientCount,
+                        storage = ingredient.storage,
+                        storageType = ingredient.storageType,
+                        regDate = ingredient.regDate,
+                        expiryDate = ingredient.expiryDate,
+                        remainDay = CalendarUtils.getDDay(ingredient.expiryDate),
+                        memo = ingredient.memo ?: ""
+                    )
+                }
+                /**
+                 * Dummy Data
+                 * _coldStorageList = 0개
+                 * */
+                //_frozenStorageListItem.value = emptyList()
+            }else{
+                _frozenStorageListItem.value = emptyList()
             }
-            /**
-             * Dummy Data
-             * _coldStorageList = 0개
-             * */
-            //_frozenStorageListItem.value = emptyList()
-        }else{
+        }catch(e: IllegalStateException){
             _frozenStorageListItem.value = emptyList()
+        }catch(e: Exception){
+            _frozenStorageListItem.value = emptyList()
+        }finally {
+            updateFrozenStorageVisibleState()
         }
-        updateFrozenStorageVisibleState()
+
     }
 
     fun getRoomTemperatureList(){
 
-        val mRoomTemperatureList = database?.ingredientDao()?.getRoomTemperatureStorage() ?: listOf()
+        try{
+            val mRoomTemperatureList = database?.ingredientDao()?.getRoomTemperatureStorage() ?: listOf()
 
-        if(mRoomTemperatureList.isNotEmpty()){
-            _roomTemperatureStorageListItem.value = mRoomTemperatureList.map{ingredient ->
-                IngredientsItemData(
-                    id = ingredient.id,
-                    itemName = ingredient.ingredientName,
-                    itemCount = ingredient.ingredientCount,
-                    storage = ingredient.storage,
-                    storageType = ingredient.storageType,
-                    regDate = ingredient.regDate,
-                    expiryDate = ingredient.expiryDate,
-                    remainDay = CalendarUtils.getDDay(ingredient.expiryDate),
-                    memo = ingredient.memo ?: ""
-                )
+            if(mRoomTemperatureList.isNotEmpty()){
+                _roomTemperatureStorageListItem.value = mRoomTemperatureList.map{ingredient ->
+                    IngredientsItemData(
+                        id = ingredient.id,
+                        itemName = ingredient.ingredientName,
+                        itemCount = ingredient.ingredientCount,
+                        storage = ingredient.storage,
+                        storageType = ingredient.storageType,
+                        regDate = ingredient.regDate,
+                        expiryDate = ingredient.expiryDate,
+                        remainDay = CalendarUtils.getDDay(ingredient.expiryDate),
+                        memo = ingredient.memo ?: ""
+                    )
+                }
+                /**
+                 * Dummy Data
+                 * _coldStorageList = 0개
+                 * */
+                //_frozenStorageListItem.value = emptyList()
+            }else{
+                _roomTemperatureStorageListItem.value = emptyList()
             }
-            /**
-             * Dummy Data
-             * _coldStorageList = 0개
-             * */
-            //_frozenStorageListItem.value = emptyList()
-        }else{
-            _roomTemperatureStorageListItem.value = emptyList()
+        }catch(e: IllegalStateException){
+            _frozenStorageListItem.value = emptyList()
+        }catch(e: Exception){
+            _frozenStorageListItem.value = emptyList()
+        }finally {
+            updateRoomTemperatureStorageVisibleState()
         }
-        updateRoomTemperatureStorageVisibleState()
     }
 
     private fun updateColdStorageVisibleState() {
@@ -260,5 +286,9 @@ class IngredientsViewModel(
 
     fun clickIngredientAdd(){
         _goIngredientAddEvent.value = Event(Unit)
+    }
+
+    fun clickIngredientsDetail(itemData : IngredientsItemData){
+        _openIngredientsDetailEvent.value = Event(itemData)
     }
 }

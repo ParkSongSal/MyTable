@@ -56,13 +56,23 @@
     <string name="ingredients_add_1_005">재료명을 입력 후 검색해주세요.</string>
     <string name="ingredients_add_1_006">추가</string>
 
+    <!-- 재료 수정 -->
+    <string name="ingredients_update_1_000">재료관리</string>
+    <string name="ingredients_update_1_001">수정</string>
+    <string name="ingredients_update_1_002">삭제</string>
+    <string name="ingredients_update_1_003">[%1$s]</string>
+
 
     <string name="etc_1_001">카메라 촬영</string>
     <string name="etc_1_002">앨범 선택</string>
+    <string name="etc_1_003">네이버</string>
+    <string name="etc_1_004">만개의레시피</string>
+    <string name="etc_1_005">유튜브</string>
+
 
     <string name="setting_1_001">설정</string>
 
-    <string name="data_reset_dialog_1_001">작성한 레시피, 장바구니 데이터가\n모두 초기화됩니다.\n진행하시겠습니까?</string>
+    <string name="data_reset_dialog_1_001">작성하였던 재료, 레시피,\n 장바구니 데이터가 모두 초기화됩니다.\n진행하시겠습니까?</string>
 
     <string name="storage_permission_rationale_title">title</string>
     <string name="storage_permission_rationale_message">message</string>

@@ -18,9 +18,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
 
+        <import type="android.text.Html" />
         <import type="android.widget.CompoundButton" />
         <import type="android.view.View"/>
-        <import type="com.psm.mytable.type.RecipeType"/>
         <variable
             name="itemData"
             type="com.psm.mytable.ui.ingredients.IngredientsItemData" />
@@ -35,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_margin="10dp"
+        android:onClick="@{() -> viewmodel.clickIngredientsDetail(itemData)}"
         app:cardCornerRadius="12dp">
 
         <View
@@ -63,12 +64,13 @@
 
             <!-- 재료 개수 -->
             <TextView
+                android:id="@+id/itemCountText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="1dp"
-                android:text="@{itemData.itemCount}"
+                android:text="@{String.format(@string/ingredients_update_1_003, itemData.itemCount)}"
                 android:textColor="@color/text_gray"
                 android:textSize="16sp"
                 tools:text="[ 1개 ]"/>

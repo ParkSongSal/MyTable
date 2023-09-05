@@ -1,6 +1,5 @@
 package com.psm.mytable.ui.ingredients
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,7 +15,6 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.psm.mytable.EventObserver
@@ -24,17 +22,13 @@ import com.psm.mytable.MainActivity
 import com.psm.mytable.R
 import com.psm.mytable.adapter.ViewPagerFragmentStateAdapter
 import com.psm.mytable.databinding.FragmentIngredientsBinding
-import com.psm.mytable.databinding.FragmentSettingBinding
-import com.psm.mytable.type.AppEvent
 import com.psm.mytable.ui.basket.ShoppingBasketListActivity
+import com.psm.mytable.ui.ingredients.ingredientUpdate.IngredientsUpdateActivity
 import com.psm.mytable.ui.ingredients.ingredientsAdd.IngredientsAddActivity
 import com.psm.mytable.ui.setting.SettingActivity
-import com.psm.mytable.utils.ToastUtils
-import com.psm.mytable.utils.getSupportFragmentManager
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.initToolbar
 import com.psm.mytable.utils.setTitleText
-import com.psm.mytable.utils.showYesNoDialog
 
 class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener  {
     private lateinit var viewDataBinding: FragmentIngredientsBinding
@@ -43,22 +37,28 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
 
     private lateinit var settingResult: ActivityResultLauncher<Intent>
     private lateinit var ingredientAddResult: ActivityResultLauncher<Intent>
+    private lateinit var ingredientsDetailResult: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         settingResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == AppCompatActivity.RESULT_OK){
-                //viewModel.getRecipeList()
+                activity?.recreate()
             }
         }
 
         ingredientAddResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == AppCompatActivity.RESULT_OK){
-                //viewModel.getRecipeList()
-                //viewModel.testFrozenList()
                 activity?.recreate()
             }
         }
+
+        ingredientsDetailResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            if(it.resultCode == AppCompatActivity.RESULT_OK){
+                activity?.recreate()
+            }
+        }
+
     }
 
     override fun onCreateView(
@@ -125,6 +125,12 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
         viewModel.goIngredientAddEvent.observe(viewLifecycleOwner, EventObserver{
             val intent = Intent(activity, IngredientsAddActivity::class.java)
             ingredientAddResult.launch(intent)
+        })
+
+        viewModel.openIngredientsDetailEvent.observe(viewLifecycleOwner, EventObserver{ingredients->
+            val intent = Intent(activity, IngredientsUpdateActivity::class.java)
+            intent.putExtra(IngredientsActivity.EXTRA_UPDATE_INGREDIENTS, ingredients)
+            ingredientsDetailResult.launch(intent)
         })
     }
 

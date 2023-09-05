@@ -84,10 +84,6 @@ class IngredientsAddViewModel(
             database?.ingredientDao()?.insert(mData)
         }
         hideProgress()
-        val test = database?.ingredientDao()?.getAllIngredient()
-        if(test?.isNotEmpty() == true){
-            Timber.d("psm_ingredient : ${test.toString()}")
-        }
         _completeIngredientDataInsertEvent.value = Event(Unit)
 
     }

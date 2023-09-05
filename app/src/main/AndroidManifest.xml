@@ -78,6 +78,10 @@
         <activity
             android:name=".ui.ingredients.ingredientsAdd.IngredientsAddActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.ingredients.ingredientUpdate.IngredientsUpdateActivity"
+            android:exported="false" />
+
         <!-- Google Admob -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

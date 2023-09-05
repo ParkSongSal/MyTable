@@ -29,6 +29,7 @@ import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeViewModel
 import com.psm.mytable.ui.ingredients.IngredientsViewModel
 import com.psm.mytable.ui.ingredients.cold.ColdStorageViewModel
 import com.psm.mytable.ui.ingredients.frozen.FrozenStorageViewModel
+import com.psm.mytable.ui.ingredients.ingredientUpdate.IngredientsUpdateViewModel
 import com.psm.mytable.ui.ingredients.ingredientsAdd.IngredientsAddViewModel
 import com.psm.mytable.ui.ingredients.roomTemperature.RoomTemperatureStorageViewModel
 import com.psm.mytable.ui.intro.IntroViewModel
@@ -84,6 +85,8 @@ class ViewModelFactory constructor(
                 RoomTemperatureStorageViewModel(appRepository)
             isAssignableFrom(IngredientsAddViewModel::class.java) ->
                 IngredientsAddViewModel(appRepository)
+            isAssignableFrom(IngredientsUpdateViewModel::class.java) ->
+                IngredientsUpdateViewModel(appRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
