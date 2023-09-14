@@ -25,6 +25,7 @@ class ColdStorageFragment: Fragment(){
     private val viewModel by viewModels<ColdStorageViewModel> { getViewModelFactory() }
     private val mViewModel by viewModels<IngredientsViewModel> { getViewModelFactory() }
     private lateinit var ingredientsDetailResult: ActivityResultLauncher<Intent>
+    private lateinit var ingredientSearchResult: ActivityResultLauncher<Intent>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +37,16 @@ class ColdStorageFragment: Fragment(){
             }
         }
 
+        ingredientSearchResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            when(it.resultCode){
+                AppCompatActivity.RESULT_OK -> {
+                    activity?.recreate()
+                }
+                AppCompatActivity.RESULT_CANCELED -> {
+                    return@registerForActivityResult
+                }
+            }
+        }
     }
 
     override fun onCreateView(

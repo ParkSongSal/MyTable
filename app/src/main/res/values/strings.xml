@@ -55,6 +55,7 @@
     <string name="ingredients_add_1_004">선택해주세요.</string>
     <string name="ingredients_add_1_005">재료명을 입력 후 검색해주세요.</string>
     <string name="ingredients_add_1_006">추가</string>
+    <string name="ingredients_add_1_007">냉장/냉동/실온 탭</string>
 
     <!-- 재료 수정 -->
     <string name="ingredients_update_1_000">재료관리</string>
@@ -62,6 +63,8 @@
     <string name="ingredients_update_1_002">삭제</string>
     <string name="ingredients_update_1_003">[%1$s]</string>
 
+    <!-- 재료 검색 -->
+    <string name="ingredients_search_1_000">식재료검색</string>
 
     <string name="etc_1_001">카메라 촬영</string>
     <string name="etc_1_002">앨범 선택</string>

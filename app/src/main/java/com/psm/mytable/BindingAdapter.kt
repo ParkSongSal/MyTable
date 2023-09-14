@@ -6,6 +6,8 @@ import com.psm.mytable.ui.basket.ShoppingBasketAdapter
 import com.psm.mytable.ui.basket.ShoppingBasketItemData
 import com.psm.mytable.ui.ingredients.IngredientsAdapter
 import com.psm.mytable.ui.ingredients.IngredientsItemData
+import com.psm.mytable.ui.ingredients.search.IngredientSearchAdapter
+import com.psm.mytable.ui.ingredients.search.IngredientSearchResultAdapter
 import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.ui.recipe.RecipeSearchAdapter
@@ -58,5 +60,28 @@ fun setIngredientsListItem(listView: RecyclerView, items: List<IngredientsItemDa
     }
 }
 
+/**
+ * # 재료관리 검색
+ * - 냉장 재료 리스트
+ * */
+@BindingAdapter("app:ingredientsSearchList")
+fun setIngredientsSearchListItem(listView: RecyclerView, items: List<IngredientsItemData>?) {
+    items?.let {
+        (listView.adapter as IngredientSearchAdapter).submitList(items)
+    }
+}
 
+
+
+
+/**
+ * # 재료관리 검색 결과
+ * - 냉장 재료 리스트
+ * */
+@BindingAdapter("app:ingredientSearchResultItems")
+fun setIngredientsSearchResultListItem(listView: RecyclerView, items: List<IngredientsItemData>?) {
+    items?.let {
+        (listView.adapter as IngredientSearchResultAdapter).submitList(items)
+    }
+}
 

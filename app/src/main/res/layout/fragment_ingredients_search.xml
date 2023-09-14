@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ContentDescription,LabelFor,TextFields,Autofill,TooManyViews"
+    tools:targetApi="o">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="com.psm.mytable.ui.ingredients.search.IngredientsSearchViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/layout_toolbar_back"/>
+
+       <!-- <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:contentInsetStart="0dp"
+                android:contentInsetLeft="0dp"
+                android:contentInsetEnd="0dp"
+                android:contentInsetRight="0dp"
+                app:contentInsetEnd="0dp"
+                app:contentInsetLeft="0dp"
+                app:contentInsetRight="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <androidx.constraintlayout.utils.widget.ImageFilterView
+                        android:id="@+id/imgToolbarBack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_back"
+                        android:visibility="visible"
+                        android:layout_marginEnd="10dp"
+                        android:onClick="@{() -> viewmodel.clickBack()}"
+                        tools:visibility="visible" />
+
+
+                    <TextView
+                        android:id="@+id/textToolbarTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/app_name"
+                        android:textColor="@color/text_white"
+                        android:layout_marginStart="6dp"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        tools:text="식재료검색"
+                        android:gravity="start"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.Toolbar>
+        </androidx.appcompat.widget.LinearLayoutCompat>-->
+
+        <View
+            android:id="@+id/guideline1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/base_hint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolBar"
+            app:layout_constraintBottom_toTopOf="@id/searchLinear"/>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/searchLinear"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_round4_rect_stroke_solid_white"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guideline1"
+            app:layout_constraintBottom_toTopOf="@id/constraintLayout1">
+
+
+            <com.psm.mytable.ui.custom.ClearEditText
+                android:id="@+id/searchText"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="재료를 검색하세요"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:paddingStart="15dp"
+                android:paddingEnd="5dp"
+                android:textSize="15sp"
+                android:text="@={viewmodel.searchWord}"
+                app:addTextChangedListener="@{viewmodel.onSearchWordEditTextWatcher()}" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchLinear">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ingredientList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="10dp"
+                    android:visibility="@{viewmodel.ingredientListVisibility ? View.VISIBLE: View.GONE}"
+                    app:ingredientsSearchList="@{viewmodel.ingredientsListItem}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ingredientSearchResultList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp"
+                    android:clipToPadding="false"
+                    tools:visibility="gone"
+                    android:visibility="@{viewmodel.searchListVisibility ? View.VISIBLE : View.GONE}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:ingredientSearchResultItems="@{viewmodel.searchResultItems}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+                <!--app:shoppingBasketList="@{viewmodel.items}"-->
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="@{viewmodel.emptyLayoutVisible ? View.VISIBLE: View.GONE}"
+                tools:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:id="@+id/emptyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="찾으시는 재료가 없습니다."
+                    android:textColor="#bbb"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

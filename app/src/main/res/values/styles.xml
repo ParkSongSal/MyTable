@@ -10,7 +10,7 @@
 
     <style name="MySearchViewStyle">
         <item name="searchIcon">@null</item>
-        <item name="closeIcon">@drawable/baseline_close_24</item>
+        <item name="closeIcon">@drawable/ic_close</item>
         <item name="hintTextColor">@color/text_d2d2d2</item>
         <item name="android:textColor">@color/text_d2d2d2</item>
     </style>
@@ -36,7 +36,7 @@
 
 
     <style name="CommonEditText" parent="BaseEditText">
-        <item name="android:background">@drawable/bg_round_rect_stroke_e2</item>
+        <item name="android:background">@drawable/bg_round4_rect_stroke_solid_white2</item>
     </style>
 
     <style name="CommonEditText44" parent="CommonEditText">
