@@ -1,4 +1,4 @@
-package com.psm.mytable.ui.ingredients
+package com.psm.mytable.ui.ingredients.search
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.psm.mytable.databinding.ItemIngredientsBinding
+import com.psm.mytable.databinding.ItemSearchIngredientsBinding
+import com.psm.mytable.ui.ingredients.IngredientsItemData
+import com.psm.mytable.ui.ingredients.IngredientsViewModel
 
-class IngredientsAdapter(private val viewModel: IngredientsViewModel) : ListAdapter<IngredientsItemData, IngredientsAdapter.ViewHolder>(
+class IngredientSearchAdapter(private val viewModel: IngredientsViewModel) : ListAdapter<IngredientsItemData, IngredientSearchAdapter.ViewHolder>(
     ServiceInformationDataDiffCallback()
 ) {
 
@@ -23,10 +25,11 @@ class IngredientsAdapter(private val viewModel: IngredientsViewModel) : ListAdap
         return ViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(val binding: ItemIngredientsBinding) :
+    class ViewHolder private constructor(val binding: ItemSearchIngredientsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(viewModel: IngredientsViewModel, itemData: IngredientsItemData) {
+
 
             if(itemData.remainDay.toInt() >= -5){
                 // 유통(소비)기한 5일 이내 남음
@@ -35,6 +38,7 @@ class IngredientsAdapter(private val viewModel: IngredientsViewModel) : ListAdap
                 // 유통(소비)기한 5일 이상 남음
                 binding.remainText.setTextColor(Color.parseColor("#7293AD"))
             }
+
             binding.viewmodel = viewModel
             binding.itemData = itemData
             binding.executePendingBindings()
@@ -42,14 +46,10 @@ class IngredientsAdapter(private val viewModel: IngredientsViewModel) : ListAdap
 
         }
 
-        fun checkRemainDay(){
-
-        }
-
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemIngredientsBinding.inflate(layoutInflater, parent, false)
+                val binding = ItemSearchIngredientsBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }

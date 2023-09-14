@@ -49,9 +49,14 @@ class IngredientsViewModel(
     val emptyRoomTemperatureStorageListVisibility: LiveData<Boolean>
         get() = _emptyRoomTemperatureStorageListVisibility
 
+    private var _goIngredientSearchEvent = MutableLiveData<Event<Unit>>()
+    val goIngredientSearchEvent: LiveData<Event<Unit>>
+        get() = _goIngredientSearchEvent
+
     private var _goIngredientAddEvent = MutableLiveData<Event<Unit>>()
     val goIngredientAddEvent: LiveData<Event<Unit>>
         get() = _goIngredientAddEvent
+
 
 
     private val _openIngredientsDetailEvent = MutableLiveData<Event<IngredientsItemData>>()
@@ -83,6 +88,8 @@ class IngredientsViewModel(
                         remainDay = CalendarUtils.getDDay(ingredient.expiryDate),
                         memo = ingredient.memo ?: ""
                     )
+                }.sortedByDescending {
+                    it.remainDay.toInt()
                 }
                 /**
                  * Dummy Data
@@ -214,6 +221,8 @@ class IngredientsViewModel(
                         remainDay = CalendarUtils.getDDay(ingredient.expiryDate),
                         memo = ingredient.memo ?: ""
                     )
+                }.sortedByDescending {
+                    it.remainDay.toInt()
                 }
                 /**
                  * Dummy Data
@@ -251,6 +260,8 @@ class IngredientsViewModel(
                         remainDay = CalendarUtils.getDDay(ingredient.expiryDate),
                         memo = ingredient.memo ?: ""
                     )
+                }.sortedByDescending {
+                    it.remainDay.toInt()
                 }
                 /**
                  * Dummy Data
@@ -284,6 +295,12 @@ class IngredientsViewModel(
         _emptyRoomTemperatureStorageListVisibility.value = (_roomTemperatureStorageListItem.value?.size ?: 0) <= 0
     }
 
+    // 식재료 검색 화면 이동
+    fun clickIngredientSearch(){
+        _goIngredientSearchEvent.value = Event(Unit)
+    }
+
+    // 식재료 추가 화면 이동
     fun clickIngredientAdd(){
         _goIngredientAddEvent.value = Event(Unit)
     }

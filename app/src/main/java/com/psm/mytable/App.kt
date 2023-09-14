@@ -19,6 +19,11 @@ class App: Application(), CameraXConfig.Provider {
     lateinit var adRequest : AdRequest
 
     private lateinit var s3Provider: AmplifyManager
+
+
+    // 식재료 변화(수정, 삭제) 상태 변경 Flag
+    var isIngredientChange = false
+
     val s3Client
         get() = s3Provider.s3Client
     override fun onCreate() {

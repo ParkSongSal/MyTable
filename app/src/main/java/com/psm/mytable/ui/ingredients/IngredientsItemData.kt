@@ -30,4 +30,21 @@ data class IngredientsItemData(
     // 비고 메모
     val memo: String,
 
-    ): Parcelable
+    ): Parcelable{
+
+        val remainDayText: String
+            get(){
+                return when{
+                    remainDay == "-0" -> {
+                        "D-DAY"
+                    }
+                    remainDay.toInt() > 0 -> {
+                        "위험"
+                    }
+                    else -> {
+                        "D$remainDay"
+                    }
+                }
+
+            }
+    }
