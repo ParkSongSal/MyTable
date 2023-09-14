@@ -103,7 +103,7 @@
                     android:gravity="center"
                     android:textSize="17dp"
                     android:textStyle="bold"
-                    android:background="@drawable/bg_radius4_blue"
+                    android:background="@drawable/bg_radius4_d2d2d2"
                     android:id="@+id/textPositive"
                     android:text="취소"
                     android:onClick="@{() -> viewModel.clickCancel()}"/>

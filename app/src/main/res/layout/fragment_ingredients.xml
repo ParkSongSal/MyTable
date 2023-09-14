@@ -32,7 +32,7 @@
                     android:id="@+id/toolbarLinear"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:background="@color/main_color"
+                    android:background="@color/white"
                     android:gravity="start|center"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -42,19 +42,18 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="10dp"
-                        android:src="@drawable/baseline_menu_24" />
+                        android:src="@drawable/ic_menu" />
 
                     <TextView
                         android:id="@+id/textToolbarTitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:gravity="start"
+                        android:gravity="center"
                         android:text="@string/app_name"
-                        android:textColor="@color/text_white"
-                        android:textSize="18dp"
-                        android:textStyle="bold"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
                         tools:text="화면명" />
 
                     <androidx.constraintlayout.utils.widget.ImageFilterView
@@ -62,30 +61,35 @@
                         android:layout_width="27dp"
                         android:layout_height="27dp"
                         android:layout_marginEnd="10dp"
-                        android:src="@drawable/baseline_search_24"
+                        android:layout_marginTop="1dp"
+                        android:src="@drawable/ic_search_24_main_color"
+                        android:onClick="@{() -> viewmodel.clickIngredientSearch()}"
                         android:visibility="visible"
                         tools:visibility="visible" />
-                    <!--
-                                    <androidx.constraintlayout.utils.widget.ImageFilterView
-                                        android:id="@+id/imgToolbarAdd"
-                                        android:layout_width="27dp"
-                                        android:layout_height="27dp"
-                                        android:src="@drawable/baseline_add_circle_30"
-                                        android:layout_marginEnd="10dp"
-                                        android:visibility="visible"
-                                        tools:visibility="visible"/>-->
-
-
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+                <View
+                    android:id="@+id/guideline1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/base_hint"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toolbarLinear"
+                    app:layout_constraintBottom_toTopOf="@id/tabLayout"/>
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="55dp"
+                    android:contentDescription="@string/ingredients_add_1_007"
+                    android:background="@drawable/rectangle_underline_gray"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolbarLinear"
+                    app:layout_constraintTop_toBottomOf="@+id/guideline1"
+                    app:tabGravity="fill"
+                    app:tabIndicatorHeight="2dp"
+                    app:tabIndicatorFullWidth="true"
                     app:tabIndicatorColor="@color/main_color"
                     app:tabSelectedTextColor="@color/main_dark_color" />
 
@@ -93,6 +97,9 @@
                     android:id="@+id/vpIngredients"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:background="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -108,10 +115,11 @@
                     android:layout_marginTop="50dp"
                     android:layout_marginEnd="30dp"
                     android:layout_marginBottom="50dp"
-                    android:backgroundTint="@color/main_dark_color"
+                    android:backgroundTint="@color/main_color"
                     android:onClick="@{() -> viewmodel.clickIngredientAdd()}"
                     android:scaleType="center"
                     android:src="@drawable/ic_add_48"
+                    android:contentDescription="@string/ingredients_add_1_000"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:maxImageSize="35dp"

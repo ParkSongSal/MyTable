@@ -68,6 +68,7 @@
             android:gravity="center"
             android:textSize="18sp"
             android:textColor="@color/base_hint"
+            android:background="@drawable/button_bg_gray"
             android:text="@string/cancel"/>
 
         <View
@@ -83,7 +84,8 @@
             android:textStyle="bold"
             android:gravity="center"
             android:textSize="18sp"
-            android:textColor="@color/main_dark_color"
+            android:textColor="@color/white"
+            android:background="@drawable/button_bg_blue"
             android:text="@string/temp_save"/>
     </LinearLayout>
 

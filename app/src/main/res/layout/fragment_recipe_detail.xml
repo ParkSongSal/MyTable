@@ -30,18 +30,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-       <include layout="@layout/layout_toolbar_back_more_line"/>
+        <include layout="@layout/layout_toolbar_back_more_line" />
+
+        <View
+            android:id="@+id/guideline1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/base_hint"
+            app:layout_constraintBottom_toTopOf="@id/constraintLayout1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolBar" />
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/bg_e2e2e2"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolBar">
+            app:layout_constraintTop_toBottomOf="@+id/guideline1">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -53,17 +64,24 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/recipeImage"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
                         android:layout_marginTop="10dp"
-                        android:scaleType="fitCenter"
-                        tools:src="@drawable/smart_tabe_logo"
-                        android:adjustViewBounds="true"
-                        android:onClick="@{() -> viewmodel.imageClick(viewmodel.recipeDetail)}"
-                        app:imageUrl="@{viewmodel.recipeDetail.recipeImage}"
-                        />
+                        android:padding="10dp"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
+                        android:onClick="@{() -> viewmodel.imageClick(viewmodel.recipeDetail)}">
+
+                        <ImageView
+                            android:id="@+id/recipeImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            android:adjustViewBounds="true"
+                            android:onClick="@{() -> viewmodel.imageClick(viewmodel.recipeDetail)}"
+                            android:scaleType="fitCenter"
+                            app:imageUrl="@{viewmodel.recipeDetail.recipeImage}"
+                            tools:src="@drawable/smart_tabe_logo" />
+                    </FrameLayout>
 
                     <TextView
                         android:id="@+id/recipeTitle"
@@ -72,7 +90,7 @@
                         android:layout_marginTop="10dp"
                         android:text="나만의 레시피"
                         android:textColor="@color/base_text"
-                        android:textSize="16dp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/recipeImage" />
@@ -81,23 +99,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_round_rect_stroke_e2"
-                        android:text="@{viewmodel.recipeDetail.recipeName}"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                         android:gravity="start|center"
-                        android:paddingStart="7dp"
-                        android:textSize="15sp"
                         android:onClick="@{() -> viewmodel.itemDoubleClick(viewmodel.recipeDetail)}"
-                        tools:text="비빔밥"
+                        android:paddingStart="7dp"
+                        android:text="@{viewmodel.recipeDetail.recipeName}"
+                        android:textSize="15sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle" />
+                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle"
+                        tools:text="비빔밥" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/recipeImage" >
+                        app:layout_constraintTop_toBottomOf="@id/recipeImage">
 
                         <TextView
                             android:id="@+id/recipeType"
@@ -106,54 +124,53 @@
                             android:layout_marginTop="10dp"
                             android:text="종류"
                             android:textColor="@color/base_text"
-                            android:textSize="16dp"
-                            android:textStyle="bold"
-                            />
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_round_rect_stroke_e2"
                         android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                         android:gravity="center|start"
-                        android:paddingStart="7dp"
-                        android:textSize="15dp"
-                        android:text="@{viewmodel.recipeDetail.type}"
                         android:onClick="@{() -> viewmodel.itemDoubleClick(viewmodel.recipeDetail)}"
-                        tools:text="한식"
+                        android:paddingStart="7dp"
+                        android:text="@{viewmodel.recipeDetail.type}"
+                        android:textSize="15dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle" />
+                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle"
+                        tools:text="한식" />
 
-                        <TextView
-                            android:id="@+id/recipeIngredient"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="재료"
-                            android:textColor="@color/base_text"
-                            android:textSize="16dp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/recipeImage"/>
+                    <TextView
+                        android:id="@+id/recipeIngredient"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="재료"
+                        android:textColor="@color/base_text"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/recipeImage" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_round_rect_stroke_e2"
-                        android:text="@{viewmodel.recipeDetail.ingredients}"
-                        android:onClick="@{() -> viewmodel.itemDoubleClick(viewmodel.recipeDetail)}"
-                        android:textSize="15sp"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                         android:gravity="top|start|center"
+                        android:onClick="@{() -> viewmodel.itemDoubleClick(viewmodel.recipeDetail)}"
                         android:padding="7dp"
-                        tools:text="비빔밥"
+                        android:text="@{viewmodel.recipeDetail.ingredients}"
+                        android:textSize="15sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle" />
+                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle"
+                        tools:text="비빔밥" />
 
                     <!--<View
                         android:layout_width="match_parent"
@@ -163,16 +180,15 @@
                         android:layout_marginTop="10dp"
                         android:background="@color/text_yellow"/>-->
 
-                    <com.google.android.gms.ads.AdView
-                        xmlns:ads="http://schemas.android.com/apk/res-auto"
+                    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/adView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:layout_centerHorizontal="true"
                         android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
                         ads:adSize="SMART_BANNER"
-                        ads:adUnitId="@string/banner_admob_key"/>
+                        ads:adUnitId="@string/banner_admob_key" />
 
                     <TextView
                         android:id="@+id/recipeOrder"
@@ -181,7 +197,7 @@
                         android:layout_marginTop="10dp"
                         android:text="만드는 순서"
                         android:textColor="@color/base_text"
-                        android:textSize="16dp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/recipeImage" />
@@ -191,17 +207,17 @@
                         android:layout_height="200dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="20dp"
-                        android:background="@drawable/bg_round_rect_stroke_e2"
-                        android:text="@{viewmodel.recipeDetail.howToMake}"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
+                        android:gravity="top|start|center"
                         android:onClick="@{() -> viewmodel.itemDoubleClick(viewmodel.recipeDetail)}"
                         android:paddingStart="7dp"
-                        android:textSize="15sp"
-                        android:gravity="top|start|center"
                         android:paddingTop="5dp"
-                        tools:text="비빔밥 만드는 방법"
+                        android:text="@{viewmodel.recipeDetail.howToMake}"
+                        android:textSize="15sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle" />
+                        app:layout_constraintTop_toBottomOf="@+id/recipeTitle"
+                        tools:text="비빔밥 만드는 방법" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -237,37 +253,38 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="42dp"
-            android:visibility="@{viewmodel.moreLayoutVisibility}"
             android:onClick="@{() -> viewmodel.clickMenuBg()}"
-            >
+            android:visibility="@{viewmodel.moreLayoutVisibility}">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/bg_rect_stroke_gray"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:textSize="14sp"
                     android:gravity="center"
+                    android:onClick="@{() -> viewmodel.clickEditRecipe(viewmodel.recipeDetail)}"
                     android:text="@string/recipe_detail_1_002"
-                    android:onClick="@{() -> viewmodel.clickEditRecipe(viewmodel.recipeDetail)}"/>
+                    android:textSize="14sp" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/base_hint"/>
+                    android:background="@color/base_hint" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:textSize="14sp"
                     android:gravity="center"
+                    android:onClick="@{() -> viewmodel.clickDeleteRecipe(viewmodel.recipeDetail)}"
                     android:text="@string/recipe_detail_1_003"
-                    android:onClick="@{() -> viewmodel.clickDeleteRecipe(viewmodel.recipeDetail)}"/>
+                    android:textSize="14sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

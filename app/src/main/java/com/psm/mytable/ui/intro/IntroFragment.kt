@@ -95,6 +95,7 @@ class IntroFragment: Fragment(){
                 if(mInterstitialAd != null){
                     showInterstitial()
                 }else{
+                    viewModel.appInit()
                     ToastUtils.showToast("Ad wasn`t loaded")
                 }
 
@@ -138,7 +139,7 @@ class IntroFragment: Fragment(){
             mInterstitialAd?.show(requireActivity())
            // viewModel.appInit()
         }else{
-
+            viewModel.appInit()
         }
     }
 

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolBar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="55dp"
     android:orientation="vertical"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintLeft_toLeftOf="parent">
@@ -13,7 +13,6 @@
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/main_color"
         android:contentInsetLeft="0dp"
         android:contentInsetStart="0dp"
         app:contentInsetLeft="0dp"
@@ -35,7 +34,7 @@
                 android:id="@+id/imgToolbarBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_arrow_back_ios_24"
+                android:src="@drawable/ic_back"
                 android:visibility="visible"
                 tools:visibility="visible"/>
             <TextView
@@ -44,19 +43,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/shopping_basket_list_1_001"
-                android:textColor="@color/text_white"
                 android:layout_marginStart="6dp"
-                android:textSize="18dp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 tools:text="장바구니"
-                android:gravity="start"/>
+                android:gravity="center"/>
 
             <androidx.constraintlayout.utils.widget.ImageFilterView
                 android:id="@+id/imgToolbarAdd"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="3dp"
-                android:src="@drawable/baseline_add_circle_30"
+                android:layout_marginTop="1dp"
+                android:src="@drawable/ic_add_circle"
                 android:visibility="visible"
                 tools:visibility="visible"/>
 

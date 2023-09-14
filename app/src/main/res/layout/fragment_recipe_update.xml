@@ -32,16 +32,26 @@
 
        <include layout="@layout/layout_toolbar_close"/>
 
+        <View
+            android:id="@+id/guideline1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/base_hint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolBar"
+            app:layout_constraintBottom_toTopOf="@id/constraintLayout1"/>
+
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/bg_e2e2e2"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolBar">
+            app:layout_constraintTop_toBottomOf="@+id/guideline1">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -56,7 +66,7 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
-                        android:background="@drawable/bg_input_border"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                         android:onClick="@{() -> viewmodel.clickPhotoDialog()}"
                         android:layout_marginTop="10dp">
 
@@ -92,7 +102,7 @@
                         android:layout_marginTop="10dp"
                         android:text="나만의 레시피"
                         android:textColor="@color/base_text"
-                        android:textSize="16dp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/recipeImage" />
@@ -101,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_input_border"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                         android:hint="비빔밥"
                         android:text="@={viewmodel.recipeData.recipeName}"
                         android:maxLength="20"
@@ -125,7 +135,7 @@
                             android:layout_marginTop="10dp"
                             android:text="종류"
                             android:textColor="@color/base_text"
-                            android:textSize="16dp"
+                            android:textSize="15sp"
                             android:textStyle="bold"
                             />
 
@@ -135,7 +145,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_input_border"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                         android:hint="선택하세요."
                         android:layout_gravity="center"
                         android:gravity="center|start"
@@ -162,7 +172,7 @@
                             android:layout_marginTop="10dp"
                             android:text="재료"
                             android:textColor="@color/base_text"
-                            android:textSize="16dp"
+                            android:textSize="15sp"
                             android:textStyle="bold"
                             />
 
@@ -181,7 +191,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_input_border"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                         android:hint="비빔밥"
                         android:text="@={viewmodel.recipeData.ingredients}"
                         android:maxLength="100"
@@ -218,7 +228,7 @@
                         android:layout_marginTop="10dp"
                         android:text="만드는 순서"
                         android:textColor="@color/base_text"
-                        android:textSize="16dp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/recipeImage" />
@@ -227,7 +237,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_input_border"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                         android:hint="비빔밥 만드는 방법"
                         android:text="@={viewmodel.recipeData.howToMake}"
                         android:maxLength="200"
@@ -247,7 +257,7 @@
                         android:layout_marginBottom="20dp"
                         android:gravity="center"
                         android:textStyle="bold"
-                        android:textSize="16dp"
+                        android:textSize="15sp"
                         android:id="@+id/regBtn"
                         android:text="수정"
                         android:layout_marginTop="10dp"

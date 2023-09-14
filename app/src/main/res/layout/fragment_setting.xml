@@ -31,7 +31,17 @@
 
         <include layout="@layout/layout_toolbar_back"/>
 
+        <View
+            android:id="@+id/guideline1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/base_hint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolBar"
+            app:layout_constraintBottom_toTopOf="@id/linearLayout1"/>
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
@@ -39,7 +49,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolBar">
+            app:layout_constraintTop_toBottomOf="@+id/guideline1">
 
             <!--광고 제거-->
             <TextView
@@ -66,6 +76,8 @@
                 android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
                 android:text="앱 공유하기" />
 
+            <include layout="@layout/layout_vertical_guideline_1dp"/>
+
             <!--문의하기-->
             <TextView
                 android:layout_width="match_parent"
@@ -78,7 +90,7 @@
                 android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
                 android:text="문의하기" />
 
-
+            <include layout="@layout/layout_vertical_guideline_1dp"/>
             <!--데이터 초기화-->
             <TextView
                 android:layout_width="match_parent"
@@ -90,6 +102,8 @@
                 android:paddingBottom="19dp"
                 android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
                 android:text="데이터 초기화" />
+
+            <include layout="@layout/layout_vertical_guideline_1dp"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -115,6 +129,8 @@
                     android:text="@{viewmodel.mVersion}"
                     tools:text="1.2.1"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <include layout="@layout/layout_vertical_guideline_1dp"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

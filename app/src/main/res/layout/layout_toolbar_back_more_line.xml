@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolBar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="55dp"
     android:orientation="vertical"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintLeft_toLeftOf="parent">
@@ -13,7 +13,7 @@
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/main_color"
+        android:background="@color/white"
         android:contentInsetLeft="0dp"
         android:contentInsetStart="0dp"
         app:contentInsetLeft="0dp"
@@ -33,26 +33,24 @@
                 android:id="@+id/imgToolbarClose"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_close_24"
+                android:src="@drawable/ic_close"
                 android:layout_marginTop="2dp"/>
             <TextView
                 android:id="@+id/textToolbarTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_white"
                 android:layout_weight="1"
                 android:layout_marginStart="6dp"
                 tools:text="레시피명"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:gravity="start"/>
+                android:gravity="center"/>
             <androidx.constraintlayout.utils.widget.ImageFilterView
                 android:id="@+id/imgToolbarMore"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
-                android:src="@drawable/baseline_more_vert_24" />
+                android:src="@drawable/ic_more_vert" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.Toolbar>
