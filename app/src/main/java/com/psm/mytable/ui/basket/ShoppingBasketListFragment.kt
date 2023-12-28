@@ -24,9 +24,11 @@ import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentShoppingBasketListBinding
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
+import com.psm.mytable.utils.hideProgress
 import com.psm.mytable.utils.initToolbar
 import com.psm.mytable.utils.setTitleText
 import com.psm.mytable.utils.showItemAddDialog
+import com.psm.mytable.utils.showProgress
 import com.psm.mytable.utils.showYesNoDialog
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -113,11 +115,10 @@ class ShoppingBasketListFragment: Fragment() {
     private fun setupEvent() {
         viewModel.showAddShoppingItemDialogEvent.observe(viewLifecycleOwner, EventObserver{
             Prefs.adStackBasket++
-            Timber.d("psm_basket : ${showBasketAdYN}")
             if(Prefs.adStackBasket.toInt() % 3 == 0 && showBasketAdYN == "N"){
                 Prefs.adStackBasket = 0
                 if(mInterstitialAd != null){
-                    viewDataBinding.progress.visibility = View.VISIBLE
+                    showProgress(viewDataBinding.progress, activity)
                     Handler(Looper.getMainLooper()).postDelayed(
                         {
                             showInterstitial()
@@ -185,7 +186,7 @@ class ShoppingBasketListFragment: Fragment() {
                     super.onAdDismissedFullScreenContent()
                     mInterstitialAd = null
                     //showItemAddDialogEvent()
-                    viewDataBinding.progress.visibility = View.GONE
+                    hideProgress(viewDataBinding.progress, activity)
                     showItemAddDialogEvent()
                 }
 
@@ -207,7 +208,7 @@ class ShoppingBasketListFragment: Fragment() {
             mInterstitialAd?.show(requireActivity())
         }else{
             showItemAddDialogEvent()
-            viewDataBinding.progress.visibility = View.GONE
+            hideProgress(viewDataBinding.progress, activity)
         }
     }
 

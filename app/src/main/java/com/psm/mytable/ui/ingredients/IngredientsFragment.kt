@@ -39,8 +39,10 @@ import com.psm.mytable.ui.ingredients.search.IngredientsSearchActivity
 import com.psm.mytable.ui.setting.SettingActivity
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
+import com.psm.mytable.utils.hideProgress
 import com.psm.mytable.utils.initToolbar
 import com.psm.mytable.utils.setTitleText
+import com.psm.mytable.utils.showProgress
 import timber.log.Timber
 
 class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener  {
@@ -163,7 +165,7 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
             if(Prefs.adStackIngredient.toInt() % 3 == 0 && showIngredientAdYN == "N"){
                 Prefs.adStackIngredient = 0
                 if(mInterstitialAd != null){
-                    viewDataBinding.progress.visibility = View.VISIBLE
+                    showProgress(viewDataBinding.progress, activity)
                     Handler(Looper.getMainLooper()).postDelayed(
                         {
                             showInterstitial()
@@ -273,7 +275,7 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
                 override fun onAdDismissedFullScreenContent() {
                     super.onAdDismissedFullScreenContent()
                     mInterstitialAd = null
-                    viewDataBinding.progress.visibility = View.GONE
+                    hideProgress(viewDataBinding.progress, activity)
                     goIngredientAdd()
                 }
 
@@ -295,7 +297,7 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
             mInterstitialAd?.show(requireActivity())
         }else{
             goIngredientAdd()
-            viewDataBinding.progress.visibility = View.GONE
+            hideProgress(viewDataBinding.progress, activity)
         }
     }
 

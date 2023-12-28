@@ -19,9 +19,11 @@ package com.psm.mytable.utils
  * Extension functions for Fragment.
  */
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.StringRes
@@ -65,6 +67,15 @@ fun Fragment.initToolbar(view: View) {
     }
 }
 
+fun showProgress(view: View, activity: Activity?) {
+    view.visibility = View.VISIBLE
+    activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+}
+
+fun hideProgress(view: View, activity: Activity?) {
+    view.visibility = View.GONE
+    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+}
 
 fun Fragment.showTempSaveDialog(
     negativeCallback: () -> Unit = {},

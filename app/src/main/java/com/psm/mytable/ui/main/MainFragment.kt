@@ -25,7 +25,6 @@ import com.psm.mytable.MainActivity
 import com.psm.mytable.Prefs
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentMainBinding
-import com.psm.mytable.room.recipe.Recipe
 import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.ui.recipe.RecipeSearchAdapter
@@ -33,8 +32,10 @@ import com.psm.mytable.ui.recipe.detail.RecipeDetailActivity
 import com.psm.mytable.ui.recipe.update.RecipeUpdateActivity
 import com.psm.mytable.ui.recipe.write.RecipeWriteActivity
 import com.psm.mytable.utils.getViewModelFactory
+import com.psm.mytable.utils.hideProgress
 import com.psm.mytable.utils.recyclerview.RecyclerViewHorizontalDecoration
 import com.psm.mytable.utils.recyclerview.RecyclerViewVerticalDecoration
+import com.psm.mytable.utils.showProgress
 
 class MainFragment: Fragment(){
     private lateinit var viewDataBinding: FragmentMainBinding
@@ -164,7 +165,7 @@ class MainFragment: Fragment(){
             if(Prefs.adStackRecipe.toInt() % 3 == 0 && showRecipeAdYN == "N"){
                 Prefs.adStackRecipe = 0
                 if(mInterstitialAd != null){
-                    viewDataBinding.progress.visibility = View.VISIBLE
+                    showProgress(viewDataBinding.progress, activity)
                     Handler(Looper.getMainLooper()).postDelayed(
                         {
                             showInterstitial()
@@ -222,7 +223,7 @@ class MainFragment: Fragment(){
                     super.onAdDismissedFullScreenContent()
                     mInterstitialAd = null
                     //showItemAddDialogEvent()
-                    viewDataBinding.progress.visibility = View.GONE
+                    hideProgress(viewDataBinding.progress, activity)
                     goRecipeWrite()
                 }
 
@@ -244,7 +245,7 @@ class MainFragment: Fragment(){
             mInterstitialAd?.show(requireActivity())
         }else{
             goRecipeWrite()
-            viewDataBinding.progress.visibility = View.GONE
+            hideProgress(viewDataBinding.progress, activity)
         }
     }
 
