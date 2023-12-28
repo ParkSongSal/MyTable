@@ -68,19 +68,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
                         android:layout_marginTop="10dp"
-                        android:padding="10dp"
                         android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                         android:onClick="@{() -> viewmodel.imageClick(viewmodel.recipeDetail)}">
 
-                        <ImageView
-                            android:id="@+id/recipeImage"
+                        <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_height="300dp"
-                            android:adjustViewBounds="true"
-                            android:onClick="@{() -> viewmodel.imageClick(viewmodel.recipeDetail)}"
-                            android:scaleType="fitCenter"
-                            app:imageUrl="@{viewmodel.recipeDetail.recipeImage}"
-                            tools:src="@drawable/smart_tabe_logo" />
+                            app:cardCornerRadius="8dp"
+                            android:onClick="@{() -> viewmodel.imageClick(viewmodel.recipeDetail)}">
+
+                            <ImageView
+                                android:id="@+id/recipeImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:scaleType="centerCrop"
+                                app:imageUrl="@{viewmodel.recipeDetail.recipeImage}"
+                                tools:src="@drawable/smart_tabe_logo" />
+                        </androidx.cardview.widget.CardView>
+
                     </FrameLayout>
 
                     <TextView
