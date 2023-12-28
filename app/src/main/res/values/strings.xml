@@ -11,7 +11,18 @@
 
     <string name="banner_admob_key">ca-app-pub-3145363349418895/7077896000</string>
     <string name="banner_admob_key2">ca-app-pub-3145363349418895/3553417729</string>
+
+    <!-- 재료 관리 전면광고 -->
+    <string name="ingredient_front_admob_key">ca-app-pub-3145363349418895/9999117904</string>
+
+    <!-- 장바구니 전면광고 -->
+    <string name="basket_front_admob_key">ca-app-pub-3145363349418895/5216668354</string>
+
+    <!-- 레시피 전면광고 -->
+    <string name="recipe_front_admob_key">ca-app-pub-3145363349418895/2990197283</string>
+
     <string name="google_admob_test_key">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="native_admob_key">ca-app-pub-3145363349418895/7871397997</string>
 
     <string name="recipe_type_1_001">한식</string>
     <string name="recipe_type_1_002">일식</string>
