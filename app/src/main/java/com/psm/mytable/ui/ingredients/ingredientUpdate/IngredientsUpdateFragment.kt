@@ -10,8 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.psm.mytable.App
 import com.psm.mytable.EventObserver
+import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentIngredientsUpdateBinding
 import com.psm.mytable.ui.ingredients.IngredientsActivity
 import com.psm.mytable.ui.ingredients.IngredientsItemData
@@ -27,6 +35,8 @@ class IngredientsUpdateFragment: Fragment(){
 
     var dateCallbackMethod: DatePickerDialog.OnDateSetListener? = null
     lateinit var mView:View
+    private var adLoader: AdLoader? = null
+    private var isDestroyed : Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,12 +62,36 @@ class IngredientsUpdateFragment: Fragment(){
 
         viewModel.appInit(requireContext())
         initAd()
+        adLoader?.loadAd(AdRequest.Builder().build())
         setupEvent()
         InitializeListener()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        isDestroyed = true
+    }
+
     private fun initAd(){
-        viewDataBinding.adView.loadAd(App.instance.adRequest)
+        //viewDataBinding.adView.loadAd(App.instance.adRequest)
+        MobileAds.initialize(requireActivity())
+        adLoader = AdLoader.Builder(App.instance, getString(R.string.native_admob_key))
+            .forNativeAd{ad : NativeAd ->
+                if(isDestroyed){
+                    ad.destroy()
+                    return@forNativeAd
+                }
+                viewDataBinding.myTemplate.setNativeAd(ad)
+            }
+            .withAdListener(object : AdListener() {
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+
+                }
+            })
+            .withNativeAdOptions(
+                NativeAdOptions.Builder()
+                    .build()
+            ).build()
     }
 
     private fun setupEvent() {
@@ -154,6 +188,9 @@ class IngredientsUpdateFragment: Fragment(){
                     7 -> "07"
                     8 -> "08"
                     9 -> "09"
+                    10 -> "10"
+                    11 -> "11"
+                    12 -> "12"
                     else -> monthOfYear.toString()
                 }
                 val day = when (dayOfMonth) {

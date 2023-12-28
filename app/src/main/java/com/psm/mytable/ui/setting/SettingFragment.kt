@@ -8,7 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.psm.mytable.App
 import com.psm.mytable.EventObserver
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentSettingBinding
@@ -22,6 +30,8 @@ import com.psm.mytable.utils.showYesNoDialog
 class SettingFragment: Fragment(){
     private lateinit var viewDataBinding: FragmentSettingBinding
     private val viewModel by viewModels<SettingViewModel> { getViewModelFactory() }
+    private var adLoader: AdLoader? = null
+    private var isDestroyed : Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,8 +54,34 @@ class SettingFragment: Fragment(){
         viewModel.appInit(requireContext())
 
         setupEvent()
+        initAd()
+        adLoader?.loadAd(AdRequest.Builder().build())
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        isDestroyed = true
+    }
+    private fun initAd() {
+        MobileAds.initialize(requireActivity())
+        adLoader = AdLoader.Builder(App.instance, getString(R.string.native_admob_key))
+            .forNativeAd{ad : NativeAd ->
+                if(isDestroyed){
+                    ad.destroy()
+                    return@forNativeAd
+                }
+                viewDataBinding.myTemplate.setNativeAd(ad)
+            }
+            .withAdListener(object : AdListener() {
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+
+                }
+            })
+            .withNativeAdOptions(
+                NativeAdOptions.Builder()
+                    .build()
+            ).build()
+    }
     private fun setupEvent() {
 
         viewModel.appEvent.observe(viewLifecycleOwner, EventObserver{

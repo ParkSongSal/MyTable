@@ -201,25 +201,13 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/recipeTitle" />
 
-                    <!--<View
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:visibility="visible"
-                        android:id="@+id/adView"
-                        android:layout_marginTop="10dp"
-                        android:background="@color/text_yellow"/>-->
 
-
-                    <com.google.android.gms.ads.AdView
-                        xmlns:ads="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/adView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                    <com.google.android.ads.nativetemplates.TemplateView
+                        android:id="@+id/my_template"
+                        app:gnt_template_type="@layout/gnt_small_template_view"
                         android:layout_marginTop="10dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="center"
-                        ads:adSize="SMART_BANNER"
-                        ads:adUnitId="@string/banner_admob_key2"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
 
                     <TextView
                         android:id="@+id/recipeOrder"

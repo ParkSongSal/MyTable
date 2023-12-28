@@ -19,6 +19,13 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -48,6 +55,9 @@ class RecipeUpdateFragment: Fragment() {
     private lateinit var imageCameraResult: ActivityResultLauncher<Intent>
 
     lateinit var mView:View
+
+    private var adLoader: AdLoader? = null
+    private var isDestroyed : Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -116,9 +126,33 @@ class RecipeUpdateFragment: Fragment() {
     }
 
     private fun initAd(){
-        viewDataBinding.adView.loadAd(App.instance.adRequest)
+        MobileAds.initialize(requireActivity())
+        adLoader = AdLoader.Builder(App.instance, getString(R.string.native_admob_key))
+            .forNativeAd{ad : NativeAd ->
+                if(isDestroyed){
+                    ad.destroy()
+                    return@forNativeAd
+                }
+                viewDataBinding.myTemplate.setNativeAd(ad)
+            }
+            .withAdListener(object : AdListener() {
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+
+                }
+            })
+            .withNativeAdOptions(
+                NativeAdOptions.Builder()
+                    .build()
+            ).build()
+        adLoader?.loadAd(AdRequest.Builder().build())
+
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        isDestroyed = true
+    }
     private fun errorPage(msg: String){
         activity?.finish()
         ToastUtils.showToast(msg)
