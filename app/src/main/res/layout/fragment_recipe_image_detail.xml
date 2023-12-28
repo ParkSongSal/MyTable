@@ -31,11 +31,21 @@
 
         <include layout="@layout/layout_toolbar_close"/>
 
+        <View
+            android:id="@+id/guideline1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/base_hint"
+            app:layout_constraintBottom_toTopOf="@id/constraintLayout1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolBar" />
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/photoView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:imageUrl="@{viewmodel.recipeImage}"
+            android:scaleType="fitCenter"
             tools:src="@drawable/smart_tabe_logo"
             app:layout_constraintTop_toBottomOf="@+id/toolBar"
             app:layout_constraintBottom_toBottomOf="parent"
