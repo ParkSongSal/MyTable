@@ -23,9 +23,17 @@ class App: Application(), CameraXConfig.Provider {
 
     // 식재료 변화(수정, 삭제) 상태 변경 Flag
     var isIngredientChange = false
+    var stackIngredient : Int = 0
+
+
+    var stackBasket : Int = 0
+
+    var stackRecipe : Int = 0
 
     val s3Client
         get() = s3Provider.s3Client
+
+
     override fun onCreate() {
         super.onCreate()
         instance = this

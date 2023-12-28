@@ -12,6 +12,10 @@ object Prefs {
     private const val INGREDIENTS = "ingredients"
     private const val HOWTOMAKE = "howToMake"
 
+    private const val AD_STACK_BASKET = "adStackBasket"
+    private const val AD_STACK_INGREDIENT = "adStackIngredient"
+    private const val AD_STACK_RECIPE = "adStackRecipe"
+
 
     private val prefs by lazy {
         App.instance.getSharedPreferences("common", MODE_PRIVATE)
@@ -62,6 +66,19 @@ object Prefs {
     var howToMake
         get() = getStringValue(HOWTOMAKE)
         set(value) = setStringValue(HOWTOMAKE, value)
+
+
+    var adStackBasket
+        get() = getLongValue(AD_STACK_BASKET)
+        set(value) = setLongValue(AD_STACK_BASKET, value)
+
+    var adStackIngredient
+        get() = getLongValue(AD_STACK_INGREDIENT)
+        set(value) = setLongValue(AD_STACK_INGREDIENT, value)
+
+    var adStackRecipe
+        get() = getLongValue(AD_STACK_RECIPE)
+        set(value) = setLongValue(AD_STACK_RECIPE, value)
 
     fun clear() {
     }

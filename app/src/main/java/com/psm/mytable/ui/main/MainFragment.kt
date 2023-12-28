@@ -2,6 +2,8 @@ package com.psm.mytable.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +14,18 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.psm.mytable.App
 import com.psm.mytable.EventObserver
 import com.psm.mytable.MainActivity
+import com.psm.mytable.Prefs
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentMainBinding
+import com.psm.mytable.room.recipe.Recipe
 import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.ui.recipe.RecipeSearchAdapter
@@ -37,8 +45,7 @@ class MainFragment: Fragment(){
     private lateinit var recipeUpdateResult: ActivityResultLauncher<Intent>
     private lateinit var recipeDetailResult: ActivityResultLauncher<Intent>
     private lateinit var settingResult: ActivityResultLauncher<Intent>
-
-
+    var showRecipeAdYN : String = "N"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -96,6 +103,7 @@ class MainFragment: Fragment(){
         viewModel.init(requireContext())
         setupListAdapter()
         init()
+        initAd()
     }
 
     override fun onResume() {
@@ -152,16 +160,92 @@ class MainFragment: Fragment(){
 
         // 레시피 작성 화면 이동
         viewModel.goRecipeWriteEvent.observe(viewLifecycleOwner, EventObserver{
-            val intent = Intent(requireContext(), RecipeWriteActivity::class.java)
-            recipeWriteResult.launch(intent)
+            Prefs.adStackRecipe++
+            if(Prefs.adStackRecipe.toInt() % 3 == 0 && showRecipeAdYN == "N"){
+                Prefs.adStackRecipe = 0
+                if(mInterstitialAd != null){
+                    viewDataBinding.progress.visibility = View.VISIBLE
+                    Handler(Looper.getMainLooper()).postDelayed(
+                        {
+                            showInterstitial()
+                        }, 1000
+                    )
+                }else{
+                    goRecipeWrite()
+                }
+            }else{
+                goRecipeWrite()
+            }
         })
 
         // 레시피 상세 화면 이동
         viewModel.openRecipeDetailEvent.observe(viewLifecycleOwner, EventObserver{ recipe ->
-            val intent = Intent(activity, RecipeDetailActivity::class.java)
-            intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, recipe)
-            recipeDetailResult.launch(intent)
+            goRecipeDetail(recipe)
         })
+    }
+
+    private fun goRecipeWrite(){
+        val intent = Intent(requireContext(), RecipeWriteActivity::class.java)
+        recipeWriteResult.launch(intent)
+    }
+
+    private fun goRecipeDetail(recipe: RecipeItemData){
+        val intent = Intent(activity, RecipeDetailActivity::class.java)
+        intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, recipe)
+        recipeDetailResult.launch(intent)
+    }
+
+
+    private fun initAd(){
+        InterstitialAd.load(App.instance, getString(R.string.recipe_front_admob_key), App.instance.adRequest, object : InterstitialAdLoadCallback(){
+            override fun onAdFailedToLoad(p0: LoadAdError) {
+                super.onAdFailedToLoad(p0)
+                mInterstitialAd = null
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                super.onAdLoaded(interstitialAd)
+                mInterstitialAd = interstitialAd
+            }
+        })
+    }
+
+    private fun showInterstitial(){
+        if(mInterstitialAd != null){
+            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback(){
+                override fun onAdClicked() {
+                    super.onAdClicked()
+                }
+
+                // Called When ad is dismissed
+                override fun onAdDismissedFullScreenContent() {
+                    super.onAdDismissedFullScreenContent()
+                    mInterstitialAd = null
+                    //showItemAddDialogEvent()
+                    viewDataBinding.progress.visibility = View.GONE
+                    goRecipeWrite()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                    super.onAdFailedToShowFullScreenContent(p0)
+                    mInterstitialAd = null
+                }
+
+                override fun onAdImpression() {
+                    super.onAdImpression()
+                }
+
+                override fun onAdShowedFullScreenContent() {
+                    super.onAdShowedFullScreenContent()
+                }
+
+            }
+            showRecipeAdYN = "Y"
+            mInterstitialAd?.show(requireActivity())
+        }else{
+            goRecipeWrite()
+            viewDataBinding.progress.visibility = View.GONE
+        }
     }
 
     companion object {

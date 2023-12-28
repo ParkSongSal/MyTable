@@ -3,6 +3,8 @@ package com.psm.mytable.ui.ingredients
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -16,11 +18,17 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.psm.mytable.App
 import com.psm.mytable.EventObserver
 import com.psm.mytable.MainActivity
+import com.psm.mytable.Prefs
 import com.psm.mytable.R
 import com.psm.mytable.adapter.ViewPagerFragmentStateAdapter
 import com.psm.mytable.databinding.FragmentIngredientsBinding
@@ -29,6 +37,7 @@ import com.psm.mytable.ui.ingredients.ingredientUpdate.IngredientsUpdateActivity
 import com.psm.mytable.ui.ingredients.ingredientsAdd.IngredientsAddActivity
 import com.psm.mytable.ui.ingredients.search.IngredientsSearchActivity
 import com.psm.mytable.ui.setting.SettingActivity
+import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.initToolbar
 import com.psm.mytable.utils.setTitleText
@@ -37,7 +46,9 @@ import timber.log.Timber
 class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedListener  {
     private lateinit var viewDataBinding: FragmentIngredientsBinding
     private val viewModel by viewModels<IngredientsViewModel> { getViewModelFactory() }
+    private var mInterstitialAd: InterstitialAd? = null
 
+    var showIngredientAdYN : String = "N"
 
     private lateinit var settingResult: ActivityResultLauncher<Intent>
     private lateinit var ingredientAddResult: ActivityResultLauncher<Intent>
@@ -126,6 +137,7 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
         //initToolbar(view)
         //setTitleText(view, R.string.setting_1_001)
         viewModel.appInit(requireContext())
+        initAd()
     }
 
     private fun init(){
@@ -147,8 +159,22 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
 
         // 식재료 추가 화면 이동
         viewModel.goIngredientAddEvent.observe(viewLifecycleOwner, EventObserver{
-            val intent = Intent(activity, IngredientsAddActivity::class.java)
-            ingredientAddResult.launch(intent)
+            Prefs.adStackIngredient++
+            if(Prefs.adStackIngredient.toInt() % 3 == 0 && showIngredientAdYN == "N"){
+                Prefs.adStackIngredient = 0
+                if(mInterstitialAd != null){
+                    viewDataBinding.progress.visibility = View.VISIBLE
+                    Handler(Looper.getMainLooper()).postDelayed(
+                        {
+                            showInterstitial()
+                        },1500
+                    )
+                }else{
+                    goIngredientAdd()
+                }
+            }else{
+                goIngredientAdd()
+            }
         })
 
         // 식재료 수정 화면 이동
@@ -159,6 +185,11 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
         })
     }
 
+    private fun goIngredientAdd(){
+        val intent = Intent(activity, IngredientsAddActivity::class.java)
+        ingredientAddResult.launch(intent)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.main_navigationmenu, menu)
@@ -166,29 +197,7 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            // 장바구니
-            R.id.shoppingBasket->{
-                val intent = Intent(activity, ShoppingBasketListActivity::class.java)
-                startActivity(intent)
-                viewDataBinding.drawerLayout.close()
-                return super.onOptionsItemSelected(item)
-            }
-            // 설정
-            R.id.setting->{
-                val intent = Intent(activity, SettingActivity::class.java)
-                settingResult.launch(intent)
-                viewDataBinding.drawerLayout.close()
-                return super.onOptionsItemSelected(item)
-            }
 
-            // 재료관리
-            /*R.id.ingredient->{
-                val intent = Intent(activity, IngredientsActivity::class.java)
-                startActivity(intent)
-                //settingResult.launch(intent)
-                viewDataBinding.drawerLayout.close()
-                return super.onOptionsItemSelected(item)
-            }*/
             // 레시피 목록
             R.id.recipe->{
                 val intent = Intent(activity, MainActivity::class.java)
@@ -197,13 +206,24 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
                 viewDataBinding.drawerLayout.close()
                 return super.onOptionsItemSelected(item)
             }
-            /*// 재료관리
-            R.id.materialMng->{
-                Toast.makeText(App.instance, "재료관리", Toast.LENGTH_SHORT).show()
-                //intent = Intent(this, StopWatchActivity::class.java)
-                //startActivity(intent)
+
+            // 장바구니
+            R.id.shoppingBasket->{
+                val intent = Intent(activity, ShoppingBasketListActivity::class.java)
+                startActivity(intent)
+                viewDataBinding.drawerLayout.close()
                 return super.onOptionsItemSelected(item)
             }
+
+            // 설정
+            R.id.setting->{
+                val intent = Intent(activity, SettingActivity::class.java)
+                settingResult.launch(intent)
+                viewDataBinding.drawerLayout.close()
+                return super.onOptionsItemSelected(item)
+            }
+
+            /*// 재료관리
             // 주간식단
             R.id.weeklyDiet->{
                 Toast.makeText(App.instance, "주간식단", Toast.LENGTH_SHORT).show()
@@ -222,6 +242,61 @@ class IngredientsFragment: Fragment(), NavigationView.OnNavigationItemSelectedLi
            */
         }
         return true
+    }
+
+
+    private fun initAd(){
+        InterstitialAd.load(App.instance, getString(R.string.ingredient_front_admob_key), App.instance.adRequest, object : InterstitialAdLoadCallback(){
+            override fun onAdFailedToLoad(p0: LoadAdError) {
+                super.onAdFailedToLoad(p0)
+                mInterstitialAd = null
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                super.onAdLoaded(interstitialAd)
+                mInterstitialAd = interstitialAd
+
+
+
+            }
+        })
+    }
+
+    private fun showInterstitial(){
+        if(mInterstitialAd != null){
+            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback(){
+                override fun onAdClicked() {
+                    super.onAdClicked()
+                }
+
+                // Called When ad is dismissed
+                override fun onAdDismissedFullScreenContent() {
+                    super.onAdDismissedFullScreenContent()
+                    mInterstitialAd = null
+                    viewDataBinding.progress.visibility = View.GONE
+                    goIngredientAdd()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                    super.onAdFailedToShowFullScreenContent(p0)
+                    mInterstitialAd = null
+                }
+
+                override fun onAdImpression() {
+                    super.onAdImpression()
+                }
+
+                override fun onAdShowedFullScreenContent() {
+                    super.onAdShowedFullScreenContent()
+                }
+
+            }
+            showIngredientAdYN = "Y"
+            mInterstitialAd?.show(requireActivity())
+        }else{
+            goIngredientAdd()
+            viewDataBinding.progress.visibility = View.GONE
+        }
     }
 
     companion object {
