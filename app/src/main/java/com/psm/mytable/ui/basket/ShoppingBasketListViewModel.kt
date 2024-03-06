@@ -12,7 +12,7 @@ import com.psm.mytable.room.RoomDB
 import com.psm.mytable.room.basket.ShoppingBasket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -163,21 +163,20 @@ class ShoppingBasketListViewModel(
             reg_date = nowDate
         )
 
-        val job = viewModelScope.launch(Dispatchers.IO){
-            Timber.d("psm_Thread is Start Job...")
+        viewModelScope.launch(Dispatchers.IO){
             database?.shoppingBasketDao()?.insert(mData)
+            withContext(Dispatchers.Main) {
+                _completeShoppingItemInsertEvent.value = Event(Unit)
+            }
         }
-
-        runBlocking{
-            job.join()
-            Timber.d("psm_Thread is continuing...")
-        }
-        Timber.d("psm_Thread is The End...")
-        _completeShoppingItemInsertEvent.value = Event(Unit)
     }
 
     fun clickDeleteItem(itemData: ShoppingBasketItemData){
         _showDeleteShoppingItemDialogEvent.value = Event(itemData)
+    }
+
+    fun clickBasketAdd() {
+        addShoppingItem()
     }
 
     fun deleteShoppingItemAct(itemData: ShoppingBasketItemData){
@@ -188,16 +187,11 @@ class ShoppingBasketListViewModel(
             reg_date = itemData.reg_date
         )
 
-        val job = viewModelScope.launch(Dispatchers.IO){
-            Timber.d("psm_Thread is Start Job...")
+        viewModelScope.launch(Dispatchers.IO){
             database?.shoppingBasketDao()?.delete(mData)
+            withContext(Dispatchers.Main) {
+                _completeShoppingItemDeleteEvent.postValue(Event(Unit))
+            }
         }
-
-        runBlocking{
-            job.join()
-            Timber.d("psm_Thread is continuing...")
-        }
-        Timber.d("psm_Thread is The End...")
-        _completeShoppingItemDeleteEvent.postValue(Event(Unit))
     }
 }

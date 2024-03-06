@@ -5,51 +5,51 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.psm.mytable.databinding.ItemShoppingBasketBinding
 
-class ShoppingBasketPagingAdapter(private val viewModel: ShoppingBasketListViewModel) : PagingDataAdapter<ShoppingBasketItemData, ShoppingBasketPagingAdapter.ViewHolder>(
-    ServiceInformationDataDiffCallback()
+class ShoppingBasketPagingAdapter() : PagingDataAdapter<ShoppingBasketItemData, ShoppingBasketPagingAdapter.ViewHolder>(
+    ServiceInformationDataDiffCallback
 ) {
 
+    interface CustomListenerInterface {
+        fun removeListener(position: Int, itemData: ShoppingBasketItemData)
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int){
         val item = getItem(position)
         if (item != null) {
-            holder.bind(viewModel, item)
+            holder.bind(item)
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+        return ViewHolder(ItemShoppingBasketBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        ))
+        //return ViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(val binding: ItemShoppingBasketBinding) :
+    private var onRemoveListener: CustomListenerInterface? = null
+    fun removeListener(pOnClick: CustomListenerInterface) {
+        this.onRemoveListener = pOnClick
+    }
+    inner class ViewHolder (val binding: ItemShoppingBasketBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(viewModel: ShoppingBasketListViewModel, itemData: ShoppingBasketItemData) {
+        fun bind(itemData: ShoppingBasketItemData) {
 
             if(itemData.id.toInt() % 2 == 0){
                 binding.pointView.setBackgroundColor(Color.parseColor("#A1B4D1"))
             }else{
                 binding.pointView.setBackgroundColor(Color.parseColor("#CDDC39"))
             }
-
-            binding.viewmodel = viewModel
-            binding.itemData = itemData
-            binding.executePendingBindings()
-
-
-        }
-
-        companion object {
-            fun from(parent: ViewGroup): ViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemShoppingBasketBinding.inflate(layoutInflater, parent, false)
-
-                return ViewHolder(binding)
+            binding.itemNameTextView.text = itemData.itemName
+            binding.deleteLinear.setOnClickListener {
+                onRemoveListener?.removeListener(bindingAdapterPosition, itemData)
             }
         }
     }
@@ -60,13 +60,15 @@ class ShoppingBasketPagingAdapter(private val viewModel: ShoppingBasketListViewM
      * Used by ListAdapter to calculate the minimum number of changes between and old list and a new
      * list that's been passed to `submitList`.
      */
-    class ServiceInformationDataDiffCallback : DiffUtil.ItemCallback<ShoppingBasketItemData>() {
-        override fun areItemsTheSame(oldItem: ShoppingBasketItemData, newItem: ShoppingBasketItemData): Boolean {
-            return oldItem.id == newItem.id
-        }
+    companion object {
+        private val ServiceInformationDataDiffCallback = object: DiffUtil.ItemCallback<ShoppingBasketItemData>() {
+            override fun areItemsTheSame(oldItem: ShoppingBasketItemData, newItem: ShoppingBasketItemData): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-        override fun areContentsTheSame(oldItem: ShoppingBasketItemData, newItem: ShoppingBasketItemData): Boolean {
-            return oldItem == newItem
+            override fun areContentsTheSame(oldItem: ShoppingBasketItemData, newItem: ShoppingBasketItemData): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 }

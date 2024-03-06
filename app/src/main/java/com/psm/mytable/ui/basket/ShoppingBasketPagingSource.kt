@@ -4,9 +4,6 @@ import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.psm.mytable.room.RoomDB
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.IOException
 
 class ShoppingBasketPagingSource : PagingSource<Int, ShoppingBasketItemData>(){
@@ -29,20 +26,15 @@ class ShoppingBasketPagingSource : PagingSource<Int, ShoppingBasketItemData>(){
         // 시작 페이지
         // 처음에 null 값인 것을 고려하여 시작 값 부여
         val page = params.key ?: STARTING_PAGE
-
         return try{
             var data: List<ShoppingBasketItemData>? = null
 
             // page 값에 따른 List 호출
-            // join을 사용해서 list 값을 저장
-            CoroutineScope(Dispatchers.IO).launch{
-                data = RoomDB.database!!.shoppingBasketDao()?.getShoppingBasketPagingList(page)
-                Log.d("psm","testData Size : ${data?.size}")
-            }.join()
+            data = RoomDB.database!!.shoppingBasketDao()?.getShoppingBasketPagingList(page)
 
             // 반환할 데이터
             LoadResult.Page(
-                data = data!!,
+                data = data ?: emptyList(),
                 prevKey = if(page == STARTING_PAGE) null else page-1,
                 nextKey = if(data.isNullOrEmpty()) null else page+1
             )

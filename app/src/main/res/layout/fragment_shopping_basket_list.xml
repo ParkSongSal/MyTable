@@ -101,19 +101,22 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-           <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:layout_marginTop="50dp"
-                android:layout_marginBottom="30dp"
-                android:backgroundwTint="@color/main_dark_color"
-                android:src="@drawable/baseline_add_50"
+                android:layout_marginBottom="50dp"
+                android:backgroundTint="@color/main_color"
+                android:onClick="@{() -> viewmodel.clickBasketAdd()}"
+                android:scaleType="center"
+                android:src="@drawable/ic_add_48"
+                android:contentDescription="@string/shopping_dialog_1_001"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:tint="@null" />-->
+                app:layout_constraintStart_toStartOf="parent"
+                app:maxImageSize="40dp"
+                app:tint="@null" />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <ProgressBar
             android:id="@+id/progress"

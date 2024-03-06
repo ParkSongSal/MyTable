@@ -43,19 +43,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/shopping_basket_list_1_001"
-                android:layout_marginStart="6dp"
                 android:textSize="18sp"
                 tools:text="장바구니"
                 android:gravity="center"/>
-
-            <androidx.constraintlayout.utils.widget.ImageFilterView
-                android:id="@+id/imgToolbarAdd"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="1dp"
-                android:src="@drawable/ic_add_circle"
-                android:visibility="visible"
-                tools:visibility="visible"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.Toolbar>

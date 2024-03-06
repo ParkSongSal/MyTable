@@ -7,7 +7,6 @@ import android.os.StrictMode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -32,7 +31,6 @@ import com.psm.mytable.utils.showProgress
 import com.psm.mytable.utils.showYesNoDialog
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class ShoppingBasketListFragment: Fragment() {
     private lateinit var viewDataBinding: FragmentShoppingBasketListBinding
@@ -66,37 +64,31 @@ class ShoppingBasketListFragment: Fragment() {
         initToolbar(view)
         setTitleText(view, R.string.shopping_basket_list_1_001)
 
-
         viewModel.init(requireContext())
         setupEvent()
         setupListAdapter()
 
-        initView(view)
         initAd()
-    }
-
-    private fun initView(view: View){
-        view.findViewById<ImageFilterView>(R.id.imgToolbarAdd).setOnClickListener{
-            viewModel.addShoppingItem()
-        }
-
-    }
-
-    private fun setupListAdapter(){
-
-        mAdapter = ShoppingBasketPagingAdapter(viewModel)
-
-        viewDataBinding.shoppingList.apply{
-            layoutManager = LinearLayoutManager(App.instance)
-            //adapter = ShoppingBasketAdapter(viewModel)
-            adapter = mAdapter
-        }
 
         lifecycleScope.launch{
             viewModel.shoppingBasketPagingData.collectLatest{
-                (viewDataBinding.shoppingList.adapter as ShoppingBasketPagingAdapter).submitData(it)
+                mAdapter.submitData(it)
             }
         }
+    }
+
+
+    private fun setupListAdapter(){
+        mAdapter = ShoppingBasketPagingAdapter()
+        viewDataBinding.shoppingList.adapter = mAdapter
+        viewDataBinding.shoppingList.layoutManager = LinearLayoutManager(App.instance)
+        viewDataBinding.shoppingList.itemAnimator = null
+
+        mAdapter.removeListener(object: ShoppingBasketPagingAdapter.CustomListenerInterface {
+            override fun removeListener(position: Int, itemData: ShoppingBasketItemData) {
+                viewModel.clickDeleteItem(itemData)
+            }
+        })
     }
 
     private fun errorPage(msg: String){
@@ -133,18 +125,15 @@ class ShoppingBasketListFragment: Fragment() {
         })
 
         viewModel.completeShoppingItemInsertEvent.observe(viewLifecycleOwner, EventObserver{
-
-            mAdapter.refresh()
-            viewModel.getShoppingBasketListCount()
-
+            lifecycleScope.launch {
+                mAdapter.refresh()
+                viewModel.getShoppingBasketListCount()
+            }
         })
 
         viewModel.completeShoppingItemDeleteEvent.observe(viewLifecycleOwner, EventObserver{
             ToastUtils.showToast("삭제되었습니다.")
             mAdapter.refresh()
-            viewModel.getShoppingBasketListCount()
-
-
         })
 
 

@@ -53,14 +53,14 @@
 
 
             <TextView
+                android:id="@+id/itemNameTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{itemData.itemName}"
-
                 android:textColor="@color/text_dark_gray"
                 android:textSize="16sp"
                 tools:text="항목1"/>
+            <!--android:text="@{itemData.itemName}"-->
 
             <!--<View
                 android:layout_width="0dp"
@@ -68,11 +68,11 @@
                 android:layout_weight="1"/>-->
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/deleteLinear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> viewmodel.clickDeleteItem(itemData)}"
                 android:padding="15dp">
-
+                <!--android:onClick="@{() -> viewmodel.clickDeleteItem(itemData)}"-->
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
