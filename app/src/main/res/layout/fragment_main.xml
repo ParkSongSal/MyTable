@@ -73,13 +73,12 @@
                 android:layout_marginStart="10dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                 android:inputType="text"
                 android:layoutDirection="rtl"
                 android:textSize="14sp"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@null"
-                app:queryHint="레시피를 검색하세요." />
+                app:queryHint="레시피를 검색하세요.." />
 
             <!--<androidx.appcompat.widget.AppCompatEditText
                 android:layout_width="0dp"
@@ -115,8 +114,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/white"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -145,7 +144,7 @@
                     android:clipToPadding="false"
                     android:paddingTop="15dp"
                     android:visibility="@{viewmodel.recipeListVisibility ? View.VISIBLE: View.GONE}"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:recipeList="@{viewmodel.items}"
                     tools:visibility="gone" />
 
@@ -156,7 +155,7 @@
                     android:clipToPadding="false"
                     android:paddingTop="15dp"
                     android:visibility="@{viewmodel.searchResultVisible ? View.VISIBLE : View.GONE}"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:searchResultItems="@{viewmodel.searchResultItems}"
                     tools:visibility="gone" />
 
@@ -182,7 +181,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="등록된 레시피가 없습니다."
+                    android:text="레시피가 없습니다."
                     android:textColor="#bbb"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"

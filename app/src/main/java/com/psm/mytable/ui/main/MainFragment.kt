@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
@@ -142,7 +142,8 @@ class MainFragment: Fragment(){
     private fun setupListAdapter(){
 
         viewDataBinding.recipeList.apply{
-            layoutManager = GridLayoutManager(App.instance, 2)
+            layoutManager = LinearLayoutManager(this.context)
+            //layoutManager = GridLayoutManager(App.instance, 2)
             addItemDecoration(RecyclerViewHorizontalDecoration(30))
             addItemDecoration(RecyclerViewVerticalDecoration(30))
             adapter = RecipeAdapter(viewModel)
@@ -150,7 +151,8 @@ class MainFragment: Fragment(){
         }
 
         viewDataBinding.searchResultList.apply{
-            layoutManager = GridLayoutManager(App.instance, 2)
+            //layoutManager = GridLayoutManager(App.instance, 2)
+            layoutManager = LinearLayoutManager(this.context)
             addItemDecoration(RecyclerViewHorizontalDecoration(30))
             addItemDecoration(RecyclerViewVerticalDecoration(30))
             adapter = RecipeSearchAdapter(viewModel)
