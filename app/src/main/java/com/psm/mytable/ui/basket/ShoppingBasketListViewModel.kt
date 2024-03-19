@@ -7,13 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.psm.mytable.Event
-import com.psm.mytable.room.AppRepository
-import com.psm.mytable.room.RoomDB
-import com.psm.mytable.room.basket.ShoppingBasket
+import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.data.room.RoomDB
+import com.psm.mytable.data.room.basket.ShoppingBasket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -67,7 +66,6 @@ class ShoppingBasketListViewModel(
 
         database = RoomDB.getInstance(context)
 
-        //getShoppingBasketList()
         getShoppingBasketListCount()
     }
 
@@ -84,58 +82,6 @@ class ShoppingBasketListViewModel(
         }catch(e: Exception){
             updateShoppingBasketVisibleState(false)
         }
-    }
-    fun getShoppingBasketList(){
-
-        /*runBlocking {
-            repeat(22){
-                val now = System.currentTimeMillis()
-                val date = Date(now)
-                val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-                val nowDate = sdf.format(date)
-                val mData = ShoppingBasket(
-                    id = 0,
-                    itemName = "test$it",
-                    reg_date = nowDate
-                )
-
-                viewModelScope.launch(Dispatchers.IO){
-                    database?.shoppingBasketDao()?.insert(mData)
-                }
-            }
-        }*/
-
-        /*_items.value = listOf(
-            ShoppingBasketItemData(
-                id = 1,
-                itemName = "item1",
-                reg_date = "2023-07-18"
-            ),
-            ShoppingBasketItemData(
-                id = 2,
-                itemName = "item2",
-                reg_date = "2023-07-18"
-            )
-        )*/
-        /*try{
-            val mShoppingBasketList = database?.shoppingBasketDao()?.getAllShoppingBasket() ?: listOf()
-            if(mShoppingBasketList.isNotEmpty()){
-                _items.value = mShoppingBasketList.map{item ->
-                    ShoppingBasketItemData(
-                        id = item.id.toLong(),
-                        itemName = item.itemName,
-                        reg_date = item.reg_date
-                    )
-                }
-                updateShoppingBasketVisibleState(true)
-            }else{
-                updateShoppingBasketVisibleState(false)
-            }
-        }catch(e: IllegalStateException){
-            updateShoppingBasketVisibleState(false)
-        }catch(e: Exception){
-            updateShoppingBasketVisibleState(false)
-        }*/
     }
 
     private fun updateShoppingBasketVisibleState(boolean: Boolean){

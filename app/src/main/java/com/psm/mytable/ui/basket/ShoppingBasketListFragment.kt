@@ -80,15 +80,16 @@ class ShoppingBasketListFragment: Fragment() {
 
     private fun setupListAdapter(){
         mAdapter = ShoppingBasketPagingAdapter()
-        viewDataBinding.shoppingList.adapter = mAdapter
-        viewDataBinding.shoppingList.layoutManager = LinearLayoutManager(App.instance)
-        viewDataBinding.shoppingList.itemAnimator = null
-
         mAdapter.removeListener(object: ShoppingBasketPagingAdapter.CustomListenerInterface {
             override fun removeListener(position: Int, itemData: ShoppingBasketItemData) {
                 viewModel.clickDeleteItem(itemData)
             }
         })
+        viewDataBinding.shoppingList.apply {
+            adapter = mAdapter
+            layoutManager = LinearLayoutManager(this.context)
+            itemAnimator = null
+        }
     }
 
     private fun errorPage(msg: String){
@@ -138,10 +139,10 @@ class ShoppingBasketListFragment: Fragment() {
 
 
         viewModel.showDeleteShoppingItemDialogEvent.observe(viewLifecycleOwner, EventObserver{itemData->
-            val message = getString(R.string.shopping_dialog_1_003)
+            val msg = getString(R.string.shopping_dialog_1_004, itemData.itemName)
             val positiveButton = getString(R.string.confirm)
             val negativeButton = getString(R.string.cancel)
-            showYesNoDialog(message, positiveButton, negativeButton, positiveCallback = {
+            showYesNoDialog(msg, positiveButton, negativeButton, positiveCallback = {
                 viewModel.deleteShoppingItemAct(itemData)
             })
         })

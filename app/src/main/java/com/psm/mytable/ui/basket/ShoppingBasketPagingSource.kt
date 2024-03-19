@@ -3,7 +3,7 @@ package com.psm.mytable.ui.basket
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.psm.mytable.room.RoomDB
+import com.psm.mytable.data.room.RoomDB
 import java.io.IOException
 
 class ShoppingBasketPagingSource : PagingSource<Int, ShoppingBasketItemData>(){
