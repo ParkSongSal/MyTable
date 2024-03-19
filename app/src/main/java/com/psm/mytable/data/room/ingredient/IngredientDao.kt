@@ -1,4 +1,4 @@
-package com.psm.mytable.room.ingredient
+package com.psm.mytable.data.room.ingredient
 
 import androidx.paging.PagingSource
 import androidx.room.Dao

@@ -1,4 +1,4 @@
-package com.psm.mytable.room
+package com.psm.mytable.data.room
 
 import android.content.Context
 import androidx.room.Database
@@ -8,12 +8,12 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.psm.mytable.room.basket.ShoppingBasket
-import com.psm.mytable.room.basket.ShoppingBasketDao
-import com.psm.mytable.room.ingredient.Ingredient
-import com.psm.mytable.room.ingredient.IngredientDao
-import com.psm.mytable.room.recipe.Recipe
-import com.psm.mytable.room.recipe.RecipeDao
+import com.psm.mytable.data.room.basket.ShoppingBasket
+import com.psm.mytable.data.room.basket.ShoppingBasketDao
+import com.psm.mytable.data.room.ingredient.Ingredient
+import com.psm.mytable.data.room.ingredient.IngredientDao
+import com.psm.mytable.data.room.recipe.Recipe
+import com.psm.mytable.data.room.recipe.RecipeDao
 
 @Database(entities= [Recipe::class, ShoppingBasket::class, Ingredient::class], version = 15, exportSchema = false)
 abstract class RoomDB : RoomDatabase(){

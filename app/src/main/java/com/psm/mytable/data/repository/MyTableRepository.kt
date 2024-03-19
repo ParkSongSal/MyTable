@@ -1,4 +1,4 @@
-package com.psm.mytable.room
+package com.psm.mytable.data.repository
 
 
 /**

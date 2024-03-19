@@ -1,4 +1,4 @@
-package com.psm.mytable.room.recipe
+package com.psm.mytable.data.room.recipe
 
 import android.graphics.Bitmap
 import android.net.Uri

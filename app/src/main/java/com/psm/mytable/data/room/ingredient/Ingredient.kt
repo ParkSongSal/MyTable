@@ -1,4 +1,4 @@
-package com.psm.mytable.room.ingredient
+package com.psm.mytable.data.room.ingredient
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

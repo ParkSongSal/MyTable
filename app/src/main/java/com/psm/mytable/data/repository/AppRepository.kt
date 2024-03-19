@@ -1,12 +1,9 @@
-package com.psm.mytable.room
+package com.psm.mytable.data.repository
 
-import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import com.psm.mytable.room.recipe.Recipe
-import com.psm.mytable.room.recipe.RecipeDao
+import com.psm.mytable.data.room.RoomDB
 import com.psm.mytable.ui.basket.ShoppingBasketItemData
 import com.psm.mytable.ui.basket.ShoppingBasketPagingSource
 import kotlinx.coroutines.flow.Flow
@@ -14,9 +11,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * API 구현
  */
-class AppRepository(private val dao: RecipeDao){
-
-    val recipeDao : PagingSource<Int, Recipe> = dao.getAllRecipePaging()
+class AppRepository(private val database: RoomDB){
 
     /**
      * Pager를 사용하여 PagingData를 반환
