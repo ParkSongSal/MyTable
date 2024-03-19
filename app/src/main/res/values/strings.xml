@@ -24,6 +24,7 @@
     <string name="google_admob_test_key">ca-app-pub-3940256099942544/6300978111</string>
     <string name="native_admob_key">ca-app-pub-3145363349418895/7871397997</string>
 
+    <string name="recipe_type_1_000">전체</string>
     <string name="recipe_type_1_001">한식</string>
     <string name="recipe_type_1_002">일식</string>
     <string name="recipe_type_1_003">중식</string>
@@ -54,7 +55,8 @@
     <string name="shopping_dialog_1_001">장바구니 항목 추가</string>
     <string name="shopping_dialog_1_002">추가할 항목을 입력하세요.</string>
     <string name="shopping_dialog_1_003">선택하신 항목을 삭제하시겠습니까?</string>
-
+    <string name="shopping_dialog_1_004">[ %1$s ]\n 삭제하시겠습니까?</string>
+    [%1$s]
     <!--재료 목록  -->
     <string name="ingredients_1_001">식재료관리</string>
 
