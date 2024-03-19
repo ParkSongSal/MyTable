@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.psm.mytable.Event
-import com.psm.mytable.room.AppRepository
-import com.psm.mytable.room.RoomDB
+import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.data.room.RoomDB
 import com.psm.mytable.utils.CalendarUtils
 
 /**
@@ -67,7 +67,6 @@ class IngredientsViewModel(
 
     fun appInit(context: Context) {
         database = RoomDB.getInstance(context)
-
     }
 
     fun getColdStorageList() {

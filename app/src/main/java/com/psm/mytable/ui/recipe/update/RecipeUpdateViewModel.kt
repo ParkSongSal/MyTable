@@ -11,13 +11,12 @@ import com.amazonaws.AmazonServiceException
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
-import com.amazonaws.services.s3.model.CannedAccessControlList
 import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.psm.mytable.App
 import com.psm.mytable.Event
-import com.psm.mytable.room.AppRepository
-import com.psm.mytable.room.RoomDB
-import com.psm.mytable.room.recipe.Recipe
+import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.data.room.RoomDB
+import com.psm.mytable.data.room.recipe.Recipe
 import com.psm.mytable.type.RecipeType
 import com.psm.mytable.ui.recipe.RecipeItemData
 import com.starry.file_utils.FileUtils
@@ -122,7 +121,7 @@ class RecipeUpdateViewModel(
     }
 
     fun setRecipeType(type: RecipeType){
-        _recipeType.value = type.recipeName
+        _recipeType.value = type.categoryName
         _recipeData.value?.recipeTypeId = type.typeId
     }
 

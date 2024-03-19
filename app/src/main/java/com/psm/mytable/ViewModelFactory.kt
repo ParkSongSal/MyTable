@@ -20,9 +20,8 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
-import com.psm.mytable.room.AppRepository
+import com.psm.mytable.data.repository.AppRepository
 import com.psm.mytable.ui.main.MainViewModel
-import com.psm.mytable.room.MyTableRepository
 import com.psm.mytable.ui.basket.ShoppingBasketListViewModel
 import com.psm.mytable.ui.camera.CameraViewModel
 import com.psm.mytable.ui.dialog.recipe.SelectRecipeTypeViewModel

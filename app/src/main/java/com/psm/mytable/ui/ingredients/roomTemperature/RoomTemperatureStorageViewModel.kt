@@ -2,8 +2,8 @@ package com.psm.mytable.ui.ingredients.roomTemperature
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.psm.mytable.room.AppRepository
-import com.psm.mytable.room.RoomDB
+import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.data.room.RoomDB
 
 /**
  * 설정 화면 노출 및 앱 초기화

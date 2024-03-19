@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.psm.mytable.Event
 import com.psm.mytable.common.ProgressVisibility
-import com.psm.mytable.room.AppRepository
-import com.psm.mytable.room.RoomDB
+import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.data.room.RoomDB
 import com.psm.mytable.ui.ingredients.IngredientsItemData
 import com.psm.mytable.utils.CalendarUtils
 import com.psm.mytable.utils.HangulUtils

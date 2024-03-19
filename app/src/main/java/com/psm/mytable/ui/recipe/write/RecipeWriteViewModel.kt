@@ -13,9 +13,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHand
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.psm.mytable.App
 import com.psm.mytable.Event
-import com.psm.mytable.room.AppRepository
-import com.psm.mytable.room.RoomDB
-import com.psm.mytable.room.recipe.Recipe
+import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.data.room.RoomDB
+import com.psm.mytable.data.room.recipe.Recipe
 import com.psm.mytable.type.RecipeType
 import com.starry.file_utils.FileUtils
 import kotlinx.coroutines.Dispatchers
@@ -76,7 +76,7 @@ class RecipeWriteViewModel(
     }
 
     fun setRecipeType(type: RecipeType){
-        _recipeType.value = type.recipeName
+        _recipeType.value = type.categoryName
         _recipeTypeId.value = type.typeId
     }
 

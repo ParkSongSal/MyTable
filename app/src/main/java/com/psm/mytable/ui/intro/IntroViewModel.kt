@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.psm.mytable.Event
-import com.psm.mytable.room.AppRepository
+import com.psm.mytable.data.repository.AppRepository
 
 /**
  * 인트로 화면 노출 및 앱 초기화

@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.psm.mytable.Event
 import com.psm.mytable.common.ProgressVisibility
-import com.psm.mytable.room.AppRepository
-import com.psm.mytable.room.RoomDB
-import com.psm.mytable.room.ingredient.Ingredient
+import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.data.room.RoomDB
+import com.psm.mytable.data.room.ingredient.Ingredient
 import com.psm.mytable.type.RecipeSearchType
 import com.psm.mytable.ui.ingredients.IngredientsItemData
 import kotlinx.coroutines.Dispatchers

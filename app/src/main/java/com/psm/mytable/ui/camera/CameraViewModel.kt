@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.psm.mytable.Event
-import com.psm.mytable.room.AppRepository
-import com.psm.mytable.room.MyTableRepository
+import com.psm.mytable.data.repository.AppRepository
 
 class CameraViewModel(
     private val repository: AppRepository

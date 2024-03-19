@@ -10,9 +10,9 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.psm.mytable.App
 import com.psm.mytable.BuildConfig
 import com.psm.mytable.Event
-import com.psm.mytable.room.AppRepository
-import com.psm.mytable.room.RoomDB
-import com.psm.mytable.room.recipe.Recipe
+import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.data.room.RoomDB
+import com.psm.mytable.data.room.recipe.Recipe
 import com.psm.mytable.type.AppEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
