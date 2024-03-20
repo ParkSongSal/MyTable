@@ -244,7 +244,7 @@
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminateTint="@color/text_blue2"
+            android:indeterminateTint="@color/main_dark_color"
             android:visibility="@{viewmodel.progressVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
