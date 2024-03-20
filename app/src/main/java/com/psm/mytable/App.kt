@@ -3,6 +3,7 @@ package com.psm.mytable
 import AmplifyManager
 import android.app.Application
 import android.content.Context
+import android.net.Uri
 import androidx.camera.camera2.Camera2Config
 import androidx.camera.core.CameraXConfig
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler
@@ -11,6 +12,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.psm.mytable.data.repository.AppRepository
 import com.psm.mytable.data.room.RoomDB
+import com.starry.file_utils.FileUtils
 import timber.log.Timber
 
 class App: Application(), CameraXConfig.Provider {
@@ -50,6 +52,10 @@ class App: Application(), CameraXConfig.Provider {
         adRequest = AdRequest.Builder().build()
 
         Timber.plant(Timber.DebugTree())
+    }
+
+    fun getFilePath(uri: Uri): String? {
+        return FileUtils(this).getPath(uri)
     }
 
     fun transferLossHandler() {

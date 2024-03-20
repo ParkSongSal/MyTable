@@ -29,7 +29,7 @@ interface RecipeDao {
 
     // Recipe 테이블 데이터 수정
     @Update
-    fun updateRecipe(recipe: Recipe) : Int
+    fun updateRecipe(recipe: Recipe)
 
     @Query("SELECT * FROM table_recipe order by id")
     fun getAllRecipe(): List<Recipe>

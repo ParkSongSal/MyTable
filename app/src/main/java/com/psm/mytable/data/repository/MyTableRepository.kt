@@ -8,10 +8,8 @@ import com.psm.mytable.data.room.recipe.Recipe
 interface MyTableRepository {
 
     suspend fun insertRecipe(recipe: Recipe)
-
     suspend fun getSearchAllRecipeList(searchWord: String) : List<Recipe>
-
     suspend fun getAllRecipeList() : List<Recipe>
-
     suspend fun getCategoryRecipeList(typeId: Int) : List<Recipe>
+    suspend fun updateRecipe(recipe: Recipe)
 }

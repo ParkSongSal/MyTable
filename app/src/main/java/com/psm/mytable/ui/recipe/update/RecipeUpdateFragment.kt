@@ -41,9 +41,11 @@ import com.psm.mytable.ui.camera.CameraActivity
 import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
+import com.psm.mytable.utils.hideProgress
 import com.psm.mytable.utils.initToolbar
 import com.psm.mytable.utils.setTitleText
 import com.psm.mytable.utils.showPhotoSelectDialog
+import com.psm.mytable.utils.showProgress
 import com.psm.mytable.utils.showRecipeSelectDialog
 import java.io.File
 
@@ -70,7 +72,6 @@ class RecipeUpdateFragment: Fragment() {
                     viewModel.setRecipeImageUri(imageUri)
                     setRecipeImage(imageUri)
                 }
-
             }
         }
 
@@ -82,7 +83,6 @@ class RecipeUpdateFragment: Fragment() {
                 }
             }
         }
-
     }
 
     private fun setRecipeImage(imageUri:Uri){
@@ -108,25 +108,14 @@ class RecipeUpdateFragment: Fragment() {
 
         mView = view
         initToolbar(view)
-
         setTitleText(view, R.string.recipe_update_1_001)
 
-        requireActivity().intent.getParcelableExtra<RecipeItemData>(MainActivity.EXTRA_UPDATE_RECIPE)?.let{
-            viewModel.setRecipeData(it)
-        }?: errorPage("잘못된 접근입니다.")
-
-        viewModel.init(requireContext())
-        init()
         setupEvent()
         initAd()
     }
 
-    private fun init(){
-
-    }
-
     private fun initAd(){
-        MobileAds.initialize(requireActivity())
+        MobileAds.initialize(viewDataBinding.root.context)
         adLoader = AdLoader.Builder(App.instance, getString(R.string.native_admob_key))
             .forNativeAd{ad : NativeAd ->
                 if(isDestroyed){
@@ -136,9 +125,7 @@ class RecipeUpdateFragment: Fragment() {
                 viewDataBinding.myTemplate.setNativeAd(ad)
             }
             .withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(p0: LoadAdError) {
-
-                }
+                override fun onAdFailedToLoad(p0: LoadAdError) {}
             })
             .withNativeAdOptions(
                 NativeAdOptions.Builder()
@@ -148,6 +135,11 @@ class RecipeUpdateFragment: Fragment() {
 
     }
 
+    private fun initRecipeData() {
+        activity?.intent?.getParcelableExtra<RecipeItemData>(MainActivity.EXTRA_UPDATE_RECIPE)?.let{
+            viewModel.setRecipeData(it)
+        }?: errorPage("잘못된 접근입니다.")
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -172,10 +164,6 @@ class RecipeUpdateFragment: Fragment() {
                         "CAMERA"-> {
                             val intent = Intent(activity, CameraActivity::class.java)
                             imageCameraResult.launch(intent)
-                            /*imageUri = createImageUri()
-                            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                            imageCameraResult.launch(intent)*/
                         }
                         // 앨범선택
                         else -> {
@@ -196,17 +184,23 @@ class RecipeUpdateFragment: Fragment() {
                 }
             )
         })
-
-        viewModel.errorEvent.observe(viewLifecycleOwner, EventObserver{
-            ToastUtils.showToast("오류가 발생했습니다.")
-            activity?.setResult(Activity.RESULT_CANCELED)
-            activity?.finish()
-        })
-
-        viewModel.completeRecipeDataUpdateEvent.observe(viewLifecycleOwner, EventObserver{
-            ToastUtils.showToast("레시피가 수정되었습니다.")
-            activity?.setResult(Activity.RESULT_OK)
-            activity?.finish()
+        // 레피시 수정 State
+        viewModel.recipeUpdateState.observe(viewLifecycleOwner, EventObserver {state ->
+            when(state) {
+                is RecipeUpdateState.UnInitialized -> initRecipeData()
+                is RecipeUpdateState.Loading -> showProgress(viewDataBinding.progress, activity)
+                is RecipeUpdateState.Error -> {
+                    ToastUtils.showToast("오류가 발생했습니다. 재시도 해주세요!")
+                    activity?.setResult(Activity.RESULT_CANCELED)
+                    activity?.finish()
+                }
+                is RecipeUpdateState.Complete -> {
+                    hideProgress(viewDataBinding.progress, activity)
+                    ToastUtils.showToast("레시피가 수정되었습니다.")
+                    activity?.setResult(Activity.RESULT_OK)
+                    activity?.finish()
+                }
+            }
         })
     }
 

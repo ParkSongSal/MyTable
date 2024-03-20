@@ -1,41 +1,35 @@
 package com.psm.mytable.ui.recipe.update
 
-import android.content.Context
 import android.net.Uri
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.amazonaws.AmazonServiceException
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.psm.mytable.App
 import com.psm.mytable.Event
-import com.psm.mytable.data.repository.AppRepository
-import com.psm.mytable.data.room.RoomDB
 import com.psm.mytable.data.room.recipe.Recipe
+import com.psm.mytable.domain.recipe.UpdateRecipeUseCase
 import com.psm.mytable.type.RecipeType
 import com.psm.mytable.ui.recipe.RecipeItemData
-import com.starry.file_utils.FileUtils
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
+import com.psm.mytable.utils.extension.onIO
+import com.psm.mytable.utils.extension.onMain
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 
 /**
- * 레시피 작성(등록, 수정)
- * [앱 초기화]
- * - 클라이언트 ID 정보가 없는 경우 받오온다.
- * - FCM 토큰 등록이 안되 있으면 등록 한다.
- * - 로그인 사용자, 비 로그인 사용자에 해당되는 앱 초기화 완료 이벤트를 전달한다.
- * - 버전 체크 (강제 또는 선택 업데이트 알럿 노출)
+ * 레시피 수정 ViewModel
+ * 필요한 UseCase
+ * 1. [UpdateRecipeUseCase] 레시피 수정
  */
 class RecipeUpdateViewModel(
-    private val repository: AppRepository
+    private val updateRecipeUseCase: UpdateRecipeUseCase
 ) : ViewModel(){
 
     private val _recipeData = MutableLiveData<RecipeViewData>()
@@ -56,11 +50,6 @@ class RecipeUpdateViewModel(
     val openFoodTypeDialogEvent: LiveData<Event<Unit>>
         get() = _openFoodTypeDialogEvent
 
-    // 레시피 수정 완료
-    private var _completeRecipeDataUpdateEvent = MutableLiveData<Event<Unit>>()
-    val completeRecipeDataUpdateEvent: LiveData<Event<Unit>>
-        get() = _completeRecipeDataUpdateEvent
-
     private var _recipeType = MutableLiveData<String>("한식")
     val recipeType: LiveData<String>
         get() = _recipeType
@@ -69,19 +58,9 @@ class RecipeUpdateViewModel(
     val imageInfoObjectVisible: LiveData<Int>
         get() = _imageInfoObjectVisible
 
-    private val _progressVisible = MutableLiveData(false)
-    val progressVisible: LiveData<Boolean>
-        get() = _progressVisible
-
-    private var _errorEvent = MutableLiveData<Event<Unit>>()
-    val errorEvent: LiveData<Event<Unit>>
-        get() = _errorEvent
-
-    private var database: RoomDB? = null
-
-    fun init(context: Context){
-        database = RoomDB.getInstance(context)
-    }
+    private var _recipeUpdateState =
+        MutableLiveData<Event<RecipeUpdateState>>(Event(RecipeUpdateState.UnInitialized))
+    val recipeUpdateState: LiveData<Event<RecipeUpdateState>> = _recipeUpdateState
 
     fun setRecipeData(recipeItemData: RecipeItemData){
 
@@ -110,8 +89,6 @@ class RecipeUpdateViewModel(
     fun setRecipeImageUri(uri: Uri){
         _recipeData.value?.recipeImageUri = uri
     }
-
-
     private fun imageInfoObjectVisible(){
         _imageInfoObjectVisible.value = if(_recipeData.value?.recipeImage?.isNotEmpty() == true){
             View.GONE
@@ -134,13 +111,11 @@ class RecipeUpdateViewModel(
     }
 
     fun clickNext(){
-        showProgress()
-
         var file:File? = null
         var fileName = ""
         val mRecipeImagePath = if(_recipeData.value?.recipeImageUri != null){
             val fileUri = Uri.parse(_recipeData.value?.recipeImageUri.toString())
-            val filePath = FileUtils(App.instance.applicationContext).getPath(fileUri)
+            val filePath = App.instance.getFilePath(fileUri)
             file = File(filePath)
             fileName = file.name
 
@@ -149,9 +124,9 @@ class RecipeUpdateViewModel(
             _recipeData.value?.recipeImage!!
         }
 
-        val mRecipeName = if(_recipeData.value?.recipeName != _recipeData.value?.originalRecipeName){
+        val mRecipeName = if(_recipeData.value?.recipeName != _recipeData.value?.originalRecipeName) {
             _recipeData.value?.recipeName
-        }else{
+        } else {
             _recipeData.value?.originalRecipeName
         }
 
@@ -194,88 +169,63 @@ class RecipeUpdateViewModel(
         uploadS3Image(fileName, file, mData)
     }
 
-    fun roomRecipeUpdate(mData: Recipe, fileDelteFlag : Boolean){
-        viewModelScope.launch(IO){
-            val result = database?.recipeDao()?.updateRecipe(mData)
-            // 이미지 업로드 성공시 기존 이미지 삭제
-           /* if(result != 0){
-                _completeRecipeDataUpdateEvent.value = Event(Unit)
-            }else{
-                ToastUtils.showToast("룸 업데이트 실패")
-                _completeRecipeDataUpdateEvent.value = Event(Unit)
-            }*/
+    fun roomRecipeUpdate(mData: Recipe, fileDeleteFlag : Boolean){
+        onIO{
+            updateRecipeUseCase(mData)
         }
-        if(fileDelteFlag){
+        if(fileDeleteFlag){
             deleteS3Image()
         }else{
-            //_completeRecipeDataUpdateEvent.postValue(Event(Unit))
-            _completeRecipeDataUpdateEvent.value = Event(Unit)
+            onMain{
+                _recipeUpdateState.postValue(Event(RecipeUpdateState.Complete))
+            }
         }
     }
 
-    fun uploadS3Image(fileName: String, file: File?, mData: Recipe){
+    private fun uploadS3Image(fileName: String, file: File?, mData: Recipe){
+        _recipeUpdateState.postValue(Event(RecipeUpdateState.Loading))
         if(file != null){
-
-            TransferNetworkLossHandler.getInstance(App.instance.applicationContext)
+            App.instance.transferLossHandler()
             val mBucket = "my-test-butket"
-            val uploadObserver = App.instance.getTransferUtility(App.instance).upload(
+            val uploadObserver = App.transferUtility?.upload(
                 mBucket,
                 "test1/$fileName",
                 file
             )
-            uploadObserver.setTransferListener(object : TransferListener{
+            uploadObserver?.setTransferListener(object : TransferListener{
                 override fun onStateChanged(id: Int, state: TransferState?) {
                     when (state) {
-                        TransferState.COMPLETED -> {
-                            roomRecipeUpdate(mData, true)
-
-                        }
-                        TransferState.FAILED, TransferState.CANCELED -> {
-                            _errorEvent.value = Event(Unit)
-                        }
-
+                        TransferState.COMPLETED -> roomRecipeUpdate(mData, true)
+                        TransferState.FAILED, TransferState.CANCELED -> _recipeUpdateState.postValue(Event(RecipeUpdateState.Error))
                         else -> {}
                     }
                 }
-
-                override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
-                }
-
+                override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {}
                 override fun onError(id: Int, ex: java.lang.Exception?) {
-                    hideProgress()
-                    _errorEvent.value = Event(Unit)
+                    _recipeUpdateState.postValue(Event(RecipeUpdateState.Error))
                 }
-
             })
-
         }else{
             roomRecipeUpdate(mData, false)
         }
     }
-    fun deleteS3Image(){
+    private fun deleteS3Image(){
 
         val mRecipeImage = _recipeData.value?.recipeImage
         val mBucket = "my-test-butket"
         val mKey = mRecipeImage?.substring(mRecipeImage.indexOf("test1/"))
-
         try{
-            val deleteObjectRequest = DeleteObjectRequest(mBucket, mKey)
-            App.instance.s3Client.deleteObject(deleteObjectRequest)
-            _completeRecipeDataUpdateEvent.value = Event(Unit)
+            onIO {
+                val deleteObjectRequest = DeleteObjectRequest(mBucket, mKey)
+                App.instance.s3Client.deleteObject(deleteObjectRequest)
+                withContext(Dispatchers.Main) {
+                    _recipeUpdateState.postValue(Event(RecipeUpdateState.Complete))
+                }
+            }
         }catch (e: AmazonServiceException){
-            _errorEvent.value = Event(Unit)
+            _recipeUpdateState.postValue(Event(RecipeUpdateState.Error))
         }catch(e:Exception){
-            _errorEvent.value = Event(Unit)
-        }finally {
-            hideProgress()
+            _recipeUpdateState.postValue(Event(RecipeUpdateState.Error))
         }
-    }
-
-    fun showProgress(){
-        _progressVisible.value = true
-    }
-
-    fun hideProgress(){
-        _progressVisible.value = false
     }
 }

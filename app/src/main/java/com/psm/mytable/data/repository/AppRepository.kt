@@ -35,17 +35,17 @@ class AppRepository : MyTableRepository{
     override suspend fun insertRecipe(recipe: Recipe) {
         recipeDao?.insert(recipe)
     }
-
     override suspend fun getSearchAllRecipeList(searchWord: String): List<Recipe> {
         return recipeDao?.getSearchAllRecipeList(searchWord) ?: emptyList()
     }
-
     override suspend fun getAllRecipeList(): List<Recipe> {
         return recipeDao?.getAllRecipe() ?: emptyList()
     }
-
     override suspend fun getCategoryRecipeList(typeId : Int): List<Recipe> {
         return recipeDao?.getCategoryRecipe(typeId) ?: emptyList()
     }
 
+    override suspend fun updateRecipe(recipe: Recipe) {
+        recipeDao?.updateRecipe(recipe)
+    }
 }

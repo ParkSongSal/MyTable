@@ -69,7 +69,7 @@ class ViewModelFactory constructor(
             isAssignableFrom(CameraViewModel::class.java) ->
                 CameraViewModel(appRepository)
             isAssignableFrom(RecipeUpdateViewModel::class.java) ->
-                RecipeUpdateViewModel(appRepository)
+                RecipeUpdateViewModel(UseCaseInjection.provideUpdateRecipeUseCase())
             isAssignableFrom(RecipeDetailViewModel::class.java) ->
                 RecipeDetailViewModel(appRepository)
             isAssignableFrom(IntroViewModel::class.java) ->

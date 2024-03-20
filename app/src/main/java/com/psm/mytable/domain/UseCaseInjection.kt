@@ -5,6 +5,7 @@ import com.psm.mytable.domain.recipe.GetAllRecipeUseCase
 import com.psm.mytable.domain.recipe.GetCategoryRecipeUseCase
 import com.psm.mytable.domain.recipe.GetSearchRecipeUseCase
 import com.psm.mytable.domain.recipe.InsertRecipeUseCase
+import com.psm.mytable.domain.recipe.UpdateRecipeUseCase
 
 object UseCaseInjection {
 
@@ -28,6 +29,11 @@ object UseCaseInjection {
      * 레시피 등록
      * */
     fun provideInsertRecipeUseCase() = InsertRecipeUseCase(AppRepository())
+
+    /**
+     * 레시피 수정
+     * */
+    fun provideUpdateRecipeUseCase() = UpdateRecipeUseCase(AppRepository())
 
     /*--------------------------------End Recipe --------------------------------*/
 
