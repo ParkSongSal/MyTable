@@ -20,6 +20,7 @@
     <color name="text_white">#fff</color>
     <color name="bg_e2e2e2">#E2E2E2</color>
     <color name="bg_d3d3d3">#DDDADA</color>
+    <color name="bg_f5f3fa">#f5f3fa</color>
     <color name="text_gray">#aeb2b6</color>
     <color name="text_dark_gray">#66696c</color>
     <color name="text_red">#f83109</color>

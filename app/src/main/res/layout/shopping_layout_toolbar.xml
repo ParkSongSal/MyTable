@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="55dp"
     android:orientation="vertical"
+    android:background="@color/bg_f5f3fa"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintLeft_toLeftOf="parent">
 
@@ -46,7 +47,14 @@
                 android:textSize="18sp"
                 tools:text="장바구니"
                 android:gravity="center"/>
-
+            <androidx.constraintlayout.utils.widget.ImageFilterView
+                android:id="@+id/imgToolbarMore"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:visibility="invisible"
+                android:src="@drawable/ic_more_vert" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.Toolbar>
 </androidx.appcompat.widget.LinearLayoutCompat>

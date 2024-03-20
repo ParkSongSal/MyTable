@@ -11,7 +11,7 @@
         android:id="@+id/layoutBody"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/white"
+        android:background="@color/bg_f5f3fa"
         android:padding="20dp"
         app:layout_constraintBottom_toTopOf="@id/layoutButton">
 
@@ -49,7 +49,6 @@
             android:layout_height="60dp"
             android:layout_weight="1"
             android:id="@+id/textNegative"
-            android:layout_marginEnd="5dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:textSize="18sp"
@@ -58,16 +57,11 @@
             android:background="@drawable/button_bg_gray"
             android:text="@string/cancel"/>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/base_hint"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:id="@+id/textPositive"
-            android:layout_marginStart="5dp"
             android:textStyle="bold"
             android:gravity="center"
             android:textSize="18sp"

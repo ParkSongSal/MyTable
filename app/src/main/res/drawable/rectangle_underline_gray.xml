@@ -8,7 +8,7 @@
     <item>
         <inset android:insetBottom="1dp">
             <shape android:shape="rectangle">
-                <solid android:color="@color/white" />
+                <solid android:color="@color/bg_f5f3fa" />
             </shape>
         </inset>
     </item>

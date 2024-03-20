@@ -7,13 +7,13 @@
     android:layout_width="match_parent"
     android:layout_height="55dp"
     android:orientation="vertical"
+    android:background="@color/bg_f5f3fa"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintLeft_toLeftOf="parent">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:contentInsetLeft="0dp"
         android:contentInsetStart="0dp"
         app:contentInsetLeft="0dp"
@@ -40,7 +40,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="6dp"
                 tools:text="레시피명"
                 android:textSize="18sp"
                 android:gravity="center"/>

@@ -28,7 +28,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/bg_f5f3fa">
 
         <include layout="@layout/layout_toolbar_close" />
 
@@ -47,7 +48,6 @@
             android:id="@+id/constraintLayout1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/white"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
