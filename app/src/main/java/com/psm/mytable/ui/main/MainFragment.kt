@@ -25,19 +25,21 @@ import com.psm.mytable.MainActivity
 import com.psm.mytable.Prefs
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentMainBinding
+import com.psm.mytable.type.RecipeType
 import com.psm.mytable.ui.recipe.RecipeAdapter
 import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.ui.recipe.RecipeSearchAdapter
 import com.psm.mytable.ui.recipe.detail.RecipeDetailActivity
 import com.psm.mytable.ui.recipe.update.RecipeUpdateActivity
 import com.psm.mytable.ui.recipe.write.RecipeWriteActivity
+import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.hideProgress
 import com.psm.mytable.utils.recyclerview.RecyclerViewHorizontalDecoration
 import com.psm.mytable.utils.recyclerview.RecyclerViewVerticalDecoration
 import com.psm.mytable.utils.showProgress
 
-class MainFragment: Fragment(){
+class MainFragment : Fragment() {
     private lateinit var viewDataBinding: FragmentMainBinding
     private val viewModel by viewModels<MainViewModel> { getViewModelFactory() }
 
@@ -46,37 +48,44 @@ class MainFragment: Fragment(){
     private lateinit var recipeUpdateResult: ActivityResultLauncher<Intent>
     private lateinit var recipeDetailResult: ActivityResultLauncher<Intent>
     private lateinit var settingResult: ActivityResultLauncher<Intent>
-    var showRecipeAdYN : String = "N"
+    var showRecipeAdYN: String = "N"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        recipeWriteResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            if(it.resultCode == AppCompatActivity.RESULT_OK){
-                viewModel.getRecipeList()
-            }
-        }
-
-        recipeDetailResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            when(it.resultCode){
-                AppCompatActivity.RESULT_OK ->{
-                    viewModel.getRecipeList()
-                }
-                9002 ->{
-                    val mIntent = it.data
-                    val itemData = mIntent?.getParcelableExtra<RecipeItemData>(RecipeDetailActivity.EXTRA_RECIPE)
-                    requireActivity().intent.getParcelableExtra<RecipeItemData>(RecipeDetailActivity.EXTRA_RECIPE)
-                    val intent = Intent(activity, RecipeUpdateActivity::class.java)
-                    intent.putExtra(MainActivity.EXTRA_UPDATE_RECIPE, itemData)
-                    recipeUpdateResult.launch(intent)
+        recipeWriteResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == AppCompatActivity.RESULT_OK) {
+                    viewModel.getRecipeCategory(RecipeType.ALL)
                 }
             }
-        }
 
-        recipeUpdateResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            if(it.resultCode == AppCompatActivity.RESULT_OK){
-                viewModel.getRecipeList()
+        recipeDetailResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                when (it.resultCode) {
+                    AppCompatActivity.RESULT_OK -> {
+                        viewModel.getRecipeCategory(RecipeType.ALL)
+                    }
+
+                    9002 -> {
+                        val mIntent = it.data
+                        val itemData =
+                            mIntent?.getParcelableExtra<RecipeItemData>(RecipeDetailActivity.EXTRA_RECIPE)
+                        requireActivity().intent.getParcelableExtra<RecipeItemData>(
+                            RecipeDetailActivity.EXTRA_RECIPE
+                        )
+                        val intent = Intent(activity, RecipeUpdateActivity::class.java)
+                        intent.putExtra(MainActivity.EXTRA_UPDATE_RECIPE, itemData)
+                        recipeUpdateResult.launch(intent)
+                    }
+                }
             }
-        }
+
+        recipeUpdateResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == AppCompatActivity.RESULT_OK) {
+                    viewModel.getRecipeCategory(RecipeType.ALL)
+                }
+            }
     }
 
     override fun onCreateView(
@@ -84,7 +93,7 @@ class MainFragment: Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewDataBinding = FragmentMainBinding.inflate(inflater, container, false).apply{
+        viewDataBinding = FragmentMainBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
         return viewDataBinding.root
@@ -100,58 +109,82 @@ class MainFragment: Fragment(){
                 activity?.finish()
             }
         }
-
         viewModel.init(requireContext())
-        setupListAdapter()
         init()
+        setupListAdapter()
         initAd()
     }
 
     override fun onResume() {
         super.onResume()
-
         // SearchView 자동 포커스 제거
         viewDataBinding.SearchView.setQuery("", false)
         viewDataBinding.mainLayout.requestFocus()
     }
 
-    private fun init(){
-
-
-
+    private fun init() = with(viewDataBinding) {
         // SearchView 자동 포커스 제거
-        viewDataBinding.mainLayout.isFocusableInTouchMode = true
-        viewDataBinding.mainLayout.isFocusable = true
 
-        viewDataBinding.SearchView.setIconifiedByDefault(false)
-        viewDataBinding.SearchView.isIconified = false
-        viewDataBinding.SearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            // 완료 누르면
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+        mainLayout.apply {
+            isFocusableInTouchMode = true
+            isFocusable = true
+        }
+        SearchView.apply {
+            setIconifiedByDefault(false)
+            isIconified = false
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                // 완료 누르면
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    if (query.isNullOrEmpty()) {
+                        ToastUtils.showToast("검색어를 입력해주세요.")
+                    } else {
+                        viewModel.filterSearchWordRecipe(query ?: "")
+                        categoryRg.clearCheck()
+                        //rbAll.isChecked = true
+                    }
+                    return false
+                }
+
+                // 검색어가 변경될때 마다
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (newText == "") {
+                        viewModel.searchWord.value = ""
+                        rbAll.isChecked = true
+                    } else {
+                        return false
+                    }
+                    return true
+                }
+            })
+        }
+        categoryRg.setOnCheckedChangeListener { group, checkedId ->
+            if(viewModel.searchWord.value.isNullOrEmpty()) {
+                when (checkedId) {
+                    R.id.rbAll-> viewModel.getRecipeCategory(RecipeType.ALL)
+                    R.id.rbKr -> viewModel.getRecipeCategory(RecipeType.KR)
+                    R.id.rbJp -> viewModel.getRecipeCategory(RecipeType.JP)
+                    R.id.rbWe -> viewModel.getRecipeCategory(RecipeType.WESTERN)
+                    R.id.rbCn -> viewModel.getRecipeCategory(RecipeType.CN)
+                    R.id.rbSb -> viewModel.getRecipeCategory(RecipeType.SNACKBAR)
+                    R.id.rbBa -> viewModel.getRecipeCategory(RecipeType.BA)
+                    else -> viewModel.getRecipeCategory(RecipeType.ALL)
+                }
+            } else {
+                return@setOnCheckedChangeListener
             }
 
-            // 검색어가 변경될때 마다
-            override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.filterSearchWordRecipe(newText ?: "")
-                return true
-            }
-
-        })
+        }
     }
-    private fun setupListAdapter(){
 
-        viewDataBinding.recipeList.apply{
+    private fun setupListAdapter() = with(viewDataBinding) {
+        recipeList.apply {
             layoutManager = LinearLayoutManager(this.context)
-            //layoutManager = GridLayoutManager(App.instance, 2)
             addItemDecoration(RecyclerViewHorizontalDecoration(30))
             addItemDecoration(RecyclerViewVerticalDecoration(30))
             adapter = RecipeAdapter(viewModel)
-            //adapter = pagingAdapter
+            itemAnimator = null
         }
-
-        viewDataBinding.searchResultList.apply{
-            //layoutManager = GridLayoutManager(App.instance, 2)
+        searchResultList.apply {
             layoutManager = LinearLayoutManager(this.context)
             addItemDecoration(RecyclerViewHorizontalDecoration(30))
             addItemDecoration(RecyclerViewVerticalDecoration(30))
@@ -160,71 +193,83 @@ class MainFragment: Fragment(){
     }
 
     private fun setupEvent() {
+        viewModel.recipeListState.observe(viewLifecycleOwner, EventObserver { state ->
+            when (state) {
+                is RecipeListState.UnInitialized -> viewModel.getRecipeCategory(RecipeType.ALL)
+                is RecipeListState.Loading -> showProgress(viewDataBinding.progress, activity)
+                is RecipeListState.Error -> {
+                    ToastUtils.showToast("알 수 없는 오류가 발생했습니다. 다시 시도바랍니다.")
+                    activity?.finish()
+                }
+
+                is RecipeListState.Success -> hideProgress(viewDataBinding.progress, activity)
+                is RecipeListState.Complete -> hideProgress(viewDataBinding.progress, activity)
+            }
+        })
 
         // 레시피 작성 화면 이동
-        viewModel.goRecipeWriteEvent.observe(viewLifecycleOwner, EventObserver{
+        viewModel.goRecipeWriteEvent.observe(viewLifecycleOwner, EventObserver {
             Prefs.adStackRecipe++
-            if(Prefs.adStackRecipe.toInt() % 3 == 0 && showRecipeAdYN == "N"){
+            if (Prefs.adStackRecipe.toInt() % 3 == 0 && showRecipeAdYN == "N") {
                 Prefs.adStackRecipe = 0
-                if(mInterstitialAd != null){
+                if (mInterstitialAd != null) {
                     showProgress(viewDataBinding.progress, activity)
                     Handler(Looper.getMainLooper()).postDelayed(
                         {
                             showInterstitial()
                         }, 1000
                     )
-                }else{
+                } else {
                     goRecipeWrite()
                 }
-            }else{
+            } else {
                 goRecipeWrite()
             }
         })
 
         // 레시피 상세 화면 이동
-        viewModel.openRecipeDetailEvent.observe(viewLifecycleOwner, EventObserver{ recipe ->
+        viewModel.openRecipeDetailEvent.observe(viewLifecycleOwner, EventObserver { recipe ->
             goRecipeDetail(recipe)
         })
     }
 
-    private fun goRecipeWrite(){
+    private fun goRecipeWrite() {
         val intent = Intent(requireContext(), RecipeWriteActivity::class.java)
         recipeWriteResult.launch(intent)
     }
 
-    private fun goRecipeDetail(recipe: RecipeItemData){
+    private fun goRecipeDetail(recipe: RecipeItemData) {
         val intent = Intent(activity, RecipeDetailActivity::class.java)
         intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, recipe)
         recipeDetailResult.launch(intent)
     }
 
 
-    private fun initAd(){
-        InterstitialAd.load(App.instance, getString(R.string.recipe_front_admob_key), App.instance.adRequest, object : InterstitialAdLoadCallback(){
-            override fun onAdFailedToLoad(p0: LoadAdError) {
-                super.onAdFailedToLoad(p0)
-                mInterstitialAd = null
-            }
-
-            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                super.onAdLoaded(interstitialAd)
-                mInterstitialAd = interstitialAd
-            }
-        })
-    }
-
-    private fun showInterstitial(){
-        if(mInterstitialAd != null){
-            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback(){
-                override fun onAdClicked() {
-                    super.onAdClicked()
+    private fun initAd() {
+        InterstitialAd.load(
+            App.instance,
+            getString(R.string.recipe_front_admob_key),
+            App.instance.adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+                    super.onAdFailedToLoad(p0)
+                    mInterstitialAd = null
                 }
 
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    super.onAdLoaded(interstitialAd)
+                    mInterstitialAd = interstitialAd
+                }
+            })
+    }
+
+    private fun showInterstitial() {
+        if (mInterstitialAd != null) {
+            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 // Called When ad is dismissed
                 override fun onAdDismissedFullScreenContent() {
                     super.onAdDismissedFullScreenContent()
                     mInterstitialAd = null
-                    //showItemAddDialogEvent()
                     hideProgress(viewDataBinding.progress, activity)
                     goRecipeWrite()
                 }
@@ -233,19 +278,10 @@ class MainFragment: Fragment(){
                     super.onAdFailedToShowFullScreenContent(p0)
                     mInterstitialAd = null
                 }
-
-                override fun onAdImpression() {
-                    super.onAdImpression()
-                }
-
-                override fun onAdShowedFullScreenContent() {
-                    super.onAdShowedFullScreenContent()
-                }
-
             }
             showRecipeAdYN = "Y"
             mInterstitialAd?.show(requireActivity())
-        }else{
+        } else {
             goRecipeWrite()
             hideProgress(viewDataBinding.progress, activity)
         }

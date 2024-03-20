@@ -34,45 +34,44 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="4dp">
+        app:elevation="20dp"
+        app:cardCornerRadius="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_round_rect_stroke_f6"
-            android:orientation="vertical">
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_round_rect_stroke_f6"
-                android:gravity="center_vertical"
-                android:onClick="@{() -> viewmodel.clickRecipeDetail(itemData)}">
+            android:orientation="horizontal"
+            android:onClick="@{() -> viewmodel.clickRecipeDetail(itemData)}">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="230dp"
-                    android:scaleType="centerCrop"
-                    android:adjustViewBounds="true"
-                    tools:src="@mipmap/ic_launcher"
-                    app:imageUrl="@{itemData.recipeImage}"
-                    />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="8dp">
+
+                    <ImageView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:scaleType="centerCrop"
+                        android:adjustViewBounds="true"
+                        tools:src="@mipmap/ic_launcher"
+                        app:imageUrl="@{itemData.recipeImage}"
+                        />
+                </androidx.cardview.widget.CardView>
+
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="match_parent"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
-                    android:background="@color/main_color"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/recipeNameText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_f6f6f6"
-                        android:textStyle="bold"
-                        android:textSize="18dp"
+                        android:textColor="@color/text_right_black"
+                        android:textSize="18sp"
                         android:ellipsize="marquee"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -89,14 +88,11 @@
                         android:paddingBottom="3dp"
                         android:text="@{itemData.type}"
                         android:textSize="15dp"
-                        android:textColor="@color/text_f6f6f6"
-                        android:background="@drawable/bg_ellipse_rect_stroke_f6"
+                        android:textColor="@color/main_color"
+                        android:background="@drawable/bg_round4_rect_stroke_solid_white2"
                         android:layout_marginTop="3dp"
                         tools:text="분식"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

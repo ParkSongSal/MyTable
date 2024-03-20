@@ -1,4 +1,4 @@
-package com.psm.mytable.room.recipe
+package com.psm.mytable.data.room.recipe
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
@@ -33,6 +33,15 @@ interface RecipeDao {
 
     @Query("SELECT * FROM table_recipe order by id")
     fun getAllRecipe(): List<Recipe>
+
+    @Query("SELECT * FROM table_recipe WHERE recipeTypeId = :typeId")
+    fun getCategoryRecipe(typeId: Int): List<Recipe>
+
+    @Query("SELECT * FROM table_recipe WHERE recipeName LIKE :searchWord AND recipeTypeId = :typeId")
+    fun getSearchCategoryRecipeList(searchWord: String, typeId: Int): List<Recipe>
+
+    @Query("SELECT * FROM table_recipe WHERE recipeName LIKE :searchWord")
+    fun getSearchAllRecipeList(searchWord: String): List<Recipe>
 
     @Query("SELECT * FROM table_recipe order by id desc")
     fun getAllRecipePaging(): PagingSource<Int, Recipe>
