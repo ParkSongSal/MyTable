@@ -21,6 +21,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.domain.UseCaseInjection
 import com.psm.mytable.ui.main.MainViewModel
 import com.psm.mytable.ui.basket.ShoppingBasketListViewModel
 import com.psm.mytable.ui.camera.CameraViewModel
@@ -56,9 +57,13 @@ class ViewModelFactory constructor(
     ) = with(modelClass) {
         when {
             isAssignableFrom(MainViewModel::class.java) ->
-                MainViewModel(appRepository)
+                MainViewModel(
+                    UseCaseInjection.provideGetAllRecipeUseCase(),
+                    UseCaseInjection.provideGetCategoryRecipeUseCase(),
+                    UseCaseInjection.provideGetSearchRecipeUseCase()
+                )
             isAssignableFrom(RecipeWriteViewModel::class.java) ->
-                RecipeWriteViewModel(appRepository)
+                RecipeWriteViewModel(UseCaseInjection.provideInsertRecipeUseCase())
             isAssignableFrom(SelectRecipeTypeViewModel::class.java) ->
                 SelectRecipeTypeViewModel(appRepository)
             isAssignableFrom(CameraViewModel::class.java) ->
