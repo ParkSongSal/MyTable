@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.psm.mytable.BR
-import timber.log.Timber
 
 class RecipeViewData: BaseObservable() {
 
@@ -48,15 +47,11 @@ class RecipeViewData: BaseObservable() {
             notifyPropertyChanged(BR.requiredDataComplete)
         }
 
-
-
     private fun checkRequiredData() {
         requiredDataComplete = recipeName.isNotEmpty() &&
                 ingredients.isNotEmpty()&&
                 howToMake.isNotEmpty()&&
                 recipeImageUri != null
-
-
     }
 
 }

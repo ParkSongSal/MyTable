@@ -56,7 +56,7 @@
                     tools:visibility="visible" />
 
                 <androidx.appcompat.widget.SearchView
-                    android:id="@+id/Search_view"
+                    android:id="@+id/search_view"
                     style="@style/MySearchViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

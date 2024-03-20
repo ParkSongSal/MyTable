@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import androidx.camera.camera2.Camera2Config
 import androidx.camera.core.CameraXConfig
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
@@ -14,7 +15,16 @@ import timber.log.Timber
 
 class App: Application(), CameraXConfig.Provider {
 
-    var database: RoomDB? = null
+    companion object {
+        lateinit var instance: App
+        private set
+        var database: RoomDB? = null
+        private set
+
+        var transferUtility: TransferUtility? = null
+        private set
+    }
+
     lateinit var repository: AppRepository
     lateinit var adRequest : AdRequest
 
@@ -23,32 +33,27 @@ class App: Application(), CameraXConfig.Provider {
 
     // 식재료 변화(수정, 삭제) 상태 변경 Flag
     var isIngredientChange = false
-    var stackIngredient : Int = 0
-
-
-    var stackBasket : Int = 0
-
-    var stackRecipe : Int = 0
 
     val s3Client
         get() = s3Provider.s3Client
 
-
     override fun onCreate() {
         super.onCreate()
         instance = this
-
+        initS3()
 
         database = RoomDB.getInstance(instance)
-        repository = AppRepository(database!!)
+        transferUtility = getTransferUtility(instance)
+        repository = AppRepository()
 
-
-        initS3()
         MobileAds.initialize(instance)
         adRequest = AdRequest.Builder().build()
 
         Timber.plant(Timber.DebugTree())
+    }
 
+    fun transferLossHandler() {
+        TransferNetworkLossHandler.getInstance(this)
     }
 
     fun getTransferUtility(context: Context): TransferUtility = TransferUtility.builder()
@@ -58,10 +63,6 @@ class App: Application(), CameraXConfig.Provider {
 
     private fun initS3(){
         s3Provider = AmplifyManager(this)
-    }
-
-    companion object {
-        lateinit var instance: App
     }
 
     override fun getCameraXConfig(): CameraXConfig = Camera2Config.defaultConfig()

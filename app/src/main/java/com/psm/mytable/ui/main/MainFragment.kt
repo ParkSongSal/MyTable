@@ -109,7 +109,6 @@ class MainFragment : Fragment() {
                 activity?.finish()
             }
         }
-        viewModel.init(requireContext())
         init()
         setupListAdapter()
         initAd()
@@ -118,7 +117,7 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         // SearchView 자동 포커스 제거
-        viewDataBinding.SearchView.setQuery("", false)
+        viewDataBinding.searchView.setQuery("", false)
         viewDataBinding.mainLayout.requestFocus()
     }
 
@@ -129,7 +128,7 @@ class MainFragment : Fragment() {
             isFocusableInTouchMode = true
             isFocusable = true
         }
-        SearchView.apply {
+        searchView.apply {
             setIconifiedByDefault(false)
             isIconified = false
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -140,7 +139,6 @@ class MainFragment : Fragment() {
                     } else {
                         viewModel.filterSearchWordRecipe(query ?: "")
                         categoryRg.clearCheck()
-                        //rbAll.isChecked = true
                     }
                     return false
                 }
@@ -150,6 +148,7 @@ class MainFragment : Fragment() {
                     if (newText == "") {
                         viewModel.searchWord.value = ""
                         rbAll.isChecked = true
+                        searchView.clearFocus()
                     } else {
                         return false
                     }
@@ -172,7 +171,6 @@ class MainFragment : Fragment() {
             } else {
                 return@setOnCheckedChangeListener
             }
-
         }
     }
 
@@ -201,7 +199,6 @@ class MainFragment : Fragment() {
                     ToastUtils.showToast("알 수 없는 오류가 발생했습니다. 다시 시도바랍니다.")
                     activity?.finish()
                 }
-
                 is RecipeListState.Success -> hideProgress(viewDataBinding.progress, activity)
                 is RecipeListState.Complete -> hideProgress(viewDataBinding.progress, activity)
             }
@@ -243,7 +240,6 @@ class MainFragment : Fragment() {
         intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, recipe)
         recipeDetailResult.launch(intent)
     }
-
 
     private fun initAd() {
         InterstitialAd.load(
