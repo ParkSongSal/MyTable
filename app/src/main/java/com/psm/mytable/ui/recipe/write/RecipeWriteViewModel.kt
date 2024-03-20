@@ -1,26 +1,22 @@
 package com.psm.mytable.ui.recipe.write
 
-import android.content.Context
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.psm.mytable.App
 import com.psm.mytable.Event
-import com.psm.mytable.data.repository.AppRepository
-import com.psm.mytable.data.room.RoomDB
 import com.psm.mytable.data.room.recipe.Recipe
+import com.psm.mytable.domain.recipe.InsertRecipeUseCase
 import com.psm.mytable.type.RecipeType
+import com.psm.mytable.utils.extension.onIO
 import com.starry.file_utils.FileUtils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import timber.log.Timber
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -34,7 +30,7 @@ import java.util.Date
  * - 버전 체크 (강제 또는 선택 업데이트 알럿 노출)
  */
 class RecipeWriteViewModel(
-    private val repository: AppRepository
+    private val insertRecipeUseCase: InsertRecipeUseCase
 ) : ViewModel(){
 
     val recipeWriteData = MutableLiveData(RecipeViewData())
@@ -65,12 +61,6 @@ class RecipeWriteViewModel(
     val progressVisible: LiveData<Boolean>
         get() = _progressVisible
 
-    private var database: RoomDB? = null
-
-    fun init(context: Context){
-        database = RoomDB.getInstance(context)
-    }
-
     fun setRecipeImageUri(uri: Uri){
         recipeWriteData.value?.recipeImageUri = uri
     }
@@ -94,6 +84,7 @@ class RecipeWriteViewModel(
     fun hideProgress(){
         _progressVisible.value = false
     }
+
     @RequiresApi(Build.VERSION_CODES.Q)
     fun clickNext(){
         showProgress()
@@ -115,47 +106,36 @@ class RecipeWriteViewModel(
             reg_date = nowDate,
             recipeImagePath = "https://my-test-butket.s3.ap-southeast-2.amazonaws.com/test1/$fileName"
         )
-
-        Timber.d("psm_mData : ${mData.toString()}")
         uploadWithTransferUtility(fileName, file, mData)
-
     }
 
-    fun uploadWithTransferUtility(fileName: String, file: File, mData : Recipe) : Int?{
+    private fun uploadWithTransferUtility(fileName: String, file: File, mData : Recipe) : Int?{
         try {
-            TransferNetworkLossHandler.getInstance(App.instance)
-            val observer = App.instance.getTransferUtility(App.instance).upload("my-test-butket", "test1/$fileName", file)
-            observer.setTransferListener(object : TransferListener {
-                override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
-                    //callback.onProgress(bytesCurrent.toFloat() / bytesTotal)
-                }
-
+            App.instance.transferLossHandler()
+            val observer = App.transferUtility?.upload("my-test-butket", "test1/$fileName", file)
+            observer?.setTransferListener(object : TransferListener {
+                override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {}
                 override fun onStateChanged(id: Int, state: TransferState?) {
                     when (state) {
                         TransferState.COMPLETED -> {
-                            viewModelScope.launch(Dispatchers.IO){
-                                database?.recipeDao()?.insert(mData)
+                            onIO {
+                                insertRecipeUseCase(mData)
+                                withContext(Dispatchers.Main) {
+                                    _completeRecipeDataInsertEvent.value = Event(Unit)
+                                    hideProgress()
+                                }
                             }
-
-                            _completeRecipeDataInsertEvent.value = Event(Unit)
-                            hideProgress()
                         }
-                        TransferState.FAILED, TransferState.CANCELED -> {
-                            //callback.onFailure(state.toString())
-                            hideProgress()
-                        }
+                        TransferState.FAILED, TransferState.CANCELED -> hideProgress()
                         else -> {}
                     }
                 }
-
                 override fun onError(id: Int, ex: Exception?) {
                     hideProgress()
-                    //callback.onFailure(ex?.localizedMessage ?: "Unknown error(3)")
                 }
             })
-            return observer.id
+            return observer?.id
         } catch (e: IllegalArgumentException) {
-            //callback.onFailure(e.localizedMessage ?: "Unknown error(4)")
             return null
         }
     }

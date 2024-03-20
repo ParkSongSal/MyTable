@@ -164,7 +164,6 @@ class RecipeWriteFragment: Fragment() {
         initView(view)
         setTitleText(view, R.string.recipe_write_1_001)
 
-        viewModel.init(requireContext())
         init()
         initAd()
         setupEvent()
