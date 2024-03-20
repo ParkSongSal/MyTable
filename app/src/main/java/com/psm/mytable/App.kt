@@ -8,13 +8,13 @@ import androidx.camera.core.CameraXConfig
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
-import com.psm.mytable.room.AppRepository
-import com.psm.mytable.room.RoomDB
+import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.data.room.RoomDB
 import timber.log.Timber
 
 class App: Application(), CameraXConfig.Provider {
 
-    private var database: RoomDB? = null
+    var database: RoomDB? = null
     lateinit var repository: AppRepository
     lateinit var adRequest : AdRequest
 
@@ -40,7 +40,7 @@ class App: Application(), CameraXConfig.Provider {
 
 
         database = RoomDB.getInstance(instance)
-        repository = AppRepository(database?.recipeDao()!!)
+        repository = AppRepository(database!!)
 
 
         initS3()
@@ -51,12 +51,12 @@ class App: Application(), CameraXConfig.Provider {
 
     }
 
-    fun getTransferUtility(context: Context) = TransferUtility.builder()
+    fun getTransferUtility(context: Context): TransferUtility = TransferUtility.builder()
         .context(context)
         .s3Client(s3Client)
         .build()
 
-    fun initS3(){
+    private fun initS3(){
         s3Provider = AmplifyManager(this)
     }
 
