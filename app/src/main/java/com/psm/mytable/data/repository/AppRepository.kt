@@ -44,11 +44,9 @@ class AppRepository : MyTableRepository{
     override suspend fun getCategoryRecipeList(typeId : Int): List<Recipe> {
         return recipeDao?.getCategoryRecipe(typeId) ?: emptyList()
     }
-
     override suspend fun updateRecipe(recipe: Recipe) {
         recipeDao?.updateRecipe(recipe)
     }
-
     override suspend fun deleteRecipe(recipe: Recipe) {
         recipeDao?.delete(recipe)
     }

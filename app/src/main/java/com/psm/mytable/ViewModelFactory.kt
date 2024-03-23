@@ -77,7 +77,7 @@ class ViewModelFactory constructor(
             isAssignableFrom(ShoppingBasketListViewModel::class.java) ->
                 ShoppingBasketListViewModel(appRepository)
             isAssignableFrom(RecipeImageDetailViewModel::class.java) ->
-                RecipeImageDetailViewModel(appRepository)
+                RecipeImageDetailViewModel()
             isAssignableFrom(SettingViewModel::class.java) ->
                 SettingViewModel(appRepository)
             isAssignableFrom(IngredientsViewModel::class.java) ->

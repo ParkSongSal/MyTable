@@ -12,6 +12,5 @@ interface MyTableRepository {
     suspend fun getAllRecipeList() : List<Recipe>
     suspend fun getCategoryRecipeList(typeId: Int) : List<Recipe>
     suspend fun updateRecipe(recipe: Recipe)
-
     suspend fun deleteRecipe(recipe: Recipe)
 }

@@ -4,16 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.psm.mytable.EventObserver
 import com.psm.mytable.R
 import com.psm.mytable.databinding.FragmentRecipeImageDetailBinding
 import com.psm.mytable.ui.recipe.RecipeItemData
-import com.psm.mytable.ui.recipe.detail.RecipeDetailActivity
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
 import com.psm.mytable.utils.initToolbar
+import com.psm.mytable.utils.setColorToolbar
 import com.psm.mytable.utils.setTitleText
 
 class RecipeImageDetailFragment: Fragment(){
@@ -37,12 +38,16 @@ class RecipeImageDetailFragment: Fragment(){
         viewDataBinding.lifecycleOwner = this
         setupEvent()
         mView = view
-
         initToolbar(view)
+        setColorView(view)
         requireActivity().intent.getParcelableExtra<RecipeItemData>(RecipeImageDetailActivity.EXTRA_RECIPE)?.let{
             viewModel.getRecipeDetailData(it)
         }?: errorPage("잘못된 접근입니다.")
+    }
 
+    private fun setColorView(view: View) {
+        setColorToolbar(view, "#000000", "#ffffff")
+        activity?.window?.statusBarColor = ContextCompat.getColor(view.context, R.color.black)
     }
 
     private fun setupEvent() {

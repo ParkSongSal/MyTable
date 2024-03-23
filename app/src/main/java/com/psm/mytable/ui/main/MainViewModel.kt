@@ -15,7 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 /**
- * 레시피 목록
+ * 레시피 목록 ViewModel
  * 필요한 UseCase
  * 1. [GetAllRecipeUseCase] 레시피 전체 목록
  * 2. [GetCategoryRecipeUseCase] 카테고리별 레시피 목록

@@ -21,6 +21,7 @@ package com.psm.mytable.utils
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -59,7 +60,9 @@ fun Fragment.initToolbar(view: View) {
             activity?.finish()
         }
     }
+    view.findViewById<View>(R.id.toolBar)?.apply {
 
+    }
     view.findViewById<View>(R.id.imgToolbarBack)?.apply {
         setOnClickListener {
             activity?.finish()
@@ -67,6 +70,17 @@ fun Fragment.initToolbar(view: View) {
     }
 }
 
+fun Fragment.setColorToolbar(view: View, bgColorRes: String, textColorRes: String) {
+    view.findViewById<View>(R.id.toolBar).apply {
+        setBackgroundColor(Color.parseColor(bgColorRes))
+    }
+    view.findViewById<TextView>(R.id.textToolbarTitle)?.apply {
+        setTextColor(Color.parseColor(textColorRes))
+    }
+    view.findViewById<View>(R.id.guideline1)?.apply {
+        setBackgroundColor(Color.parseColor(bgColorRes))
+    }
+}
 fun showProgress(view: View, activity: Activity?) {
     view.visibility = View.VISIBLE
     activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
