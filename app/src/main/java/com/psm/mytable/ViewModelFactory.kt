@@ -71,7 +71,7 @@ class ViewModelFactory constructor(
             isAssignableFrom(RecipeUpdateViewModel::class.java) ->
                 RecipeUpdateViewModel(UseCaseInjection.provideUpdateRecipeUseCase())
             isAssignableFrom(RecipeDetailViewModel::class.java) ->
-                RecipeDetailViewModel(appRepository)
+                RecipeDetailViewModel(UseCaseInjection.provideDeleteRecipeUseCase())
             isAssignableFrom(IntroViewModel::class.java) ->
                 IntroViewModel(appRepository)
             isAssignableFrom(ShoppingBasketListViewModel::class.java) ->

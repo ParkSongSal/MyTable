@@ -39,13 +39,16 @@ import com.psm.mytable.App
 import com.psm.mytable.EventObserver
 import com.psm.mytable.Prefs
 import com.psm.mytable.R
+import com.psm.mytable.data.room.recipe.Recipe
 import com.psm.mytable.databinding.FragmentRecipeWriteBinding
 import com.psm.mytable.ui.camera.CameraActivity
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
+import com.psm.mytable.utils.hideProgress
 import com.psm.mytable.utils.initToolbar
 import com.psm.mytable.utils.setTitleText
 import com.psm.mytable.utils.showPhotoSelectDialog
+import com.psm.mytable.utils.showProgress
 import com.psm.mytable.utils.showRecipeSelectDialog
 import com.psm.mytable.utils.showTempSaveDialog
 import com.psm.mytable.utils.showYesNoDialog
@@ -161,25 +164,18 @@ class RecipeWriteFragment: Fragment() {
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
         initToolbar(view)
-        initView(view)
         setTitleText(view, R.string.recipe_write_1_001)
-
-        init()
+        initView(view)
         initAd()
         setupEvent()
-        checkTempSaved()
-    }
 
+    }
 
     private fun initView(view: View){
         val toolbarClose = view.findViewById<ImageFilterView>(R.id.imgToolbarClose)
         toolbarClose.setOnClickListener{
             checkSaveDialog()
         }
-    }
-
-    private fun init(){
-
     }
 
     private fun checkTempSaved(){
@@ -200,7 +196,6 @@ class RecipeWriteFragment: Fragment() {
         viewModel.recipeWriteData.value?.ingredients = Prefs.ingredients
         viewModel.recipeWriteData.value?.howToMake = Prefs.howToMake
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -267,12 +262,26 @@ class RecipeWriteFragment: Fragment() {
             )
         })
 
-        viewModel.completeRecipeDataInsertEvent.observe(viewLifecycleOwner, EventObserver{
-            ToastUtils.showToast("레시피가 등록되었습니다.")
-            Prefs.clearRecipe()
-            activity?.setResult(Activity.RESULT_OK)
-            activity?.finish()
-            //viewModel.getAllRecipe()
+        // 레피시 등록 UI State
+        viewModel.recipeWriteState.observe(viewLifecycleOwner, EventObserver {state ->
+            when(state) {
+                is RecipeWriteState.UnInitialized -> checkTempSaved()
+                is RecipeWriteState.Loading -> showProgress(viewDataBinding.progress, activity)
+                is RecipeWriteState.Error -> {
+                    hideProgress(viewDataBinding.progress, activity)
+                    ToastUtils.showToast("오류가 발생했습니다. 다시 시도 바랍니다.")
+                }
+                is RecipeWriteState.Complete -> {
+                    hideProgress(viewDataBinding.progress, activity)
+                    ToastUtils.showToast("레시피가 등록되었습니다.")
+                    Prefs.clearRecipe()
+                    activity?.setResult(Activity.RESULT_OK)
+                    activity?.finish()
+                }
+                is RecipeWriteState.Failed, RecipeWriteState.Cancel -> {
+                    hideProgress(viewDataBinding.progress, activity)
+                }
+            }
         })
     }
 

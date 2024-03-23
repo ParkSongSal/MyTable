@@ -1,6 +1,7 @@
 package com.psm.mytable.domain
 
 import com.psm.mytable.data.repository.AppRepository
+import com.psm.mytable.domain.recipe.DeleteRecipeUseCase
 import com.psm.mytable.domain.recipe.GetAllRecipeUseCase
 import com.psm.mytable.domain.recipe.GetCategoryRecipeUseCase
 import com.psm.mytable.domain.recipe.GetSearchRecipeUseCase
@@ -34,6 +35,12 @@ object UseCaseInjection {
      * 레시피 수정
      * */
     fun provideUpdateRecipeUseCase() = UpdateRecipeUseCase(AppRepository())
+
+
+    /**
+     * 레시피 삭제
+     * */
+    fun provideDeleteRecipeUseCase() = DeleteRecipeUseCase(AppRepository())
 
     /*--------------------------------End Recipe --------------------------------*/
 

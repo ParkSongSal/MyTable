@@ -22,12 +22,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 /**
- * 레시피 작성(등록, 수정)
- * [앱 초기화]
- * - 클라이언트 ID 정보가 없는 경우 받오온다.
- * - FCM 토큰 등록이 안되 있으면 등록 한다.
- * - 로그인 사용자, 비 로그인 사용자에 해당되는 앱 초기화 완료 이벤트를 전달한다.
- * - 버전 체크 (강제 또는 선택 업데이트 알럿 노출)
+ * 레시피 등록 ViewModel
+ * 필요한 UseCase
+ * 1. [InsertRecipeUseCase] 레시피 등록
  */
 class RecipeWriteViewModel(
     private val insertRecipeUseCase: InsertRecipeUseCase
@@ -44,10 +41,6 @@ class RecipeWriteViewModel(
     val openFoodTypeDialogEvent: LiveData<Event<Unit>>
         get() = _openFoodTypeDialogEvent
 
-    private var _completeRecipeDataInsertEvent = MutableLiveData<Event<Unit>>()
-    val completeRecipeDataInsertEvent: LiveData<Event<Unit>>
-        get() = _completeRecipeDataInsertEvent
-
     private var _recipeType = MutableLiveData<String>("한식")
     val recipeType: LiveData<String>
         get() = _recipeType
@@ -55,11 +48,9 @@ class RecipeWriteViewModel(
     private var _recipeTypeId = MutableLiveData<Int>(1)
     val recipeTypeId: LiveData<Int>
         get() = _recipeTypeId
-    val testName = MutableLiveData<String>()
 
-    private val _progressVisible = MutableLiveData(false)
-    val progressVisible: LiveData<Boolean>
-        get() = _progressVisible
+    private var _recipeWriteState = MutableLiveData<Event<RecipeWriteState>>(Event(RecipeWriteState.UnInitialized))
+    val recipeWriteState: LiveData<Event<RecipeWriteState>> = _recipeWriteState
 
     fun setRecipeImageUri(uri: Uri){
         recipeWriteData.value?.recipeImageUri = uri
@@ -77,17 +68,9 @@ class RecipeWriteViewModel(
         _openFoodTypeDialogEvent.value = Event(Unit)
     }
 
-    fun showProgress(){
-        _progressVisible.value = true
-    }
-
-    fun hideProgress(){
-        _progressVisible.value = false
-    }
-
     @RequiresApi(Build.VERSION_CODES.Q)
     fun clickNext(){
-        showProgress()
+        _recipeWriteState.postValue(Event(RecipeWriteState.Loading))
         val fileUri = Uri.parse(recipeWriteData.value?.recipeImageUri.toString())
         val filePath = FileUtils(App.instance.applicationContext).getPath(fileUri)
         val file = File(filePath)
@@ -109,7 +92,7 @@ class RecipeWriteViewModel(
         uploadWithTransferUtility(fileName, file, mData)
     }
 
-    private fun uploadWithTransferUtility(fileName: String, file: File, mData : Recipe) : Int?{
+    private fun uploadWithTransferUtility(fileName: String, file: File, mData : Recipe){
         try {
             App.instance.transferLossHandler()
             val observer = App.transferUtility?.upload("my-test-butket", "test1/$fileName", file)
@@ -121,22 +104,21 @@ class RecipeWriteViewModel(
                             onIO {
                                 insertRecipeUseCase(mData)
                                 withContext(Dispatchers.Main) {
-                                    _completeRecipeDataInsertEvent.value = Event(Unit)
-                                    hideProgress()
+                                    _recipeWriteState.postValue(Event(RecipeWriteState.Complete))
                                 }
                             }
                         }
-                        TransferState.FAILED, TransferState.CANCELED -> hideProgress()
+                        TransferState.FAILED -> _recipeWriteState.postValue(Event(RecipeWriteState.Failed))
+                        TransferState.CANCELED -> _recipeWriteState.postValue(Event(RecipeWriteState.Cancel))
                         else -> {}
                     }
                 }
                 override fun onError(id: Int, ex: Exception?) {
-                    hideProgress()
+                    _recipeWriteState.postValue(Event(RecipeWriteState.Error))
                 }
             })
-            return observer?.id
         } catch (e: IllegalArgumentException) {
-            return null
+            _recipeWriteState.postValue(Event(RecipeWriteState.Error))
         }
     }
 
