@@ -18,8 +18,10 @@ import com.psm.mytable.ui.recipe.RecipeItemData
 import com.psm.mytable.ui.recipe.image.RecipeImageDetailActivity
 import com.psm.mytable.utils.ToastUtils
 import com.psm.mytable.utils.getViewModelFactory
+import com.psm.mytable.utils.hideProgress
 import com.psm.mytable.utils.initToolbar
 import com.psm.mytable.utils.setTitleText
+import com.psm.mytable.utils.showProgress
 
 class RecipeDetailFragment: Fragment() {
     private lateinit var viewDataBinding: FragmentRecipeDetailBinding
@@ -48,16 +50,15 @@ class RecipeDetailFragment: Fragment() {
         initToolbar(view)
         setTitleText(view, R.string.recipe_detail_1_001)
 
-        viewModel.init(requireContext())
-
-        requireActivity().intent.getParcelableExtra<RecipeItemData>(RecipeDetailActivity.EXTRA_RECIPE)?.let{
-            viewModel.getRecipeDetailData(it)
-        }?: errorPage("잘못된 접근입니다.")
-
         setupEvent()
-
         initView()
         initAd()
+    }
+
+    private fun setDetailData() {
+        activity?.intent?.getParcelableExtra<RecipeItemData>(RecipeDetailActivity.EXTRA_RECIPE)?.let{
+            viewModel.getRecipeDetailData(it)
+        }?: errorPage("잘못된 접근입니다.")
     }
 
     private fun initView(){
@@ -102,19 +103,24 @@ class RecipeDetailFragment: Fragment() {
             activity?.finish()
         })
 
-        viewModel.completeRecipeDeleteEvent.observe(viewLifecycleOwner, EventObserver{
-            ToastUtils.showToast("레시피가 삭제되었습니다.")
-            activity?.setResult(Activity.RESULT_OK)
-            activity?.finish()
-        })
-        viewModel.errorEvent.observe(viewLifecycleOwner, EventObserver{
-            errorPage("문제가 발생하여, 이전 화면으로 돌아갑니다.")
-        })
-
         viewModel.goRecipeImageDetailEvent.observe(viewLifecycleOwner, EventObserver{
             val intent = Intent(activity, RecipeImageDetailActivity::class.java)
             intent.putExtra(RecipeImageDetailActivity.EXTRA_RECIPE, it)
             startActivity(intent)
+        })
+
+        viewModel.recipeDetailState.observe(viewLifecycleOwner, EventObserver {state ->
+            when(state) {
+                is RecipeDetailState.UnInitialized -> setDetailData()
+                is RecipeDetailState.Loading -> showProgress(viewDataBinding.progress, activity)
+                is RecipeDetailState.Error -> errorPage("문제가 발생하여, 이전 화면으로 돌아갑니다.")
+                is RecipeDetailState.Complete -> {
+                    hideProgress(viewDataBinding.progress, activity)
+                    ToastUtils.showToast("레시피가 삭제되었습니다.")
+                    activity?.setResult(Activity.RESULT_OK)
+                    activity?.finish()
+                }
+            }
         })
     }
 

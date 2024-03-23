@@ -48,4 +48,8 @@ class AppRepository : MyTableRepository{
     override suspend fun updateRecipe(recipe: Recipe) {
         recipeDao?.updateRecipe(recipe)
     }
+
+    override suspend fun deleteRecipe(recipe: Recipe) {
+        recipeDao?.delete(recipe)
+    }
 }

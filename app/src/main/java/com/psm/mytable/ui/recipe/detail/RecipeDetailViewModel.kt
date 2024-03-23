@@ -1,38 +1,32 @@
 package com.psm.mytable.ui.recipe.detail
 
-import android.content.Context
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.amazonaws.AmazonServiceException
 import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.psm.mytable.App
 import com.psm.mytable.Event
-import com.psm.mytable.data.repository.AppRepository
-import com.psm.mytable.data.room.RoomDB
 import com.psm.mytable.data.room.recipe.Recipe
+import com.psm.mytable.domain.recipe.DeleteRecipeUseCase
 import com.psm.mytable.ui.recipe.RecipeItemData
+import com.psm.mytable.utils.extension.onIO
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 /**
- * 레시피 작성(등록, 수정)
- * [앱 초기화]
- * - 클라이언트 ID 정보가 없는 경우 받오온다.
- * - FCM 토큰 등록이 안되 있으면 등록 한다.
- * - 로그인 사용자, 비 로그인 사용자에 해당되는 앱 초기화 완료 이벤트를 전달한다.
- * - 버전 체크 (강제 또는 선택 업데이트 알럿 노출)
+ * 레시피 상세 ViewModel
+ * 필요한 UseCase
+ * 1. [DeleteRecipeUseCase] 레시피 삭제
  */
 class RecipeDetailViewModel(
-    private val repository: AppRepository
+    val deleteRecipeUseCase: DeleteRecipeUseCase
 ) : ViewModel(){
 
     private val _recipeDetail = MutableLiveData<RecipeItemData>()
     val recipeDetail: LiveData<RecipeItemData> = _recipeDetail
-
 
     private val _setTitleEvent = MutableLiveData<Event<String>>()
     val setTitleEvent: LiveData<Event<String>>
@@ -41,10 +35,6 @@ class RecipeDetailViewModel(
     private var _moreLayoutVisibility = MutableLiveData(View.GONE)
     val moreLayoutVisibility: LiveData<Int>
         get() = _moreLayoutVisibility
-
-    private var _completeRecipeDeleteEvent = MutableLiveData<Event<Unit>>()
-    val completeRecipeDeleteEvent: LiveData<Event<Unit>>
-        get() = _completeRecipeDeleteEvent
 
     private var _goRecipeUpdateEvent = MutableLiveData<Event<RecipeItemData>>()
     val goRecipeUpdateEvent: LiveData<Event<RecipeItemData>>
@@ -58,17 +48,10 @@ class RecipeDetailViewModel(
     val goRecipeImageDetailEvent: LiveData<Event<RecipeItemData>>
         get() = _goRecipeImageDetailEvent
 
+    private var _recipeDetailState =
+        MutableLiveData<Event<RecipeDetailState>>(Event(RecipeDetailState.UnInitialized))
+    val recipeDetailState: LiveData<Event<RecipeDetailState>> = _recipeDetailState
 
-
-    private var _errorEvent = MutableLiveData<Event<Unit>>()
-    val errorEvent: LiveData<Event<Unit>>
-        get() = _errorEvent
-
-    private var database: RoomDB? = null
-
-    fun init(context: Context){
-        database = RoomDB.getInstance(context)
-    }
     fun getRecipeDetailData(recipeItemData: RecipeItemData){
         _recipeDetail.value = RecipeItemData(
             id = recipeItemData.id,
@@ -101,47 +84,42 @@ class RecipeDetailViewModel(
         if(itemData.value?.id != null){
             _goRecipeUpdateEvent.value = Event(itemData.value!!)
         }else{
-            _errorEvent.value = Event(Unit)
+            _recipeDetailState.postValue(Event(RecipeDetailState.Error))
         }
     }
 
     fun clickDeleteRecipe(itemData: LiveData<RecipeItemData>) {
-
+        _recipeDetailState.postValue(Event(RecipeDetailState.Loading))
         val mRecipeImage = itemData.value?.recipeImage
         val mBucket = "my-test-butket"
         val mKey = mRecipeImage?.substring(mRecipeImage.indexOf("test1/"))
 
         try{
-
-            val deleteObjectRequest = DeleteObjectRequest(mBucket, mKey)
-            App.instance.s3Client.deleteObject(deleteObjectRequest)
-
-            val mData = Recipe(
-                id = itemData.value?.id?.toInt() ?: 0,
-                recipeName = itemData.value?.recipeName ?: "",
-                recipeType = itemData.value.toString(),
-                recipeTypeId = itemData.value?.typeId ?: 0,
-                ingredients = itemData.value?.ingredients ?: "",
-                howToMake = itemData.value?.howToMake ?: "",
-                reg_date = itemData.value?.reg_date ?: "",
-                recipeImagePath = itemData.value?.recipeImage ?: ""
-            )
-
-            hideMoreMenuLayout()
-           runBlocking{
-                val job = viewModelScope.launch(Dispatchers.IO){
-                    database?.recipeDao()?.delete(mData)
+            onIO {
+                delay(1000)
+                val deleteObjectRequest = DeleteObjectRequest(mBucket, mKey)
+                App.instance.s3Client.deleteObject(deleteObjectRequest)
+                val mData = Recipe(
+                    id = itemData.value?.id?.toInt() ?: 0,
+                    recipeName = itemData.value?.recipeName ?: "",
+                    recipeType = itemData.value.toString(),
+                    recipeTypeId = itemData.value?.typeId ?: 0,
+                    ingredients = itemData.value?.ingredients ?: "",
+                    howToMake = itemData.value?.howToMake ?: "",
+                    reg_date = itemData.value?.reg_date ?: "",
+                    recipeImagePath = itemData.value?.recipeImage ?: ""
+                )
+                deleteRecipeUseCase(mData)
+                withContext(Dispatchers.Main) {
+                    hideMoreMenuLayout()
+                    _recipeDetailState.postValue(Event(RecipeDetailState.Complete))
                 }
-                job.join()
             }
-            _completeRecipeDeleteEvent.value = Event((Unit))
         }catch (e: AmazonServiceException){
-            _errorEvent.value = Event(Unit)
+            _recipeDetailState.postValue(Event(RecipeDetailState.Error))
         }catch (e: Exception){
-            _errorEvent.value = Event(Unit)
+            _recipeDetailState.postValue(Event(RecipeDetailState.Error))
         }
-
-
     }
 
     var clickTime:Long = 0
